@@ -1,0 +1,70 @@
+{
+  "name": "pro-backup",
+  "author": "Bikiran",
+  "description": "This APP is built by Bikiran",
+  "version": "1.1.0",
+  "private": true,
+  "homepage": "./",
+  "main": "src/main.js",
+  "publisher": "bikiran",
+  "license": "CC0-1.0",
+  "scripts": {
+    "electron": "electron .",
+    "electron:start": "electron-forge start",
+    "electron:package": "electron-forge package",
+    "electron:make": "electron-forge make",
+    "build": "electron-builder"
+  },
+  "build": {
+    "productName": "pro-backup",
+    "appId": "com.pro-backup.app",
+    "win": {
+      "target": "nsis",
+      "icon": "/src/assets/Backup.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "/src/assets/Backup.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "/src/assets/Backup.png"
+    },
+    "extraResources": [
+      {
+        "from": "build",
+        "to": "./build",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-window-state": "^5.0.3",
+    "zklib": "^0.2.11"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
+    "electron": "^24.2.0",
+    "electron-builder": "^23.6.0",
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "prettier": "^2.8.8"
+  },
+  "packageManager": "yarn@3.2.3"
+}

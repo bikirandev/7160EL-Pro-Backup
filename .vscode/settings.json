@@ -1,0 +1,7 @@
+{
+  // Theme
+  "workbench.colorTheme": "Learn with Sumit - Peace of the eye",
+
+  "files.eol": "\r\n",
+  "eslint.validate": ["javascript"]
+}
