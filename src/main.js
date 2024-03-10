@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 // const { startDevice, stopDevice } = require('./app/device');
 const createWindow = require('./utils/createWindow');
 
@@ -8,10 +8,19 @@ const createWindow = require('./utils/createWindow');
 // Menu.setApplicationMenu(false)
 
 app.whenReady().then(() => {
-  // Listen for 'set-title' event from renderer process
-  // ipcMain.handle('set-title', (event, title) => {
-  //   console.log('Title received from renderer process:', title);
-  // });
+  // close window
+  ipcMain.on('close-window', () => {
+    console.log('Close Window:');
+    app.quit();
+  });
+
+  // Listen for 'minimize-window' event from renderer process
+  ipcMain.on('minimize-window', () => {
+    const focusedWindow = BrowserWindow.getFocusedWindow();
+    if (focusedWindow) {
+      focusedWindow.minimize();
+    }
+  });
 
   // --Creating Window // it returns win
   createWindow();

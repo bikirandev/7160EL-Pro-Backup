@@ -2,8 +2,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  setTitle: (title) => ipcRenderer.send('set-title', title),
+  // close window
+  closeWindow: (ev, data) => ipcRenderer.send('close-window', data),
 
-  // device acivity
-  // deviceStart: (formData) => ipcRenderer.invoke('device:start', formData),
+  // minimize window
+  minimizeWindow: () => ipcRenderer.send('minimize-window'),
 });

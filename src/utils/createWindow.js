@@ -5,8 +5,11 @@ const startUrl = require('./startUrl');
 
 module.exports = () => {
   const win = new BrowserWindow({
-    width: 400,
+    width: 1100,
     height: 700,
+    resizable: false,
+    titleBarStyle: 'hidden',
+
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, '../preload.js'),
