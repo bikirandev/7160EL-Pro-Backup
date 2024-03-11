@@ -3,5 +3,12 @@
   "workbench.colorTheme": "Learn with Sumit - Peace of the eye",
 
   "files.eol": "\r\n",
-  "eslint.validate": ["javascript"]
+  "eslint.validate": [
+    "javascript"
+  ],
+  "cSpell.words": [
+    "Bikiran",
+    "nsis",
+    "zklib"
+  ]
 }
