@@ -10,4 +10,4 @@ const GetUrl = () => (isDev
     slashes: true,
   }));
 
-module.exports = GetUrl();
+module.exports = GetUrl;

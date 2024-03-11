@@ -1,14 +1,12 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { BrowserWindow, shell } = import('electron');
 const path = require('path');
 const startUrl = require('./startUrl');
 
-module.exports = () => {
+module.exports = ({ BrowserWindow, shell }) => {
   const win = new BrowserWindow({
     width: 1100,
     height: 700,
     resizable: false,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
 
     webPreferences: {
       nodeIntegration: true,

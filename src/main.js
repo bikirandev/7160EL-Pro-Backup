@@ -1,11 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { app, BrowserWindow, ipcMain } = require('electron');
-// const { startDevice, stopDevice } = require('./app/device');
+const {
+  app, BrowserWindow, ipcMain, shell,
+  // eslint-disable-next-line import/no-extraneous-dependencies
+} = require('electron');
 const createWindow = require('./utils/createWindow');
-
-// '192.168.68.114', 4370
-//   hide menu
-// Menu.setApplicationMenu(false)
 
 app.whenReady().then(() => {
   // close window
@@ -23,13 +20,15 @@ app.whenReady().then(() => {
   });
 
   // --Creating Window // it returns win
-  createWindow();
+  createWindow({ BrowserWindow, shell });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
+}).catch((err) => {
+  console.log(err);
 });
 
 app.on('window-all-closed', () => {
