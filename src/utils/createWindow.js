@@ -1,7 +1,6 @@
-const path = import('path');
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { BrowserWindow, shell } = import('electron');
+const path = require('path');
 const startUrl = require('./startUrl');
 
 module.exports = () => {
