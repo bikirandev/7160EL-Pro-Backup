@@ -7,7 +7,6 @@ const createWindow = require('./utils/createWindow');
 app.whenReady().then(() => {
   // close window
   ipcMain.on('close-window', () => {
-    console.log('Close Window:');
     app.quit();
   });
 
