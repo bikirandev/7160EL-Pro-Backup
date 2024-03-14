@@ -25,3 +25,4 @@ yarn-error.log*
 /out
 dist
 .yarn/cache
+.yarn/install-state.gz
