@@ -6,7 +6,7 @@ module.exports = ({ BrowserWindow, shell }) => {
     width: 1100,
     height: 700,
     resizable: false,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
 
     webPreferences: {
       nodeIntegration: true,
