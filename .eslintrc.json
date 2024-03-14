@@ -9,6 +9,7 @@
     "ecmaVersion": "latest"
   },
   "rules": {
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "object-curly-newline": "off"
   }
 }
