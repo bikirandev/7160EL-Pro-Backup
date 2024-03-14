@@ -7,12 +7,14 @@ app
   .whenReady()
   .then(() => {
     // close window
-    ipcMain.on('close-window', () => {
-      app.quit();
+    ipcMain.on('closeWindow', (a, b) => {
+      console.log(a, b);
+
+      // app.quit();
     });
 
     // Listen for 'minimize-window' event from renderer process
-    ipcMain.on('minimize-window', () => {
+    ipcMain.on('minimizeWindow', () => {
       const focusedWindow = BrowserWindow.getFocusedWindow();
       if (focusedWindow) {
         focusedWindow.minimize();

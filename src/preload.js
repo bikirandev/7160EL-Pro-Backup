@@ -1,10 +1,22 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { contextBridge, ipcRenderer } = require('electron');
+/* eslint-disable import/no-extraneous-dependencies */
+const {
+  contextBridge,
+  ipcRenderer: { send },
+} = require('electron');
 
-contextBridge.exposeInMainWorld('electronAPI', {
-  // close window
-  closeWindow: (data) => ipcRenderer.send('close-window', data),
+const obj = {};
 
-  // minimize window
-  minimizeWindow: () => ipcRenderer.send('minimize-window'),
-});
+const operation = (id) => (data) => send(id, data);
+const adder = (id) => {
+  obj[id] = operation(id);
+};
+
+adder('closeWindow');
+adder('minimizeWindow');
+
+// getSources
+// addSource
+// updateSource
+// removeSource
+
+contextBridge.exposeInMainWorld('electronAPI', obj);
