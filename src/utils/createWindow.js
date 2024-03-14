@@ -10,8 +10,8 @@ module.exports = ({ BrowserWindow, shell }) => {
 
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, '../preload.js'),
-    },
+      preload: path.join(__dirname, '../preload.js')
+    }
     // resizable: false,
   });
 

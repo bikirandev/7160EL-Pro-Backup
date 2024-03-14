@@ -8,10 +8,10 @@ const obj = {};
 
 const operation = (id) => (data) => send(id, data);
 const adder = (id) => {
-  obj[id] = operation(id);
+      obj[id] = operation(id);
 };
 
-adder('closeWindow');
+   adder('closeWindow');
 adder('minimizeWindow');
 
 // getSources

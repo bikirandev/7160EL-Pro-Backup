@@ -10,6 +10,7 @@
   },
   "rules": {
     "comma-dangle": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "no-console": "off"
   }
 }
