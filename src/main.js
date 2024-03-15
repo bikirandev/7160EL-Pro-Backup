@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
-const winston = require('winston/lib/winston/config')
 const createWindow = require('./utils/createWindow')
 const apiRegistry = require('./ApiRegistry')
 
