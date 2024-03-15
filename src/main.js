@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const winston = require('winston/lib/winston/config')
 const createWindow = require('./utils/createWindow')
-const regModel = require('./Models/RegModel')
+const regModel = require('./RegModel')
 
 const regKeys = Object.keys(regModel)
 

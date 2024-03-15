@@ -4,7 +4,7 @@ const {
   ipcRenderer: { send },
 } = require('electron')
 
-const regModel = require('./Models/RegModel')
+const regModel = require('./RegModel')
 const obj = {}
 
 // Library
