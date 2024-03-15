@@ -2,21 +2,20 @@
 const {
   contextBridge,
   ipcRenderer: { send },
-} = require('electron');
+} = require('electron')
 
-const obj = {};
+const regModel = require('./Models/RegModel')
+const obj = {}
 
-const operation = (id) => (data) => send(id, data);
+// Library
+const operation = (id) => (data) => send(id, data)
 const adder = (id) => {
-      obj[id] = operation(id);
-};
+  obj[id] = operation(id)
+}
 
-   adder('closeWindow');
-adder('minimizeWindow');
+const keys = Object.keys(regModel)
+keys.forEach((key) => {
+  adder(key)
+})
 
-// getSources
-// addSource
-// updateSource
-// removeSource
-
-contextBridge.exposeInMainWorld('electronAPI', obj);
+contextBridge.exposeInMainWorld('electronAPI', obj)

@@ -1,10 +1,10 @@
-const getSources = () => {}
+const getSources = (ev, data) => {}
 
-const addSource = () => {}
+const addSource = (ev, data) => {}
 
-const updateSource = () => {}
+const updateSource = (ev, data) => {}
 
-const deleteSource = () => {}
+const deleteSource = (ev, data) => {}
 
 module.exports = {
   getSources,

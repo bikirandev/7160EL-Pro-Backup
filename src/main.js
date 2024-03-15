@@ -1,39 +1,31 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
-const winston = require('winston/lib/winston/config');
-const createWindow = require('./utils/createWindow');
+const { app, BrowserWindow, ipcMain, shell } = require('electron')
+const winston = require('winston/lib/winston/config')
+const createWindow = require('./utils/createWindow')
+const regModel = require('./Models/RegModel')
+
+const regKeys = Object.keys(regModel)
 
 app
   .whenReady()
   .then(() => {
-    // close window
-    ipcMain.on('closeWindow', (a, b) => {
-      console.log(a, b);
-
-      // app.quit();
-    });
-
-    // Listen for 'minimize-window' event from renderer process
-    ipcMain.on('minimizeWindow', () => {
-      const focusedWindow = BrowserWindow.getFocusedWindow();
-      if (focusedWindow) {
-        focusedWindow.minimize();
-      }
-    });
+    regKeys.forEach((key, index) => {
+      ipcMain.on(key, regModel[key])
+    })
 
     // --Creating Window // it returns win
-    createWindow({ BrowserWindow, shell });
+    createWindow({ BrowserWindow, shell })
 
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
+        createWindow()
       }
-    });
+    })
   })
   .catch((err) => {
-    winston.error(err);
-  });
+    winston.error(err)
+  })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+  if (process.platform !== 'darwin') app.quit()
+})
