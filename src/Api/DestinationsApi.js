@@ -1,14 +1,14 @@
-const getDestinations = () => {};
+const getDestinations = () => {}
 
-const addDestination = () => {};
+const addDestination = () => {}
 
-const updateDestination = () => {};
+const updateDestination = () => {}
 
-const deleteDestination = () => {};
+const deleteDestination = () => {}
 
 module.exports = {
   getDestinations,
   addDestination,
   updateDestination,
-  deleteDestination
-};
+  deleteDestination,
+}

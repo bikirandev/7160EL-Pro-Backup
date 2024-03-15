@@ -1,14 +1,14 @@
-const getSources = () => {};
+const getSources = () => {}
 
-const addSource = () => {};
+const addSource = () => {}
 
-const updateSource = () => {};
+const updateSource = () => {}
 
-const deleteSource = () => {};
+const deleteSource = () => {}
 
 module.exports = {
   getSources,
   addSource,
   updateSource,
-  deleteSource
-};
+  deleteSource,
+}
