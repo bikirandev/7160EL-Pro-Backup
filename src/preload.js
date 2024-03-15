@@ -4,7 +4,7 @@ const {
   ipcRenderer: { send },
 } = require('electron')
 
-const regModel = require('./RegModel')
+const apiRegistry = require('./ApiRegistry')
 const obj = {}
 
 // Library
@@ -13,7 +13,7 @@ const adder = (id) => {
   obj[id] = operation(id)
 }
 
-const keys = Object.keys(regModel)
+const keys = Object.keys(apiRegistry)
 keys.forEach((key) => {
   adder(key)
 })

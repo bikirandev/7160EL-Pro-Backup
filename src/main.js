@@ -2,15 +2,15 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const winston = require('winston/lib/winston/config')
 const createWindow = require('./utils/createWindow')
-const regModel = require('./RegModel')
+const apiRegistry = require('./ApiRegistry')
 
-const regKeys = Object.keys(regModel)
+const regKeys = Object.keys(apiRegistry)
 
 app
   .whenReady()
   .then(() => {
     regKeys.forEach((key, index) => {
-      ipcMain.on(key, regModel[key])
+      ipcMain.on(key, apiRegistry[key])
     })
 
     // --Creating Window // it returns win
@@ -23,7 +23,7 @@ app
     })
   })
   .catch((err) => {
-    winston.error(err)
+    console.log(err)
   })
 
 app.on('window-all-closed', () => {
