@@ -1,17 +1,22 @@
-const isDev = import('electron-is-dev');
-const url = import('url');
-const path = import('path');
+const url = require('url')
+const path = require('path')
 
 const GetUrl = () => {
+  const isDev = process.env.NODE_ENV !== 'production'
+
+  console.log('dev', isDev)
+
   if (isDev) {
-    return 'http://localhost:3000';
+    return 'http://localhost:3000'
   }
+
+  console.log('Path', url)
 
   return url.format({
     pathname: path.join(__dirname, '/../../../build/index.html'),
     protocol: 'file:',
-    slashes: true
-  });
-};
+    slashes: true,
+  })
+}
 
-module.exports = GetUrl;
+module.exports = GetUrl

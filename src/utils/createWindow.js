@@ -1,5 +1,5 @@
-const path = require('path');
-const startUrl = require('./startUrl');
+const path = require('path')
+const startUrl = require('./startUrl')
 
 module.exports = ({ BrowserWindow, shell }) => {
   const win = new BrowserWindow({
@@ -7,23 +7,23 @@ module.exports = ({ BrowserWindow, shell }) => {
     height: 700,
     resizable: false,
     // titleBarStyle: 'hidden',
-    autoHideMenuBar : true,
+    // autoHideMenuBar : true,
 
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, '../preload.js')
-    }
+      preload: path.join(__dirname, '../preload.js'),
+    },
     // resizable: false,
-  });
+  })
 
   // startUrl() returns http://localhost:3000 or ./build/index.html (React Build File)
-  win.loadURL(startUrl());
+  win.loadURL(startUrl())
 
   // url open
   win.webContents.on('will-navigate', (event, url) => {
-    event.preventDefault();
-    shell.openExternal(url);
-  });
+    event.preventDefault()
+    shell.openExternal(url)
+  })
 
-  return win;
-};
+  return win
+}
