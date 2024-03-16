@@ -1,12 +1,9 @@
-const { BrowserWindow } = require('electron')
 const {
   getDestinations,
   addDestination,
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-
-const getDirectory = require('./utils/getDirectory')
 const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 
 // /api/registration
@@ -23,23 +20,17 @@ const minimizeWindow = (ev, data) => {
   }
 }
 
-
 module.exports = {
   closeWindow,
   minimizeWindow,
 
-  // sources
   getSources,
   addSource,
   updateSource,
   deleteSource,
 
-  // destinations
   getDestinations,
   addDestination,
   updateDestination,
   deleteDestination,
-
-  // utils
-  getDirectory
 }
