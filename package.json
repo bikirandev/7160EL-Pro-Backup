@@ -44,7 +44,8 @@
     "axios": "^1.6.8",
     "electron-is-dev": "^3.0.1",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.3.0",
