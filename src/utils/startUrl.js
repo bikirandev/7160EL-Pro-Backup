@@ -10,7 +10,7 @@ const GetUrl = () => {
     if (err) throw err
   })
 
-  console.log('dev', isDev)
+  // console.log('dev', isDev)
 
   if (isDev) {
     return    'http://localhost:3000'

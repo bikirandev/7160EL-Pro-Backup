@@ -5,6 +5,7 @@ const {
   deleteDestination,
 } = require('./Api/DestinationsApi')
 const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
+const openLink= require('./utils/openLink')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -33,4 +34,7 @@ module.exports = {
   addDestination,
   updateDestination,
   deleteDestination,
+
+  //open link in external browser
+  openLink
 }
