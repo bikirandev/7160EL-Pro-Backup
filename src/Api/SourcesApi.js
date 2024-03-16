@@ -17,16 +17,14 @@ const getSources = async (ev, data) => {
 
 // Add a new Source
 const addSource = async (ev, data) => {
-  ev.reply('addSourceReplyOn', "OK I'm here!")
-
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Collect if the source already exists
   const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
-  console.log('sourceExists', sourceExists)
 
   // Check if the source already exists
   if (sourceExists.data.length > 0) {
+    ev.reply('message', 'Source already exists')
     return { error: 1, message: 'Source already exists', data: [] }
   }
 
@@ -39,8 +37,8 @@ const addSource = async (ev, data) => {
     password: data.password,
     directory: data.directory,
   })
-  console.log('newSource', newSource)
 
+  ev.reply('message', newSource.message)
   return newSource
 }
 

@@ -23,7 +23,9 @@ if (electron && electron.ipcRenderer) {
     }
   })
 
-  // obj['addSourceReply'] = (data) => ipcRenderer.send('addSourceReply', data)
+  // Message Sender
+  obj.messageOn = (fn) => ipcRenderer.on('message', fn)
+  obj.messageOff = () => ipcRenderer.removeAllListeners('message')
 
   contextBridge.exposeInMainWorld('electronAPI', obj)
 } else {
