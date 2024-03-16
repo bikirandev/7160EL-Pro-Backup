@@ -2,7 +2,7 @@ const Datastore = require('nedb')
 const dStoreSources = './nedb_sources.db'
 
 // type: 'mssql-win', 'mssql-host', 'directory'
-// data = {id: '', type: '', databaseOrPath: 'databaseName', host: '', user: '', password: '', directory: ''  }
+// data = {id: '', type: '', databaseOrPath: '', host: '', user: '', password: '', directory: ''  }
 
 // Get Lists of Sources
 const getSources = (ev, data) => {
@@ -23,32 +23,45 @@ const getSources = (ev, data) => {
 }
 
 // Add a new Source
-const addSource = (ev, data) => {
+const addSource = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
-  // Check if the source already exists
-  const sourceExists = db.find({ database: data.databaseOrPath, type: data.type }, (err, docs) => {
-    if (err) {
-      return { error: 1, message: 'Error adding source', data: [] }
-    }
+  console.log('data', data)
 
-    return { error: 0, message: 'addSource called', data: docs }
+  // Check if the source already exists
+
+  let sourceExists = await new Promise((resolve, reject) => {
+    db.find({ databaseOrPath: data.database, type: data.type }, (err, docs) => {
+      if (err) {
+        resolve({ error: 1, message: 'Error adding source', data: [] })
+      }
+
+      resolve({ error: 0, message: 'addSource called', data: docs })
+    })
   })
+
+  console.log('sourceExists', sourceExists)
 
   if (sourceExists.data.length > 0) {
-    return sourceExists
+    return { error: 1, message: 'Source already exists', data: [] }
   }
 
+  console.log('sourceExists', sourceExists)
   // add the new source to the database if it doesn't exist (databaseOrPath and type)
-  const newSource = db.insert(data, (err, newDoc) => {
-    if (err) {
-      return { error: 1, message: 'Error adding source', data: [] }
-    }
-    return { error: 0, message: 'addSource called', data: newDoc }
+
+  const newSource = await new Promise((resolve, reject) => {
+    db.insert(data, (err, newDoc) => {
+      if (err) {
+        resolve({ error: 1, message: 'Error adding source', data: [] })
+      }
+      resolve({ error: 0, message: 'addSource called', data: newDoc })
+    })
   })
 
+  console.log('newSource', newSource)
+
   // close the database
-  db.close()
+  // db.close()
 
   return newSource
 }
@@ -58,7 +71,7 @@ const updateSource = (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Check if the source  exists
-  const sourceExists = db.find({ database: data.databaseOrPath, type: data.type }, (err, docs) => {
+  const sourceExists = db.find({ databaseOrPath: data.database, type: data.type }, (err, docs) => {
     if (err) {
       return { error: 1, message: 'Error adding source', data: [] }
     }
@@ -95,7 +108,7 @@ const deleteSource = (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Check if the source  exists
-  const sourceExists = db.find({ database: data.databaseOrPath, type: data.type }, (err, docs) => {
+  const sourceExists = db.find({ databaseOrPath: data.database, type: data.type }, (err, docs) => {
     if (err) {
       return { error: 1, message: 'Error adding source', data: [] }
     }
