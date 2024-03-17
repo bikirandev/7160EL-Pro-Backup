@@ -1,18 +1,17 @@
 const Datastore = require('nedb')
+const fs = require('fs')
 const { findAll, remove, create } = require('../Models/Sources/SourcesOperation')
+const ApiReply = require('../ApiReply')
 const dStoreSources = './Data/nedb_sources.db'
+const db = new Datastore({ filename: dStoreSources, autoload: true })
 
 // type: 'mssql-win', 'mssql-host', 'directory'
 // data = {id: '', type: '', databaseOrPath: '', host: '', user: '', password: '', directory: ''  }
 
 // Get Lists of Sources
 const getSources = async (ev, data) => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
-
   const sources = await findAll(db, {})
-  console.log('sources', sources)
-
-  return sources
+  ev.reply(ApiReply.sourceListReply, sources)
 }
 
 // Add a new Source
@@ -39,7 +38,9 @@ const addSource = async (ev, data) => {
   })
 
   ev.reply('message', newSource.message)
-  return newSource
+
+  const sources = await findAll(db, {})
+  ev.reply(ApiReply.sourceListReply, sources)
 }
 
 // Update a Source

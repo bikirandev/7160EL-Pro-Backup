@@ -5,22 +5,22 @@ if (electron && electron.ipcRenderer) {
   const { contextBridge, ipcRenderer } = electron
 
   const apiRegistry = require('./ApiRegistry')
+  const apiReply = require('./ApiReply')
   const obj = {}
 
   const keys = Object.keys(apiRegistry)
   keys.forEach((key) => {
     // Sender
     obj[key] = (data) => ipcRenderer.send(key, data)
+  })
 
-    // On Receiver
-    obj[key + 'ReplyOn'] = (fn) => {
-      ipcRenderer.on(key + 'ReplyOn', fn)
-    }
+  const replyKeys = Object.keys(apiReply)
+  replyKeys.forEach((key) => {
+    // Receiver
+    obj[key] = (fn) => ipcRenderer.on(key, fn)
 
-    // Off Receiver
-    obj[key + 'ReplyOff'] = () => {
-      ipcRenderer.removeAllListeners(key + 'ReplyOn')
-    }
+    // Off Sender
+    obj[key + 'Off'] = () => ipcRenderer.removeAllListeners(key)
   })
 
   // Message Sender
