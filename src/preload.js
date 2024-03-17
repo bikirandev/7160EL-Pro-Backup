@@ -27,6 +27,9 @@ if (electron && electron.ipcRenderer) {
   obj.messageOn = (fn) => ipcRenderer.on('message', fn)
   obj.messageOff = () => ipcRenderer.removeAllListeners('message')
 
+  obj.actionOn = (fn) => ipcRenderer.on('action', fn)
+  obj.actionOff = () => ipcRenderer.removeAllListeners('action')
+
   contextBridge.exposeInMainWorld('electronAPI', obj)
 } else {
   console.error('ipcRenderer is not available')

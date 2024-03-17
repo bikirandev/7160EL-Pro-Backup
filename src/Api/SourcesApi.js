@@ -23,7 +23,8 @@ const addSource = async (ev, data) => {
 
   // Check if the source already exists
   if (sourceExists.data.length > 0) {
-    ev.reply('message', 'Source already exists')
+    //ev.reply('message', 'Source already exists')
+    ev.reply('action', { error: 1, message: 'Source already exists', data: [] })
     return { error: 1, message: 'Source already exists', data: [] }
   }
 
