@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const createWindow = require('./utils/createWindow')
 const apiRegistry = require('./ApiRegistry')
+const { api } = require('./Api/Api')
 
 const regKeys = Object.keys(apiRegistry)
 
@@ -11,6 +12,9 @@ app
     regKeys.forEach((key, index) => {
       ipcMain.on(key, apiRegistry[key])
     })
+
+    //--Common
+    ipcMain.on('cSender', api)
 
     // --Creating Window // it returns win
     createWindow({ BrowserWindow, shell })

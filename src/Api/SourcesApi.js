@@ -16,6 +16,7 @@ const getSources = async (ev, data) => {
 
 // Add a new Source
 const addSource = async (ev, data) => {
+  console.log('addSource', data)
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Collect if the source already exists
@@ -42,6 +43,29 @@ const addSource = async (ev, data) => {
 
   const sources = await findAll(db, {})
   ev.reply(ApiReply.sourceListReply, sources)
+}
+
+// Add a new Source
+const addSourceNew = async (data) => {
+  // Collect if the source already exists
+  const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
+
+  // Check if the source already exists
+  if (sourceExists.data.length > 0) {
+    return { error: 1, message: 'Source already exists', data: [] }
+  }
+
+  // create the new source to the database if it doesn't exist (databaseOrPath and type)
+  const newSource = await create(db, {
+    type: data.type,
+    databaseOrPath: data.database,
+    host: data.host,
+    user: data.user,
+    password: data.password,
+    directory: data.directory,
+  })
+
+  return newSource
 }
 
 // Update a Source
@@ -92,6 +116,7 @@ const deleteSource = async (ev, data) => {
 module.exports = {
   getSources,
   addSource,
+  addSourceNew,
   updateSource,
   deleteSource,
 }

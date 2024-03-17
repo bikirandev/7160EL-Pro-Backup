@@ -30,6 +30,11 @@ if (electron && electron.ipcRenderer) {
   obj.actionOn = (fn) => ipcRenderer.on('action', fn)
   obj.actionOff = () => ipcRenderer.removeAllListeners('action')
 
+  //--Common Sender & Receiver
+  obj.cSend = (data) => ipcRenderer.send('cSender', data)
+  obj.cReceive = (fn) => ipcRenderer.on('cReceiver', fn)
+  obj.cReceiveOff = () => ipcRenderer.removeAllListeners('cReceiver')
+
   contextBridge.exposeInMainWorld('electronAPI', obj)
 } else {
   console.error('ipcRenderer is not available')
