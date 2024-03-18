@@ -1,0 +1,34 @@
+const exec = require('child_process').exec
+const fs = require('fs')
+const path = require('path')
+
+const backupPath = 'C:'
+
+function getDateString() {
+  const d = new Date()
+  return `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)}_${('0' + d.getHours()).slice(-2)}-${('0' + d.getMinutes()).slice(-2)}-${('0' + d.getSeconds()).slice(-2)}`
+}
+
+function backup() {
+  const fileName = `database_backup_${getDateString()}.bak`
+  const filePath = path.join(backupPath, fileName)
+  const command = `sqlcmd -S localhost -E -Q "BACKUP DATABASE Bishojit TO DISK='${filePath}'"`
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error backing up database: ${stderr}`)
+    } else {
+      //console.log(`stdout: ${stdout}`)
+      //console.log(`Database backup saved to ${backupPath}\\${fileName}`)
+
+      // is file exist
+      if (fs.existsSync(filePath)) {
+        console.log('Done')
+      } else {
+        console.log('Error')
+      }
+    }
+  })
+}
+
+backup()

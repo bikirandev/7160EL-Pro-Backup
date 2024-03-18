@@ -1,16 +1,18 @@
 const findAll = (db, findBy) => {
   return new Promise((resolve, reject) => {
-    db.find(findBy, (err, docs) => {
-      // db.close()
+    try {
+      db.find(findBy, (err, docs) => {
+        // Error handling
+        if (err) {
+          resolve({ error: 1, message: 'Error adding source', data: [] })
+        }
 
-      // Error handling
-      if (err) {
-        resolve({ error: 1, message: 'Error adding source', data: [] })
-      }
-
-      // Resolve
-      resolve({ error: 0, message: 'List of Sources', data: docs })
-    })
+        // Resolve
+        resolve({ error: 0, message: 'List of Sources', data: docs })
+      })
+    } catch (e) {
+      resolve({ error: 1, message: 'Error adding source', data: [] })
+    }
   })
 }
 

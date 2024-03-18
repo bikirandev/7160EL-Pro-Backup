@@ -1,5 +1,6 @@
 const Datastore = require('nedb')
-const { findAll, remove, create } = require('../Models/Sources/SourcesOperation')
+const { findAll, remove, create } = require('../Models/Sources/SourcesDbOperation')
+const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
 const dStoreSources = './Data/nedb_sources.db'
 
 // type: 'mssql-win', 'mssql-host', 'directory'
@@ -17,6 +18,12 @@ const getSources = async (ev, data) => {
 // Add a new Source
 const addSource = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
+
+  // Validate
+  const validate = await validateMssqlWin(data.databaseOrPath)
+
+  console.log('validate', validate)
+  return validate
 
   // Collect if the source already exists
   const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
