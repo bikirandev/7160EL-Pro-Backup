@@ -1,7 +1,7 @@
-const { shell } = require("electron");
+const { shell } = require('electron')
 
-const openLink= (ev,link) =>{
-    shell.openExternal(link);
+const openLink = (ev, link) => {
+  shell.openExternal(link)
 }
 
-module.exports = openLink;
+module.exports = openLink
