@@ -1,7 +1,6 @@
 const Datastore = require('nedb')
 const fs = require('fs')
 const { findAll, remove, create } = require('../Models/Sources/SourcesOperation')
-const ApiReply = require('../ApiReply')
 const dStoreSources = './Data/nedb_sources.db'
 const db = new Datastore({ filename: dStoreSources, autoload: true })
 
@@ -11,7 +10,8 @@ const db = new Datastore({ filename: dStoreSources, autoload: true })
 // Get Lists of Sources
 const getSources = async (ev, data) => {
   const sources = await findAll(db, {})
-  ev.reply(ApiReply.sourceListReply, sources)
+
+  return sources
 }
 
 // Add a new Source
@@ -24,8 +24,6 @@ const addSource = async (ev, data) => {
 
   // Check if the source already exists
   if (sourceExists.data.length > 0) {
-    //ev.reply('message', 'Source already exists')
-    ev.reply('action', { error: 1, message: 'Source already exists', data: [] })
     return { error: 1, message: 'Source already exists', data: [] }
   }
 
@@ -39,10 +37,7 @@ const addSource = async (ev, data) => {
     directory: data.directory,
   })
 
-  ev.reply('message', newSource.message)
-
-  const sources = await findAll(db, {})
-  ev.reply(ApiReply.sourceListReply, sources)
+  return newSource
 }
 
 // Add a new Source

@@ -10,11 +10,8 @@ app
   .whenReady()
   .then(() => {
     regKeys.forEach((key, index) => {
-      ipcMain.on(key, apiRegistry[key])
+      ipcMain.handle(key, apiRegistry[key])
     })
-
-    //--Common
-    ipcMain.on('cSender', api)
 
     // --Creating Window // it returns win
     createWindow({ BrowserWindow, shell })
