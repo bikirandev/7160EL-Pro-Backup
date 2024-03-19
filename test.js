@@ -1,6 +1,7 @@
 const exec = require('child_process').exec
 const fs = require('fs')
 const path = require('path')
+const { backupMssql } = require('./src/Models/BackupLocal/BackupLocal')
 
 const backupPath = 'C:'
 
@@ -9,6 +10,7 @@ function getDateString() {
   return `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)}_${('0' + d.getHours()).slice(-2)}-${('0' + d.getMinutes()).slice(-2)}-${('0' + d.getSeconds()).slice(-2)}`
 }
 
+// eslint-disable-next-line no-unused-vars
 function backup() {
   const fileName = `database_backup_${getDateString()}.bak`
   const filePath = path.join(backupPath, fileName)
@@ -32,4 +34,6 @@ function backup() {
   })
 }
 
-backup()
+//backup()
+
+backupMssql({ database: 'Bishojit', localDir: 'D:' })
