@@ -4,9 +4,9 @@ const Execute = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        reject(stderr)
+        reject(stderr || stdout)
       } else {
-        resolve({ error, stdout, stderr })
+        resolve({ error: 0, message: 'output of [exec]', data: { error, stdout, stderr } })
       }
     })
   })

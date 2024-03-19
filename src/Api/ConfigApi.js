@@ -1,10 +1,12 @@
 const Datastore = require('nedb')
 const dStoreSources = './Data/nedb_configs.db'
 
-CONF_BACKUP_DIR = 'backupDir'
+const CONF_BACKUP_DIR = 'backupDir'
 
-const getConfigs = async (ev, date) => {
+const getConfigs = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
+
+  console.log(ev, data, db)
 
   return {
     error: 0,
@@ -18,5 +20,12 @@ const getConfigs = async (ev, date) => {
 const fixBackupDir = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
+  console.log(ev, data, db)
+
   console.log('addBackupDir')
+}
+
+module.exports = {
+  getConfigs,
+  fixBackupDir,
 }

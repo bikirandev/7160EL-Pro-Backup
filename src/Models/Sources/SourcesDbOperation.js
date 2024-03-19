@@ -4,7 +4,7 @@ const findAll = (db, findBy) => {
       db.find(findBy, (err, docs) => {
         // Error handling
         if (err) {
-          resolve({ error: 1, message: 'Error on finding Sources', data: [] })
+          reject(new Error('Error on finding Sources'))
         }
 
         // Resolve
@@ -19,11 +19,9 @@ const findAll = (db, findBy) => {
 const create = (db, data) => {
   return new Promise((resolve, reject) => {
     db.insert(data, (err, newDoc) => {
-      // db.close()
-
       // Error handling
       if (err) {
-        resolve({ error: 1, message: 'Error adding source', data: [] })
+        reject(new Error('Error adding source'))
       }
 
       // Resolve
@@ -35,11 +33,9 @@ const create = (db, data) => {
 const update = (db, id, data) => {
   return new Promise((resolve, reject) => {
     db.update({ _id: id }, { $set: data }, {}, (err, numReplaced) => {
-      // db.close()
-
       // Error handling
       if (err) {
-        resolve({ error: 1, message: 'Error updating source', data: [] })
+        reject(new Error('Error updating source'))
       }
 
       // Resolve
@@ -51,11 +47,9 @@ const update = (db, id, data) => {
 const remove = (db, id) => {
   return new Promise((resolve, reject) => {
     db.remove({ _id: id }, {}, (err, numRemoved) => {
-      // db.close()
-
       // Error handling
       if (err) {
-        resolve({ error: 1, message: 'Error deleting source', data: [] })
+        reject(new Error('Error deleting source'))
       }
 
       // Resolve

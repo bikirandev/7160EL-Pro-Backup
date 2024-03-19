@@ -9,21 +9,27 @@ function getDateString() {
 }
 
 const backupMssql = async ({ database, localDir }) => {
-  // FS Operation
-  const filename = `mssql_${database}_${getDateString()}.bak`
+  try {
+    // FS Operation
+    const filename = `mssql_${database}_${getDateString()}.bak`
 
-  const backupPath = path.join(localDir, filename)
+    const backupPath = path.join(localDir, filename)
 
-  // SQL
-  const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
+    // SQL
+    const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
 
-  // Command
-  const command = `sqlcmd -S localhost -E -Q "${sql}"`
+    // Command
+    const command = `sqlcmd -S localhost -E -Q "${sql}"`
+    //console.log('command', command)
 
-  // Execute
-  const result = await Execute(command)
+    // Execute
+    const result = await Execute(command)
+    console.log(result)
 
-  console.log(result)
+    console.log('++')
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 module.exports = {

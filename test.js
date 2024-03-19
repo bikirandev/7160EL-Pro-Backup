@@ -17,7 +17,8 @@ function backup() {
   const command = `sqlcmd -S localhost -E -Q "BACKUP DATABASE Bishojit TO DISK='${filePath}'"`
   console.log('command', command)
 
-  exec(command, (error, stdout, stderr) => {
+  // , stdout, stderr
+  exec(command, (error) => {
     if (error) {
       console.error(`Error backing up database: ${error}`)
     } else {
@@ -36,4 +37,4 @@ function backup() {
 
 //backup()
 
-backupMssql({ database: 'Bishojit', localDir: 'D:' })
+backupMssql({ database: 'Bishojit', localDir: '/Users/bishojit/Downloads/' })
