@@ -13,10 +13,11 @@ function backup() {
   const fileName = `database_backup_${getDateString()}.bak`
   const filePath = path.join(backupPath, fileName)
   const command = `sqlcmd -S localhost -E -Q "BACKUP DATABASE Bishojit TO DISK='${filePath}'"`
+  console.log('command', command)
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
-      console.error(`Error backing up database: ${stderr}`)
+      console.error(`Error backing up database: ${error}`)
     } else {
       //console.log(`stdout: ${stdout}`)
       //console.log(`Database backup saved to ${backupPath}\\${fileName}`)

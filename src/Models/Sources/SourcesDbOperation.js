@@ -4,14 +4,14 @@ const findAll = (db, findBy) => {
       db.find(findBy, (err, docs) => {
         // Error handling
         if (err) {
-          resolve({ error: 1, message: 'Error adding source', data: [] })
+          resolve({ error: 1, message: 'Error on finding Sources', data: [] })
         }
 
         // Resolve
         resolve({ error: 0, message: 'List of Sources', data: docs })
       })
     } catch (e) {
-      resolve({ error: 1, message: 'Error adding source', data: [] })
+      resolve({ error: 1, message: 'Error on finding Sources', data: [] })
     }
   })
 }
