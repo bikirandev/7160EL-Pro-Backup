@@ -1,3 +1,4 @@
+const { BrowserWindow, dialog } = require('electron')
 const {
   getDestinations,
   addDestination,
@@ -14,12 +15,20 @@ const closeWindow = (ev, data) => {
   // app.quit();
 }
 
-const minimizeWindow = (ev, data) => {
+const minimizeWindow = () => {
   const focusedWindow = BrowserWindow.getFocusedWindow()
   if (focusedWindow) {
     focusedWindow.minimize()
   }
 }
+
+
+// Open Directory Dialog
+const openDirectoryDialog = async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+  return result.filePaths[0]
+}
+
 
 module.exports = {
   closeWindow,
@@ -37,4 +46,6 @@ module.exports = {
 
   //open link in external browser
   openLink,
+
+  openDirectoryDialog,
 }
