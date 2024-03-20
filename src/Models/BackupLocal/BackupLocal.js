@@ -2,6 +2,7 @@
 //const fs = require('fs')
 const path = require('path')
 const Execute = require('../../utils/Execute')
+const mssql = require('mssql')
 
 function getDateString() {
   const d = new Date()
@@ -32,6 +33,49 @@ const backupMssql = async ({ database, localDir }) => {
   }
 }
 
+const backupMssqlHost = async (host, username, password, database, localDir) => {
+  try {
+    // FS Operation
+    const filename = `mssql_${database}_${getDateString()}.bak`
+
+    const backupPath = path.join(localDir, filename)
+
+    // SQL
+    const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
+    //console.log('sql', sql)
+
+    // SQL Connection Config
+    const connection = {
+      server: host,
+      database: database,
+      user: username,
+      password: password,
+
+      options: {
+        encrypt: true, // Use this if you're on Windows Azure
+        trustServerCertificate: true, // Trust self-signed certificate
+        servername: 'server-44.bikiran.net', // Use the actual hostname here
+      },
+      parseJSON: true,
+    }
+
+    // SQL Connection
+    const sqlConnection = await mssql.connect(connection)
+    // console.log('sqlConnection', sqlConnection)
+
+    // Execute
+    const result = await sqlConnection.query(sql)
+    console.log('result', result)
+
+    console.log('++')
+  } catch (err) {
+    console.log(err)
+  }
+
+  return
+}
+
 module.exports = {
   backupMssql,
+  backupMssqlHost,
 }

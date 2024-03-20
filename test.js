@@ -1,7 +1,7 @@
 const exec = require('child_process').exec
 const fs = require('fs')
 const path = require('path')
-const { backupMssql } = require('./src/Models/BackupLocal/BackupLocal')
+const { backupMssqlHost } = require('./src/Models/BackupLocal/BackupLocal')
 
 const backupPath = 'C:'
 
@@ -37,4 +37,12 @@ function backup() {
 
 //backup()
 
-backupMssql({ database: 'Bishojit', localDir: '/Users/bishojit/Downloads/' })
+//backupMssql({ database: 'Bishojit', localDir: '/Users/bishojit/Downloads/' })
+
+backupMssqlHost(
+  'localhost',
+  'bishojit2',
+  'Nilachol1234#',
+  'Bishojit',
+  'C:\\Users\\Administrator\\Downloads\\Test',
+)
