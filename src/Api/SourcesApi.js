@@ -1,5 +1,5 @@
 const Datastore = require('nedb')
-const { findAll, remove, create } = require('../Models/Sources/SourcesDbOperation')
+const { findAll, remove, create, update } = require('../Models/Sources/SourcesDbOperation')
 // eslint-disable-next-line no-unused-vars
 const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
 const dStoreSources = './Data/nedb_sources.db'
@@ -46,12 +46,13 @@ const addSource = async (ev, data) => {
 
 // Update a Source
 const updateSource = async (ev, data) => {
+  // Create a new instance of the database
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Collect if the source already exists
-  const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
-  console.log('sourceExists', sourceExists)
+  const sourceExists = await findAll(db, { _id: data._id, type: data.type })
 
+ // Check if the source already exists
   if (sourceExists.data.length === 0) {
     return { error: 1, message: 'Source does not exist', data: [] }
   }
@@ -60,11 +61,10 @@ const updateSource = async (ev, data) => {
   const nData = sourceExists.data[0]
 
   // Update the source
-  const updatedSource = await db.update(db, nData._id, {
+  const updatedSource = await update(db, nData._id, {
     ...nData,
     ...data,
   })
-  console.log('updatedSource', updatedSource)
 
   return updatedSource
 }
