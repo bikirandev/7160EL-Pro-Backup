@@ -70,21 +70,22 @@ const updateSource = async (ev, data) => {
 }
 
 const deleteSource = async (ev, data) => {
+  // Create a new instance of the database
   const db = new Datastore({ filename: dStoreSources, autoload: true })
 
   // Collect if the source already exists
-  const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
-  console.log('sourceExists', sourceExists)
+  const sourceExists = await findAll(db, { _id: data._id, type: data.type })
 
+  // Check if the source already exists
   if (sourceExists.data.length === 0) {
     return { error: 1, message: 'Source does not exist', data: [] }
   }
 
+  // id of the source
   const id = sourceExists.data[0]._id
 
   // delete the source in the database
   const deletedSource = await remove(db, id)
-  console.log('deletedSource', deletedSource)
 
   return deletedSource
 }
