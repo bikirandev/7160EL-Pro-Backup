@@ -16,6 +16,14 @@ const getSources = async () => {
   return sources
 }
 
+const getDefaultDirectory = async () => {
+  const db = new Datastore({ filename: dStoreSources, autoload: true })
+
+  const sources = await findAll(db, { type: 'default-directory' })
+
+  return sources
+}
+
 // Add a new Source
 const addSource = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
@@ -95,4 +103,5 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
+  getDefaultDirectory
 }
