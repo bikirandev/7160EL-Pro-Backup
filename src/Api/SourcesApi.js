@@ -1,3 +1,4 @@
+const { validateMssqlWinData, mssqlDataPattern } = require('../Models/Sources/SourcesValidate')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -29,12 +30,19 @@ const getSources = async () => {
 // Add a new Source
 const addSource = async (ev, data) => {
   const hash = generateHash()
+  const nData = { ...data, ...mssqlDataPattern }
 
   // Check if database and _id already exists
   const exData = await getAllDocuments(DB_SOURCE)
-  const ex = exData.find((x) => x.databaseOrPath === data.database || x._id === hash)
+  const ex = exData.find((x) => x.databaseOrPath === nData.database || x._id === hash)
   if (ex) {
     return { error: 1, message: 'Database already exists', data: [] }
+  }
+
+  // Data Validation
+  const validate = validateMssqlWinData(nData)
+  if (validate.error === 1) {
+    return validate
   }
 
   try {

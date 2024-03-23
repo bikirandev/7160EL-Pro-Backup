@@ -1,5 +1,3 @@
-const { findAll } = require('../Models/Sources/SourcesDbOperation')
-
 const CONF_BACKUP_DIR = 'backupDir'
 
 const getConfigs = async (ev, data) => {
@@ -25,11 +23,11 @@ const fixBackupDir = async (ev, data) => {
 }
 
 const getDefaultDirectory = async () => {
-  const db = null
+  // const db = null
 
-  const sources = await findAll(db, { type: 'default-directory' })
+  // const sources = await findAll(db, { type: 'default-directory' })
 
-  return sources
+  return null
 }
 
 module.exports = {
