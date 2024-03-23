@@ -9,7 +9,7 @@ const sourceDataPattern = {
   operation: '',
 }
 
-const types = {
+const sourceTypes = {
   TYPE_MSSQL_WIN: 'mssql-win',
   TYPE_MSSQL_HOST: 'mssql-host',
   TYPE_PGSQL: 'pgsql',
@@ -127,7 +127,7 @@ const validateDirectory = (data) => {
 }
 
 const validateType = (data) => {
-  const nTypes = Object.values(types)
+  const nTypes = Object.values(sourceTypes)
   if (!nTypes.includes(data.type)) {
     return { error: 1, message: 'Type is not valid', data: [] }
   }
@@ -137,7 +137,7 @@ const validateType = (data) => {
 
 // Export
 module.exports = {
-  types,
+  sourceTypes,
   sourceDataPattern,
   validateMssqlWin,
   validateMssqlWinData,
