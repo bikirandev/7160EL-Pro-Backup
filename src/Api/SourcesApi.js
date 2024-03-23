@@ -1,11 +1,12 @@
-const crypto = require('crypto')
 const {
   getAllDocuments,
   DB_SOURCE,
   createDocument,
   deleteDocument,
   updateDocument,
+  generateHash,
 } = require('../utils/PouchDbTools')
+
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
 
@@ -27,9 +28,16 @@ const getSources = async () => {
 
 // Add a new Source
 const addSource = async (ev, data) => {
-  try {
-    const hash = crypto.createHash('md5').update(data.database).digest('hex')
+  const hash = generateHash()
 
+  // Check if database and _id already exists
+  const exData = await getAllDocuments(DB_SOURCE)
+  const ex = exData.find((x) => x.databaseOrPath === data.database || x._id === hash)
+  if (ex) {
+    return { error: 1, message: 'Database already exists', data: [] }
+  }
+
+  try {
     const nData = {
       _id: hash,
       type: data.type,
@@ -49,7 +57,19 @@ const addSource = async (ev, data) => {
 
 // Update a Source
 const updateSource = async (ev, data) => {
-  console.log('S Data:', data)
+  // Check if database already exists
+  const exData = await getAllDocuments(DB_SOURCE)
+  const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
+  if (exDbName) {
+    return { error: 1, message: 'Source already exists', data: [] }
+  }
+
+  // Check if _id not exists
+  const exId = exData.find((x) => x._id === data._id)
+  if (!exId) {
+    return { error: 1, message: 'Source not exists', data: [] }
+  }
+
   try {
     const nData = {
       _id: data._id,
@@ -70,8 +90,17 @@ const updateSource = async (ev, data) => {
 }
 
 const deleteSource = async (ev, data) => {
+  // Check if database and _id already exists
+  const exData = await getAllDocuments(DB_SOURCE)
+
+  // Check if _id not exists
+  const exId = exData.find((x) => x._id === data._id)
+  if (!exId) {
+    return { error: 1, message: 'Source not exists', data: [] }
+  }
+
   try {
-    const result = await deleteDocument(DB_SOURCE, data.id)
+    const result = await deleteDocument(DB_SOURCE, data._id)
 
     return { error: 0, message: 'Source deleted', data: result }
   } catch (e) {
