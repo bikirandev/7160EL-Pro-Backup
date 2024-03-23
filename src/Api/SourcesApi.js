@@ -1,93 +1,82 @@
-const Datastore = require('nedb')
-const { findAll, remove, create, update } = require('../Models/Sources/SourcesDbOperation')
+const crypto = require('crypto')
+const {
+  getAllDocuments,
+  DB_SOURCE,
+  createDocument,
+  deleteDocument,
+  updateDocument,
+} = require('../utils/PouchDbTools')
 // eslint-disable-next-line no-unused-vars
-const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
-const dStoreSources = './Data/nedb_sources.db'
+//const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
 
+// ## Note
 // type: 'mssql-win', 'mssql-host', 'directory'
 // data = {id: '', type: '', databaseOrPath: '', host: '', user: '', password: '', directory: ''  }
 
 // Get Lists of Sources // ev, data
 const getSources = async () => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  try {
+    const data = await getAllDocuments(DB_SOURCE)
+    console.log('Data:', data)
 
-  const sources = await findAll(db, {})
-
-  return sources
+    return { error: 0, message: 'List of Sources', data: data }
+  } catch (e) {
+    return { error: 1, message: 'Error on finding Sources', data: [] }
+  }
 }
 
 // Add a new Source
 const addSource = async (ev, data) => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  try {
+    const hash = crypto.createHash('md5').update(data.database).digest('hex')
 
-  // Validate
-  //const validate = await validateMssqlWin(data.databaseOrPath)
+    const nData = {
+      _id: hash,
+      type: data.type,
+      databaseOrPath: data.database,
+      host: data.host,
+      user: data.user,
+      password: data.password,
+      directory: data.directory,
+    }
 
-  // Collect if the source already exists
-  const sourceExists = await findAll(db, { databaseOrPath: data.database, type: data.type })
-
-  // Check if the source already exists
-  if (sourceExists.data.length > 0) {
-    return { error: 1, message: 'Source already exists', data: [] }
+    const result = await createDocument(DB_SOURCE, nData)
+    return { error: 0, message: 'Source added', data: result }
+  } catch (e) {
+    return { error: 1, message: 'Error on adding Source', data: [] }
   }
-
-  // create the new source to the database if it doesn't exist (databaseOrPath and type)
-  const newSource = await create(db, {
-    type: data.type,
-    databaseOrPath: data.database,
-    host: data.host,
-    user: data.user,
-    password: data.password,
-    directory: data.directory,
-  })
-
-  return newSource
 }
 
 // Update a Source
 const updateSource = async (ev, data) => {
-  // Create a new instance of the database
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  console.log('S Data:', data)
+  try {
+    const nData = {
+      _id: data._id,
+      type: data.type,
+      databaseOrPath: data.databaseOrPath,
+      host: data.host,
+      user: data.user,
+      password: data.password,
+      directory: data.directory,
+    }
 
-  // Collect if the source already exists
-  const sourceExists = await findAll(db, { _id: data._id, type: data.type })
+    const result = await updateDocument(DB_SOURCE, data._id, nData)
 
-  // Check if the source already exists
-  if (sourceExists.data.length === 0) {
-    return { error: 1, message: 'Source does not exist', data: [] }
+    return { error: 0, message: 'Source updated', data: result }
+  } catch (e) {
+    return { error: 1, message: 'Error on updating Source', data: [] }
   }
-
-  // id of the source
-  const nData = sourceExists.data[0]
-
-  // Update the source
-  const updatedSource = await update(db, nData._id, {
-    ...nData,
-    ...data,
-  })
-
-  return updatedSource
 }
 
 const deleteSource = async (ev, data) => {
-  // Create a new instance of the database
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  try {
+    const result = await deleteDocument(DB_SOURCE, data.id)
 
-  // Collect if the source already exists
-  const sourceExists = await findAll(db, { _id: data._id, type: data.type })
-
-  // Check if the source already exists
-  if (sourceExists.data.length === 0) {
-    return { error: 1, message: 'Source does not exist', data: [] }
+    return { error: 0, message: 'Source deleted', data: result }
+  } catch (e) {
+    return { error: 1, message: 'Error on deleting Source', data: [] }
   }
-
-  // id of the source
-  const id = sourceExists.data[0]._id
-
-  // delete the source in the database
-  const deletedSource = await remove(db, id)
-
-  return deletedSource
 }
 
 module.exports = {

@@ -28,3 +28,4 @@ dist
 .yarn/install-state.gz
 nedb_sources.db
 test.js
+/Data/db_*

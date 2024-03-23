@@ -1,11 +1,9 @@
-const Datastore = require('nedb')
 const { findAll } = require('../Models/Sources/SourcesDbOperation')
-const dStoreSources = './Data/nedb_configs.db'
 
 const CONF_BACKUP_DIR = 'backupDir'
 
 const getConfigs = async (ev, data) => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  const db = null
 
   console.log(ev, data, db)
 
@@ -19,7 +17,7 @@ const getConfigs = async (ev, data) => {
 }
 
 const fixBackupDir = async (ev, data) => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  const db = null
 
   console.log(ev, data, db)
 
@@ -27,7 +25,7 @@ const fixBackupDir = async (ev, data) => {
 }
 
 const getDefaultDirectory = async () => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
+  const db = null
 
   const sources = await findAll(db, { type: 'default-directory' })
 
