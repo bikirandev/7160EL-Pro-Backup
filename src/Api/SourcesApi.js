@@ -1,4 +1,11 @@
-const { validateMssqlWinData, mssqlDataPattern } = require('../Models/Sources/SourcesValidate')
+const {
+  validateMssqlWinData,
+  mssqlDataPattern,
+  validateMssqlHostData,
+  validatePgsqlData,
+  validateDirectory,
+  validateType,
+} = require('../Models/Sources/SourcesValidate')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -7,6 +14,7 @@ const {
   updateDocument,
   generateHash,
 } = require('../utils/PouchDbTools')
+const { validateAll } = require('../utils/Validate')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -40,7 +48,13 @@ const addSource = async (ev, data) => {
   }
 
   // Data Validation
-  const validate = validateMssqlWinData(nData)
+  const validate = validateAll([
+    validateType(nData),
+    validateMssqlWinData(nData),
+    validateMssqlHostData(nData),
+    validatePgsqlData(nData),
+    validateDirectory(nData),
+  ])
   if (validate.error === 1) {
     return validate
   }
@@ -49,11 +63,11 @@ const addSource = async (ev, data) => {
     const nData = {
       _id: hash,
       type: data.type,
-      databaseOrPath: data.database,
+      operation: data.operation,
+      databaseOrPath: data.databaseOrPath,
       host: data.host,
       user: data.user,
       password: data.password,
-      directory: data.directory,
     }
 
     const result = await createDocument(DB_SOURCE, nData)
