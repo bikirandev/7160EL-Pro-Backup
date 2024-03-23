@@ -14,7 +14,7 @@ const validateMssqlWin = (dbName) => {
     mssql.connect(config, (err) => {
       console.log(err)
       if (err) {
-        resolve({ error: 1, message: 'Error connecting to the database', data: [] })
+        reject('Error connecting to the database')
       } else {
         resolve({ error: 0, message: 'Connection to the database successful', data: [] })
       }

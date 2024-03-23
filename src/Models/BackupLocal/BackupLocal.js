@@ -61,7 +61,6 @@ const backupMssqlHost = async (host, username, password, database, localDir) => 
 
     // SQL Connection
     const sqlConnection = await mssql.connect(connection)
-    // console.log('sqlConnection', sqlConnection)
 
     // Execute
     const result = await sqlConnection.query(sql)
