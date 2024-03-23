@@ -16,14 +16,6 @@ const getSources = async () => {
   return sources
 }
 
-const getDefaultDirectory = async () => {
-  const db = new Datastore({ filename: dStoreSources, autoload: true })
-
-  const sources = await findAll(db, { type: 'default-directory' })
-
-  return sources
-}
-
 // Add a new Source
 const addSource = async (ev, data) => {
   const db = new Datastore({ filename: dStoreSources, autoload: true })
@@ -60,7 +52,7 @@ const updateSource = async (ev, data) => {
   // Collect if the source already exists
   const sourceExists = await findAll(db, { _id: data._id, type: data.type })
 
- // Check if the source already exists
+  // Check if the source already exists
   if (sourceExists.data.length === 0) {
     return { error: 1, message: 'Source does not exist', data: [] }
   }
@@ -103,5 +95,4 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
-  getDefaultDirectory
 }

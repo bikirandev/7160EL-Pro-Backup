@@ -5,8 +5,9 @@ const {
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const { getSources, addSource, updateSource, deleteSource, getDefaultDirectory } = require('./Api/SourcesApi')
+const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
+const { getDefaultDirectory } = require('./Api/ConfigApi')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -22,13 +23,11 @@ const minimizeWindow = () => {
   }
 }
 
-
 // Open Directory Dialog
 const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   return result.filePaths[0]
 }
-
 
 module.exports = {
   closeWindow,
@@ -38,7 +37,6 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
-  getDefaultDirectory,
 
   getDestinations,
   addDestination,
@@ -48,5 +46,6 @@ module.exports = {
   //open link in external browser
   openLink,
 
+  getDefaultDirectory,
   openDirectoryDialog,
 }
