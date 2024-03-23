@@ -1,6 +1,6 @@
 const mssql = require('mssql')
 
-const mssqlDataPattern = {
+const sourceDataPattern = {
   type: '',
   host: 'localhost',
   databaseOrPath: '',
@@ -138,7 +138,7 @@ const validateType = (data) => {
 // Export
 module.exports = {
   types,
-  mssqlDataPattern,
+  sourceDataPattern,
   validateMssqlWin,
   validateMssqlWinData,
   validateMssqlHostData,

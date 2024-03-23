@@ -1,6 +1,6 @@
 const {
   validateMssqlWinData,
-  mssqlDataPattern,
+  sourceDataPattern,
   validateMssqlHostData,
   validatePgsqlData,
   validateDirectory,
@@ -38,7 +38,7 @@ const getSources = async () => {
 // Add a new Source
 const addSource = async (ev, data) => {
   const hash = generateHash()
-  const nData = { ...data, ...mssqlDataPattern }
+  const nData = { ...data, ...sourceDataPattern }
 
   // Check if database and _id already exists
   const exData = await getAllDocuments(DB_SOURCE)
