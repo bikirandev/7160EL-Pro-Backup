@@ -1,10 +1,10 @@
 const Execute = require('../../utils/Execute')
+const mssql = require('mssql')
 
-const mssqlExec = async (data, backupPath) => {
-  console.log('MSSQL Exec:', data)
+const mssqlWinExec = async (data, backupPath) => {
   const database = data.databaseOrPath
 
-  if (data.type !== 'mssql-win') {
+  if (data.type !== 'mssql-win' && data.operation !== 'exec') {
     return { error: 0, message: 'Skipped', data: [] }
   }
 
@@ -36,11 +36,46 @@ const mssqlExec = async (data, backupPath) => {
   }
 }
 
-const mssqlConnect = async (data) => {
-  console.log('MSSQL Connect:', data)
+const mssqlWinConnect = async (data, backupPath) => {
+  const database = data.databaseOrPath
+  console.log('backupPath', backupPath)
+
+  if (data.type !== 'mssql-win' && data.operation !== 'mssql-connection') {
+    return { error: 0, message: 'Skipped', data: [] }
+  }
+
+  mssql.connect({
+    server: 'localhost',
+    database: database,
+    options: {
+      trustedConnection: true,
+    },
+  })
+
+  try {
+    const pool = await mssql.connect()
+    const result = await pool.request().query('SELECT 1')
+    console.log('result', result)
+    return { error: 0, message: 'Connected', data: result }
+  } catch (e) {
+    console.log('Error on MSSQL Connection', e)
+    return { error: 1, message: 'Error on MSSQL Connection', data: [] }
+  }
 }
 
+const mssqlWinDemo = async (data, backupPath) => {
+  const database = data.databaseOrPath
+  console.log('database', database)
+  console.log('backupPath', backupPath)
+
+  if (data.type !== 'mssql-win' && data.operation !== 'mssql-demo') {
+    return { error: 0, message: 'Skipped', data: [] }
+  }
+
+  return { error: 0, message: 'Demo', data: [] }
+}
 module.exports = {
-  mssqlExec,
-  mssqlConnect,
+  mssqlWinExec,
+  mssqlWinConnect,
+  mssqlWinDemo,
 }

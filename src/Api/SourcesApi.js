@@ -6,7 +6,11 @@ const {
   validateDirectory,
   validateType,
 } = require('../Models/Sources/SourcesDataValidate')
-const { mssqlExec } = require('../Models/Sources/SourcesExecution')
+const {
+  mssqlWinExec,
+  mssqlWinConnect,
+  mssqlWinDemo,
+} = require('../Models/Sources/SourcesExecution')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -39,6 +43,7 @@ const getSources = async () => {
 
 // Add a new Source
 const addSource = async (ev, data) => {
+  console.log('Add Source:', data)
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
   const backupPath = path.join(`C:`, 'abc.bak')
@@ -57,7 +62,9 @@ const addSource = async (ev, data) => {
     validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
     validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
     validateDirectory(nData), // Validate Directory Data, if type is directory
-    await mssqlExec(nData, backupPath), // Validate MSSQL-Win Connection
+    await mssqlWinExec(nData, backupPath), // Validate MSSQL-Win exec Connection
+    await mssqlWinConnect(nData, backupPath), // Validate MSSQL-Win connect Connection
+    await mssqlWinDemo(nData, backupPath), // Validate MSSQL-Win demo Connection
   ])
   if (validate.error === 1) {
     return validate
