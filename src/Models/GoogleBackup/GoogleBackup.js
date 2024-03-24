@@ -1,8 +1,9 @@
 const values = require('../../../Default/DefaultValue')
 var { Storage } = require('@google-cloud/storage')
+var path = require('path')
 
 const backupToBucket = async (filePath, remoteDir = 'backup', gzip = false) => {
-  const fileName = filePath.split('\\').pop()
+  const fileName = path.basename(filePath)
   const destination = `${remoteDir}/${fileName}`
   try {
     const storage = new Storage({

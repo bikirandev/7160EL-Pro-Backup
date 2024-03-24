@@ -46,7 +46,6 @@ const addSource = async (ev, data) => {
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
   const backupPath = await generateFilePath(nData)
-  console.log('backupPath', backupPath)
 
   if (!backupPath) {
     return { error: 1, message: 'Error on Default Backup Path', data: [] }
@@ -96,6 +95,13 @@ const addSource = async (ev, data) => {
 
 // Update a Source
 const updateSource = async (ev, data) => {
+  const nData = { ...sourceDataPattern, ...data }
+
+  const backupPath = await generateFilePath(nData)
+  if (!backupPath) {
+    return { error: 1, message: 'Error on Default Backup Path', data: [] }
+  }
+
   // Check if database already exists
   const exData = await getAllDocuments(DB_SOURCE)
   const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
@@ -109,17 +115,24 @@ const updateSource = async (ev, data) => {
     return { error: 1, message: 'Source not exists', data: [] }
   }
 
-  try {
-    const nData = {
-      _id: data._id,
-      type: data.type,
-      databaseOrPath: data.databaseOrPath,
-      host: data.host,
-      user: data.user,
-      password: data.password,
-      directory: data.directory,
-    }
+  const validationPerms = [
+    validateType(nData), // Validate Type
+    validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+    validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+    validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+    validateDirectory(nData), // Validate Directory Data, if type is directory
+    await mssqlWinExec(nData, backupPath), // Validate MSSQL-Win exec Connection
+    await mssqlWinConnect(nData, backupPath), // Validate MSSQL-Win connect Connection
+    await mssqlWinDemo(nData, backupPath), // Validate MSSQL-Win demo Connection
+  ]
 
+  // Data Validation
+  const validate = validateAll(validationPerms)
+  if (validate.error === 1) {
+    return validate
+  }
+
+  try {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: 'Source updated', data: result }
