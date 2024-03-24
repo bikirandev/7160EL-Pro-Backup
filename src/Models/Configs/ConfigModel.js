@@ -41,7 +41,7 @@ const generateFilePath = (data) => {
   const fileName = `${data.type}_${data.databaseOrPath}_${year}${month}${day}_${hour}${minute}${second}.bak`
 
   // File Path
-  return path.join(getDefaultDirectory(), fileName)
+  return path.join(getDefaultDirectory().data.value, fileName)
 }
 
 module.exports = {
