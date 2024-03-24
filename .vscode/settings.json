@@ -4,5 +4,15 @@
 
   "files.eol": "\r\n",
   "eslint.validate": ["javascript"],
-  "cSpell.words": ["autoload", "Bikiran", "Bishojit", "nsis", "Pgsql", "sqlcmd", "zklib"]
+  "cSpell.words": [
+    "autoload",
+    "Bikiran",
+    "Bishojit",
+    "gcloud",
+    "GDRIVE",
+    "nsis",
+    "Pgsql",
+    "sqlcmd",
+    "zklib"
+  ]
 }

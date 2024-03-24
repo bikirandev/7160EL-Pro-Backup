@@ -46,6 +46,7 @@ const addSource = async (ev, data) => {
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
   const backupPath = generateFilePath(nData)
+  console.log('backupPath', backupPath)
 
   if (!backupPath) {
     return { error: 1, message: 'Error on Default Backup Path', data: [] }
