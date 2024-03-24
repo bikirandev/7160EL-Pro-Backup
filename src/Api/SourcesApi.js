@@ -46,11 +46,11 @@ const addSource = async (ev, data) => {
   console.log('Add Source:', data)
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
-  const backupPath = path.join(`C:`, 'abc.bak')
+  const backupPath = path.join(`D:`, 'abc.bak')
 
   // Check if database and _id already exists
   const exData = await getAllDocuments(DB_SOURCE)
-  const ex = exData.find((x) => x.databaseOrPath === nData.database || x._id === hash)
+  const ex = exData.find((x) => x.databaseOrPath === nData.databaseOrPath || x._id === hash)
   if (ex) {
     return { error: 1, message: 'Database already exists', data: [] }
   }

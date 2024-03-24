@@ -4,7 +4,7 @@ const mssql = require('mssql')
 const mssqlWinExec = async (data, backupPath) => {
   const database = data.databaseOrPath
 
-  if (data.type !== 'mssql-win' && data.operation !== 'exec') {
+  if (data.type !== 'mssql-win' || data.operation !== 'exec') {
     return { error: 0, message: 'Skipped', data: [] }
   }
 
@@ -40,7 +40,7 @@ const mssqlWinConnect = async (data, backupPath) => {
   const database = data.databaseOrPath
   console.log('backupPath', backupPath)
 
-  if (data.type !== 'mssql-win' && data.operation !== 'mssql-connection') {
+  if (data.type !== 'mssql-win' || data.operation !== 'mssql-connection') {
     return { error: 0, message: 'Skipped', data: [] }
   }
 
@@ -68,7 +68,7 @@ const mssqlWinDemo = async (data, backupPath) => {
   console.log('database', database)
   console.log('backupPath', backupPath)
 
-  if (data.type !== 'mssql-win' && data.operation !== 'mssql-demo') {
+  if (data.type !== 'mssql-win' || data.operation !== 'mssql-demo') {
     return { error: 0, message: 'Skipped', data: [] }
   }
 
