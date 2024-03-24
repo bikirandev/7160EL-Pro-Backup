@@ -1,3 +1,4 @@
+const { generateFilePath } = require('../Models/Configs/ConfigModel')
 const {
   validateMssqlWinData,
   sourceDataPattern,
@@ -20,7 +21,6 @@ const {
   generateHash,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
-const path = require('path')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -43,10 +43,13 @@ const getSources = async () => {
 
 // Add a new Source
 const addSource = async (ev, data) => {
-  console.log('Add Source:', data)
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
-  const backupPath = path.join(`D:`, 'abc.bak')
+  const backupPath = generateFilePath(nData)
+
+  if (!backupPath) {
+    return { error: 1, message: 'Error on Default Backup Path', data: [] }
+  }
 
   // Check if database and _id already exists
   const exData = await getAllDocuments(DB_SOURCE)
