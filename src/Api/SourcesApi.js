@@ -5,7 +5,8 @@ const {
   validatePgsqlData,
   validateDirectory,
   validateType,
-} = require('../Models/Sources/SourcesValidate')
+} = require('../Models/Sources/SourcesDataValidate')
+const { mssqlExec } = require('../Models/Sources/SourcesExecution')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -15,6 +16,7 @@ const {
   generateHash,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
+const path = require('path')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -27,7 +29,7 @@ const { validateAll } = require('../utils/Validate')
 const getSources = async () => {
   try {
     const data = await getAllDocuments(DB_SOURCE)
-    console.log('Data:', data)
+    //console.log('Data:', data)
 
     return { error: 0, message: 'List of Sources', data: data }
   } catch (e) {
@@ -38,7 +40,8 @@ const getSources = async () => {
 // Add a new Source
 const addSource = async (ev, data) => {
   const hash = generateHash()
-  const nData = { ...data, ...sourceDataPattern }
+  const nData = { ...sourceDataPattern, ...data }
+  const backupPath = path.join(`C:`, 'abc.bak')
 
   // Check if database and _id already exists
   const exData = await getAllDocuments(DB_SOURCE)
@@ -49,11 +52,12 @@ const addSource = async (ev, data) => {
 
   // Data Validation
   const validate = validateAll([
-    validateType(nData),
-    validateMssqlWinData(nData),
-    validateMssqlHostData(nData),
-    validatePgsqlData(nData),
-    validateDirectory(nData),
+    validateType(nData), // Validate Type
+    validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+    validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+    validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+    validateDirectory(nData), // Validate Directory Data, if type is directory
+    await mssqlExec(nData, backupPath), // Validate MSSQL-Win Connection
   ])
   if (validate.error === 1) {
     return validate

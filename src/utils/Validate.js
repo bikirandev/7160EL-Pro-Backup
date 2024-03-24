@@ -6,7 +6,7 @@ const validateAll = (values = []) => {
     }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'All Verification Passed', data: [] }
 }
 
 module.exports = {
