@@ -45,7 +45,7 @@ const getSources = async () => {
 const addSource = async (ev, data) => {
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data }
-  const backupPath = generateFilePath(nData)
+  const backupPath = await generateFilePath(nData)
   console.log('backupPath', backupPath)
 
   if (!backupPath) {
@@ -59,8 +59,7 @@ const addSource = async (ev, data) => {
     return { error: 1, message: 'Database already exists', data: [] }
   }
 
-  // Data Validation
-  const validate = validateAll([
+  const validationPerms = [
     validateType(nData), // Validate Type
     validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
     validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
@@ -69,7 +68,10 @@ const addSource = async (ev, data) => {
     await mssqlWinExec(nData, backupPath), // Validate MSSQL-Win exec Connection
     await mssqlWinConnect(nData, backupPath), // Validate MSSQL-Win connect Connection
     await mssqlWinDemo(nData, backupPath), // Validate MSSQL-Win demo Connection
-  ])
+  ]
+
+  // Data Validation
+  const validate = validateAll(validationPerms)
   if (validate.error === 1) {
     return validate
   }

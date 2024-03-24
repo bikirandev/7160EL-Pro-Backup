@@ -22,7 +22,7 @@ const getDefaultDirectory = async () => {
   }
 }
 
-const generateFilePath = (data) => {
+const generateFilePath = async (data) => {
   const date = new Date()
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -32,7 +32,7 @@ const generateFilePath = (data) => {
   const second = date.getSeconds()
 
   // Default Directory
-  const defaultDirectory = getDefaultDirectory()
+  const defaultDirectory = await getDefaultDirectory()
   if (defaultDirectory.error !== 0) {
     return null
   }
@@ -41,7 +41,7 @@ const generateFilePath = (data) => {
   const fileName = `${data.type}_${data.databaseOrPath}_${year}${month}${day}_${hour}${minute}${second}.bak`
 
   // File Path
-  return path.join(getDefaultDirectory().data.value, fileName)
+  return path.join(defaultDirectory.data.value, fileName)
 }
 
 module.exports = {

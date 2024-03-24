@@ -29,6 +29,11 @@ const mssqlWinExec = async (data, backupPath) => {
       return { error: 1, message: msg, data: [] }
     }
 
+    if (stdout.includes('Incorrect syntax near the keyword')) {
+      const msg = stdout.split('\n')[1]?.replace('\r', '') || 'Incorrect syntax near the keyword'
+      return { error: 1, message: msg, data: [] }
+    }
+
     return result
   } catch (e) {
     console.log('Error on MSSQL Connection', e)
