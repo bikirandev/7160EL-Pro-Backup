@@ -8,6 +8,7 @@ const {
 const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs } = require('./Api/ConfigApi')
+const { getDefaultDirectory } = require('./Models/Configs/ConfigModel')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -29,7 +30,7 @@ const openDirectoryDialog = async () => {
   return result.filePaths[0]
 }
 
-getConfigs
+getDefaultDirectory
 
 module.exports = {
   closeWindow,
@@ -47,7 +48,8 @@ module.exports = {
 
   //open link in external browser
   openLink,
+  openDirectoryDialog,
 
   getConfigs,
-  openDirectoryDialog,
+  getDefaultDirectory,
 }
