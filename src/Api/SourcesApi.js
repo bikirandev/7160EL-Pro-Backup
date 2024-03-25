@@ -46,7 +46,7 @@ const getSources = async () => {
 // Add a new Source
 const addSource = async (ev, data) => {
   const hash = generateHash()
-  const nData = { ...sourceDataPattern, ...data }
+  const nData = { ...sourceDataPattern, ...data, _id: hash }
   const backupPath = await generateFilePath(nData)
 
   if (!backupPath) {
@@ -78,16 +78,6 @@ const addSource = async (ev, data) => {
   }
 
   try {
-    const nData = {
-      _id: hash,
-      type: data.type,
-      operation: data.operation,
-      databaseOrPath: data.databaseOrPath,
-      host: data.host,
-      user: data.user,
-      password: data.password,
-    }
-
     const result = await createDocument(DB_SOURCE, nData)
     return { error: 0, message: 'Source added', data: result }
   } catch (e) {
@@ -228,28 +218,38 @@ const linkDestination = async (ev, data) => {
 
 // force backup
 const forceBackup = async (ev, id) => {
-  // Step-1: Get source configuration
-  const sourceData = await getDocument(DB_SOURCE, id)
-  console.log('Source Data:', sourceData)
+  try {
+    // Step-1: Get source configuration
+    const sourceData = await getDocument(DB_SOURCE, id)
+    if (!sourceData) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+    console.log('Source Data:', sourceData)
 
-  // Step-2: Collect backup path
-  const backupPath = await generateFilePath(sourceData)
-  console.log('Backup Path:', backupPath)
+    // Step-2: Collect backup path
+    const backupPath = await generateFilePath(sourceData)
+    if (!backupPath) {
+      return { error: 1, message: 'Error on Default Backup Path', data: [] }
+    }
 
-  const destinationId = sourceData.destinationId
-  console.log('Destination ID:', destinationId)
+    const destinationId = sourceData.destinationId
+    console.log('Destination ID:', destinationId)
 
-  // Step-2: Collect destination configuration
-  const destinationData = getDestination(destinationId)
-  console.log('Destination Data:', destinationData)
+    // Step-2: Collect destination configuration
+    const destinationData = getDestination(destinationId)
+    console.log('Destination Data:', destinationData)
 
-  // Step-4: Execute backup
-  const backupSt = validateAll([mssqlWinExec(sourceData, backupPath)])
-  console.log('Backup Status:', backupSt)
+    // Step-4: Execute backup
+    const backupSt = validateAll([mssqlWinExec(sourceData, backupPath)])
+    console.log('Backup Status:', backupSt)
+  } catch (e) {
+    console.log('Error on force backup:', e)
+    return { error: 1, message: 'Error on force backup', data: [] }
+  }
 
   // Step-5: Upload to destination
 
-  return 'OK'
+  return { error: 0, message: 'Backup Done', data: [] }
 }
 
 module.exports = {
