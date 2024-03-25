@@ -180,8 +180,8 @@ const backupAction = async (ev, data) => {
       user: data.user,
       password: data.password,
       directory: data.directory,
-      destination: data.destination,
       running: data.running,
+      destination: data.destination
     }
 
     const result = await updateDocument(DB_SOURCE, data._id, nData)
@@ -212,6 +212,7 @@ const linkDestination = async (ev, data) => {
       user: data.user,
       password: data.password,
       directory: data.directory,
+      running: data.running,
       destination: data.destination,
     }
 
@@ -223,6 +224,16 @@ const linkDestination = async (ev, data) => {
   }
 }
 
+// force backup
+const forceBackup = async (ev, id) => {
+  if(id){
+    return { error: 0, message: 'Success', data: id }
+  }else{
+    return { error: 1, message: 'Error', data: [] }
+  }
+}
+
+
 module.exports = {
   getSources,
   addSource,
@@ -230,4 +241,5 @@ module.exports = {
   deleteSource,
   backupAction,
   linkDestination,
+  forceBackup
 }

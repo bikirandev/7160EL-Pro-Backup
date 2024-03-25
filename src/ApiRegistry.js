@@ -5,7 +5,7 @@ const {
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const { getSources, addSource, updateSource, deleteSource, backupAction, linkDestination } = require('./Api/SourcesApi')
+const { getSources, addSource, updateSource, deleteSource, backupAction, linkDestination, forceBackup } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 
@@ -22,7 +22,6 @@ const minimizeWindow = () => {
     focusedWindow.minimize()
   }
 }
-
 // Open Directory Dialog
 const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
@@ -42,6 +41,7 @@ module.exports = {
 
   //backup process
   backupAction,
+  forceBackup,
 
 
   getDestinations,
