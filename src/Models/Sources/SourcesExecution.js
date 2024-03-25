@@ -4,7 +4,9 @@ const path = require('path')
 const fs = require('fs')
 const fse = require('fs-extra')
 const tar = require('tar')
+//const ncp = require('ncp').ncp
 const { generateFilePath } = require('../Configs/ConfigModel')
+const { copySourceToTemp } = require('../FileBackup/FileBackup')
 
 const mssqlWinExec = async (data) => {
   const database = data.databaseOrPath
@@ -49,37 +51,42 @@ const mssqlWinExec = async (data) => {
   }
 }
 
-const mssqlWinConnect = async (data, backupPath) => {
+const mssqlWinConnect = async (data) => {
   const database = data.databaseOrPath
-  console.log('backupPath', backupPath)
 
   if (data.type !== 'mssql-win' || data.operation !== 'mssql-connection') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: {}, skipped: true }
   }
 
-  mssql.connect({
-    server: 'localhost',
-    database: database,
-    options: {
-      trustedConnection: true,
-    },
-  })
+  const { defDirPath, fileName } = await generateFilePath(data)
+  const backupPath = path.join(defDirPath, fileName)
+  if (!backupPath) {
+    return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
+  }
 
   try {
+    mssql.connect({
+      server: 'localhost',
+      database: database,
+      options: {
+        trustedConnection: true,
+      },
+    })
+
     const pool = await mssql.connect()
     const result = await pool.request().query('SELECT 1')
+
     console.log('result', result)
-    return { error: 0, message: 'Connected', data: result }
+    return { error: 0, message: 'Connected', data: { ...result, backupPath }, skipped: false }
   } catch (e) {
     console.log('Error on MSSQL Connection', e)
-    return { error: 1, message: 'Error on MSSQL Connection', data: [] }
+    return { error: 1, message: 'Error on MSSQL Connection', data: {}, skipped: false }
   }
 }
 
-const mssqlWinDemo = async (data, backupPath) => {
+const mssqlWinDemo = async (data) => {
   const database = data.databaseOrPath
   console.log('database', database)
-  console.log('backupPath', backupPath)
 
   if (data.type !== 'mssql-win' || data.operation !== 'mssql-demo') {
     return { error: 0, message: 'Skipped', data: [] }
@@ -104,8 +111,8 @@ const directoryBackup = async (data) => {
       fse.ensureDirSync(tempPath)
     }
 
-    // copy file from source to temp
-    await fse.copy(sourcePath, tempPath, { overwrite: true })
+    await copySourceToTemp(sourcePath, tempPath)
+    console.log('Copy Done----1')
 
     // create tar file of temp directory
     const tarPath = path.join(defDirPath, dirName + '.tar')

@@ -1,34 +1,35 @@
-const fs = require('fs')
-const fse = require('fs-extra')
-const zlib = require('zlib')
+const ncp = require('ncp').ncp
 
 // Function to copy directory to temp folder
-const copyDirToTemp = async (sourceDir) => {
-  const tempDir = './temp' // Temporary directory path
-  await fse.ensureDir(tempDir) // Ensure the temp directory exists
-  await fse.emptyDir(tempDir) // Clear the temp directory if it exists
+const copySourceToTemp = async (sourcePath, tempPath) => {
+  // copy file from source to temp
+  let copiedSize = 0
+  await ncp(
+    sourcePath,
+    tempPath,
+    {
+      clobber: true,
+      transform: function (read, write, file) {
+        const totalSize = file.size
+        read.on('data', function (chunk) {
+          copiedSize += chunk.length
+          console.log(`Copy progress: ${((copiedSize / totalSize) * 100).toFixed(2)}%`)
+        })
+        read.pipe(write)
+      },
+    },
+    function (err) {
+      if (err) {
+        console.error(err)
+        return
+      }
+      console.log('Copy complete!')
+    },
+  )
 
-  // Copy the source directory to the temp directory
-  await fse.copy(sourceDir, tempDir)
-
-  return tempDir
-}
-
-const dirBackup = async (dirPath) => {
-  const file = fs.createReadStream(dirPath)
-  const gzip = zlib.createGzip()
-  const compressedFile = `${dirPath}.gz`
-  const fileStream = fs.createWriteStream(compressedFile)
-
-  file.pipe(gzip).pipe(fileStream)
-
-  await new Promise((resolve, reject) => {
-    fileStream.on('finish', resolve)
-    fileStream.on('error', reject)
-  })
+  console.log('Copy Done')
 }
 
 module.exports = {
-  copyDirToTemp,
-  dirBackup,
+  copySourceToTemp,
 }

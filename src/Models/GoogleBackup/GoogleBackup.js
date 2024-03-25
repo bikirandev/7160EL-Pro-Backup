@@ -36,8 +36,11 @@ const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip =
     writeStream.on('error', (err) => {
       console.log('Backup failed', err)
     })
+
+    return { error: 0, message: 'Backup successful', data: {} }
   } catch (err) {
     console.log('Backup failed', err)
+    return { error: 1, message: 'Backup failed', data: {} }
   }
 }
 
