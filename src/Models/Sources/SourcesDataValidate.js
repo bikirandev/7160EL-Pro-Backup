@@ -12,6 +12,8 @@ const sourceDataPattern = {
   frequency: defaultValues.frequency,
   backupQuantity: defaultValues.backupQuantity,
   backupRetention: defaultValues.backupRetention,
+  autostart: true,
+  manualStop: false,
 }
 
 const sourceTypes = {
