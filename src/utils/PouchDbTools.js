@@ -19,6 +19,21 @@ const getAllDocuments = (dbName) => {
     })
 }
 
+const getDocument = (dbName, id) => {
+  const dbPath = path.join('./Data', dbName)
+  const localDB = new PouchDb(dbPath)
+
+  return localDB
+    .get(id)
+    .then((doc) => {
+      return doc
+    })
+    .catch((err) => {
+      console.error('Error getting document:', err)
+      throw err
+    })
+}
+
 // Add new Document
 const createDocument = (dbName, data) => {
   const dbPath = path.join('./Data', dbName)
@@ -82,6 +97,7 @@ module.exports = {
   DB_DESTINATION: 'db_destinations',
   DB_CONFIG: 'db_config',
   getAllDocuments,
+  getDocument,
   createDocument,
   updateDocument,
   deleteDocument,

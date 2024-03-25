@@ -1,4 +1,5 @@
 const { generateFilePath } = require('../Models/Configs/ConfigModel')
+const { getDestination } = require('../Models/Destinations/DestinationModel')
 const {
   validateMssqlWinData,
   sourceDataPattern,
@@ -19,6 +20,7 @@ const {
   deleteDocument,
   updateDocument,
   generateHash,
+  getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 
@@ -181,7 +183,7 @@ const backupAction = async (ev, data) => {
       password: data.password,
       directory: data.directory,
       running: data.running,
-      destination: data.destination
+      destination: data.destination,
     }
 
     const result = await updateDocument(DB_SOURCE, data._id, nData)
@@ -226,13 +228,27 @@ const linkDestination = async (ev, data) => {
 
 // force backup
 const forceBackup = async (ev, id) => {
-  if(id){
-    return { error: 0, message: 'Success', data: id }
-  }else{
-    return { error: 1, message: 'Error', data: [] }
-  }
-}
+  // Step-1: Collect backup path
+  const backupPath = await generateFilePath(id)
+  console.log('Backup Path:', backupPath)
 
+  // Step-1: Get source configuration
+  const sourceData = await getDocument(DB_SOURCE, id)
+  console.log('Source Data:', sourceData)
+
+  const destinationId = sourceData.destinationId
+  console.log('Destination ID:', destinationId)
+
+  // Step-2: Collect destination configuration
+  const destinationData = getDestination(destinationId)
+  console.log('Destination Data:', destinationData)
+
+  // Step-4: Execute backup
+  const backupSt = validateAll([mssqlWinExec(sourceData, backupPath)])
+  console.log('Backup Status:', backupSt)
+
+  // Step-5: Upload to destination
+}
 
 module.exports = {
   getSources,
@@ -241,5 +257,5 @@ module.exports = {
   deleteSource,
   backupAction,
   linkDestination,
-  forceBackup
+  forceBackup,
 }

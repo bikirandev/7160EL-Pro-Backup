@@ -21,13 +21,10 @@ const backupMssql = async ({ database, localDir }) => {
 
     // Command
     const command = `sqlcmd -S localhost -E -Q "${sql}"`
-    //console.log('command', command)
 
     // Execute
     const result = await Execute(command)
     console.log(result)
-
-    console.log('++')
   } catch (err) {
     console.log(err)
   }

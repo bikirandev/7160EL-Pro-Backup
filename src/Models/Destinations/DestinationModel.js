@@ -1,10 +1,13 @@
+const defaultValues = require('../../../Default/DefaultValue')
+const { getDocument, DB_DESTINATION } = require('../../utils/PouchDbTools')
+
 const destinationPattern = {
-  type: '', // gcloud-bucket, google-drive, aws-s3, dropbox
-  title: '', // Name of the destination
+  type: '',
+  title: '',
+  location: '',
+  projectId: '',
+  keyFilename: '',
   bucket: '',
-  folder: '',
-  accessKey: '',
-  secretKey: '',
 }
 
 const destinationTypes = {
@@ -44,8 +47,20 @@ const verifyGcloudData = (data) => {
   return { error: 0, message: 'Data is valid', data: [] }
 }
 
+const getDestination = async (id) => {
+  if (id === 'default' || !id) {
+    // Collect Default Destination
+    return defaultValues.destinations[0]
+  }
+
+  // Collect Destination by ID
+  const destination = await getDocument(DB_DESTINATION, id)
+  return destination
+}
+
 module.exports = {
   destinationPattern,
   destinationTypes,
   verifyGcloudData,
+  getDestination,
 }

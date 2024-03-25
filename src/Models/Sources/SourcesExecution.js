@@ -14,13 +14,10 @@ const mssqlWinExec = async (data, backupPath) => {
 
     // Command
     const command = `sqlcmd -S localhost -E -Q "${sql}"`
-    //console.log('command', command)
 
     // Execute
     const result = await Execute(command)
     const stdout = result?.data?.stdout || ''
-
-    console.log(stdout)
 
     // Check if error
     if (stdout.includes('BACKUP DATABASE is terminating abnormally')) {
