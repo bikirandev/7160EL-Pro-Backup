@@ -1,4 +1,5 @@
 const mssql = require('mssql')
+const defaultValues = require('../../Default/DefaultValue')
 
 const sourceDataPattern = {
   type: '',
@@ -7,6 +8,9 @@ const sourceDataPattern = {
   user: '',
   password: '',
   operation: '',
+  frequency: defaultValues.frequency,
+  backupQuantity: defaultValues.backupQuantity,
+  backupRetention: defaultValues.backupRetention,
 }
 
 const sourceTypes = {

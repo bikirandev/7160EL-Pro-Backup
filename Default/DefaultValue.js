@@ -9,6 +9,9 @@ const values = {
       bucket: 'sea-resources-group',
     },
   ],
+  frequency: 'hourly',
+  backupQuantity: 100,
+  backupRetention: 30, // days
 }
 
 module.exports = values
