@@ -4,7 +4,7 @@ const ncp = require('ncp').ncp
 const copySourceToTemp = async (sourcePath, tempPath) => {
   // copy file from source to temp
   let copiedSize = 0
-  await ncp(
+  ncp(
     sourcePath,
     tempPath,
     {
@@ -13,6 +13,7 @@ const copySourceToTemp = async (sourcePath, tempPath) => {
         const totalSize = file.size
         read.on('data', function (chunk) {
           copiedSize += chunk.length
+          console.log({ copiedSize, totalSize })
           console.log(`Copy progress: ${((copiedSize / totalSize) * 100).toFixed(2)}%`)
         })
         read.pipe(write)

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
-const { backupToBucket } = require('../Models/GoogleBackup/GoogleBackup')
+const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
 const {
   validateMssqlWinData,
   sourceDataPattern,
@@ -243,7 +243,7 @@ const forceBackup = async (ev, id) => {
     console.log('Backup Path:', backupPath)
 
     // Step-5: Upload to destination
-    await backupToBucket(
+    await backupToBucket2(
       backupPath,
       destConfig,
       `${sourceData.type}/${sourceData.databaseOrPath}`,

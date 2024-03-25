@@ -6,7 +6,6 @@ const fse = require('fs-extra')
 const tar = require('tar')
 //const ncp = require('ncp').ncp
 const { generateFilePath } = require('../Configs/ConfigModel')
-const { copySourceToTemp } = require('../FileBackup/FileBackup')
 
 const mssqlWinExec = async (data) => {
   const database = data.databaseOrPath
@@ -111,8 +110,8 @@ const directoryBackup = async (data) => {
       fse.ensureDirSync(tempPath)
     }
 
-    await copySourceToTemp(sourcePath, tempPath)
-    console.log('Copy Done----1')
+    // copy file from source to temp
+    await fse.copy(sourcePath, tempPath, { overwrite: true })
 
     // create tar file of temp directory
     const tarPath = path.join(defDirPath, dirName + '.tar')
