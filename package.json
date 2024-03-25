@@ -17,7 +17,7 @@
   },
   "build": {
     "productName": "pro-backup",
-    "appId": "com.pro-backup.app",
+    "appId": "com.bikiran.pro-backup",
     "win": {
       "target": "nsis",
       "requestedExecutionLevel": "highestAvailable",
