@@ -1,3 +1,4 @@
+const path = require('path')
 const { generateFilePath } = require('../Models/Configs/ConfigModel')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket } = require('../Models/GoogleBackup/GoogleBackup')
@@ -48,7 +49,8 @@ const getSources = async () => {
 const addSource = async (ev, data) => {
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data, _id: hash }
-  const backupPath = await generateFilePath(nData)
+  const { defDirPath, fileName } = await generateFilePath(nData)
+  const backupPath = path.join(defDirPath, fileName)
 
   if (!backupPath) {
     return { error: 1, message: 'Error on Default Backup Path', data: [] }
@@ -90,7 +92,8 @@ const addSource = async (ev, data) => {
 const updateSource = async (ev, data) => {
   const nData = { ...sourceDataPattern, ...data }
 
-  const backupPath = await generateFilePath(nData)
+  const { defDirPath, fileName } = await generateFilePath(nData)
+  const backupPath = path.join(defDirPath, fileName)
   if (!backupPath) {
     return { error: 1, message: 'Error on Default Backup Path', data: [] }
   }
@@ -227,7 +230,8 @@ const forceBackup = async (ev, id) => {
     }
 
     // Step-2: Collect backup path
-    const backupPath = await generateFilePath(sourceData)
+    const { defDirPath, fileName } = await generateFilePath(sourceData)
+    const backupPath = path.join(defDirPath, fileName)
     if (!backupPath) {
       return { error: 1, message: 'Error on Default Backup Path', data: [] }
     }
