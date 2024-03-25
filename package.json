@@ -20,6 +20,8 @@
     "appId": "com.pro-backup.app",
     "win": {
       "target": "nsis",
+      "requestedExecutionLevel": "highestAvailable",
+      "startupShortcut": "true",
       "icon": "./src/assets/Backup.png"
     },
     "mac": {
