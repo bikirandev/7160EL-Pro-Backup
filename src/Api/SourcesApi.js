@@ -25,6 +25,7 @@ const {
   getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
+const { addTask, getRunningTasks, startTask } = require('../Models/Tasks/TasksModel')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -211,7 +212,7 @@ const linkDestination = async (ev, data) => {
 }
 
 // force backup
-const forceBackup = async (ev, id) => {
+const forceBackup2 = async (ev, id) => {
   try {
     // Step-1: Get source configuration
     const sourceData = await getDocument(DB_SOURCE, id)
@@ -238,9 +239,7 @@ const forceBackup = async (ev, id) => {
     if (backupSt.error === 1) {
       return backupSt
     }
-    console.log('Backup Status:', backupSt)
     const backupPath = backupSt.data.backupPath
-    console.log('Backup Path:', backupPath)
 
     // Step-5: Upload to destination
     await backupToBucket2(
@@ -249,17 +248,23 @@ const forceBackup = async (ev, id) => {
       `${sourceData.type}/${sourceData.databaseOrPath}`,
       false,
     )
-    console.log('Backup Done')
 
     // Step-6: Remove local file
     await fs.unlinkSync(backupPath)
-    console.log('Local File Removed')
 
     return { error: 0, message: 'Backup successful', data: {} }
   } catch (e) {
-    console.log('Error on force backup:', e)
+    // console.log('Error on force backup:', e)
     return { error: 1, message: 'Error on force backup', data: [] }
   }
+}
+
+const forceBackup = async (ev, id) => {
+  addTask(id, forceBackup2)
+  startTask(id)
+
+  const st = getRunningTasks()
+  console.log('Running Tasks:', st)
 }
 
 module.exports = {
