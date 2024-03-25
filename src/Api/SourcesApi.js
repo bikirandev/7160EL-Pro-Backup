@@ -180,6 +180,7 @@ const backupAction = async (ev, data) => {
       user: data.user,
       password: data.password,
       directory: data.directory,
+      destination: data.destination,
       running: data.running,
     }
 
@@ -191,6 +192,37 @@ const backupAction = async (ev, data) => {
   }
 }
 
+// API for link destination to source
+const linkDestination = async (ev, data) => {
+  // Check if database already exists
+  const exData = await getAllDocuments(DB_SOURCE)
+
+  // Check if _id not exists
+  const exId = exData.find((x) => x._id === data._id)
+  if (!exId) {
+    return { error: 1, message: 'Source not exists', data: [] }
+  }
+
+  try {
+    const nData = {
+      _id: data._id,
+      type: data.type,
+      databaseOrPath: data.databaseOrPath,
+      host: data.host,
+      user: data.user,
+      password: data.password,
+      directory: data.directory,
+      destination: data.destination,
+    }
+
+    const result = await updateDocument(DB_SOURCE, data._id, nData)
+
+    return { error: 0, message: 'Destination linked', data: result }
+  } catch (e) {
+    return { error: 1, message: 'Error on linking destination', data: [] }
+  }
+}
+
 
 
 
@@ -199,5 +231,6 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
-  backupAction
+  backupAction,
+  linkDestination
 }
