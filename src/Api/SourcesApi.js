@@ -223,14 +223,11 @@ const linkDestination = async (ev, data) => {
   }
 }
 
-
-
-
 module.exports = {
   getSources,
   addSource,
   updateSource,
   deleteSource,
   backupAction,
-  linkDestination
+  linkDestination,
 }

@@ -8,6 +8,7 @@ const sourceDataPattern = {
   user: '',
   password: '',
   operation: '',
+  destinationId: 'default', // default or destinationId
   frequency: defaultValues.frequency,
   backupQuantity: defaultValues.backupQuantity,
   backupRetention: defaultValues.backupRetention,
