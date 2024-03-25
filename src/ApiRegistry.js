@@ -5,7 +5,7 @@ const {
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
+const { getSources, addSource, updateSource, deleteSource, backupAction } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 
@@ -37,6 +37,10 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
+
+  //backup process
+  backupAction,
+
 
   getDestinations,
   addDestination,
