@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const { generateFilePath } = require('../Models/Configs/ConfigModel')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket } = require('../Models/GoogleBackup/GoogleBackup')
@@ -14,6 +15,7 @@ const {
   mssqlWinExec,
   mssqlWinConnect,
   mssqlWinDemo,
+  directoryBackup,
 } = require('../Models/Sources/SourcesExecution')
 const {
   getAllDocuments,
@@ -229,13 +231,6 @@ const forceBackup = async (ev, id) => {
       return { error: 1, message: 'Source not exists', data: [] }
     }
 
-    // Step-2: Collect backup path
-    const { defDirPath, fileName } = await generateFilePath(sourceData)
-    const backupPath = path.join(defDirPath, fileName)
-    if (!backupPath) {
-      return { error: 1, message: 'Error on Default Backup Path', data: [] }
-    }
-
     const destinationId = sourceData.destinationId
     if (!destinationId) {
       return { error: 1, message: 'Destination not linked', data: [] }
@@ -248,19 +243,27 @@ const forceBackup = async (ev, id) => {
     }
 
     // Step-4: Execute backup
-    const backupSt = validateAll([await mssqlWinExec(sourceData, backupPath)])
+    const backupSt = validateAll([
+      await mssqlWinExec(sourceData),
+      await directoryBackup(sourceData),
+    ])
     if (backupSt.error === 1) {
       return backupSt
     }
+    console.log('Backup Status:', backupSt)
+    const backupPath = backupSt.data.backupPath
+    console.log('Backup Path:', backupPath)
 
     // Step-5: Upload to destination
-    const uploadSt = await backupToBucket(
+    await backupToBucket(
       backupPath,
       destConfig,
       `${sourceData.type}/${sourceData.databaseOrPath}`,
       false,
     )
-    console.log('Upload Status:', uploadSt)
+
+    // Step-6: Remove local file
+    await fs.unlinkSync(backupPath)
 
     return { error: 0, message: 'Backup successful', data: {} }
   } catch (e) {

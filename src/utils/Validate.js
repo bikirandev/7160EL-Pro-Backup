@@ -2,11 +2,20 @@ const validateAll = (values = []) => {
   for (let i = 0; i < values.length; i++) {
     const data = values[i]
     if (data.error !== 0) {
+      console.log('Validation Error:', data)
       return data
     }
   }
 
-  return { error: 0, message: 'All Verification Passed', data: [] }
+  for (let i = 0; i < values.length; i++) {
+    const data = values[i]
+    if (data.error === 0 && data.skipped === false) {
+      console.log('Validation Passed:', data)
+      return data
+    }
+  }
+
+  return { error: 0, message: 'All Verification Passed', data: null }
 }
 
 module.exports = {
