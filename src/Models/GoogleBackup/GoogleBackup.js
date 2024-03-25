@@ -1,17 +1,16 @@
-const values = require('../../../Default/DefaultValue')
 var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 
-const backupToBucket = async (filePath, remoteDir = 'backup', gzip = false) => {
-  const fileName = path.basename(filePath)
+const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
+  const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
   const destination = `${remoteDir}/${fileName}`
   try {
     const storage = new Storage({
-      projectId: values.destination.projectId,
-      keyFilename: values.destination.keyFilename,
+      projectId: destConfig.projectId,
+      keyFilename: destConfig.keyFilename,
     })
 
-    const status = await storage.bucket(values.destination.bucket).upload(filePath, {
+    const status = await storage.bucket(destConfig.bucket).upload(filePath, {
       gzip,
       destination,
     })

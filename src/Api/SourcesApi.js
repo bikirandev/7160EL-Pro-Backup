@@ -1,5 +1,6 @@
 const { generateFilePath } = require('../Models/Configs/ConfigModel')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
+const { backupToBucket } = require('../Models/GoogleBackup/GoogleBackup')
 const {
   validateMssqlWinData,
   sourceDataPattern,
@@ -224,7 +225,6 @@ const forceBackup = async (ev, id) => {
     if (!sourceData) {
       return { error: 1, message: 'Source not exists', data: [] }
     }
-    console.log('Source Data:', sourceData)
 
     // Step-2: Collect backup path
     const backupPath = await generateFilePath(sourceData)
@@ -233,23 +233,36 @@ const forceBackup = async (ev, id) => {
     }
 
     const destinationId = sourceData.destinationId
-    console.log('Destination ID:', destinationId)
+    if (!destinationId) {
+      return { error: 1, message: 'Destination not linked', data: [] }
+    }
 
-    // Step-2: Collect destination configuration
-    const destinationData = getDestination(destinationId)
-    console.log('Destination Data:', destinationData)
+    // Step-3: Collect destination configuration
+    const destConfig = await getDestination(destinationId)
+    if (destConfig.title === '') {
+      return { error: 1, message: 'Destination config not found', data: [] }
+    }
 
     // Step-4: Execute backup
-    const backupSt = validateAll([mssqlWinExec(sourceData, backupPath)])
-    console.log('Backup Status:', backupSt)
+    const backupSt = validateAll([await mssqlWinExec(sourceData, backupPath)])
+    if (backupSt.error === 1) {
+      return backupSt
+    }
+
+    // Step-5: Upload to destination
+    const uploadSt = await backupToBucket(
+      backupPath,
+      destConfig,
+      `${sourceData.type}/${sourceData.databaseOrPath}`,
+      false,
+    )
+    console.log('Upload Status:', uploadSt)
+
+    return { error: 0, message: 'Backup successful', data: {} }
   } catch (e) {
     console.log('Error on force backup:', e)
     return { error: 1, message: 'Error on force backup', data: [] }
   }
-
-  // Step-5: Upload to destination
-
-  return { error: 0, message: 'Backup Done', data: [] }
 }
 
 module.exports = {
