@@ -1,5 +1,6 @@
 const { getAllDocuments, DB_CONFIG } = require('../../utils/PouchDbTools')
 const path = require('path')
+//const fse = require('fs-extra')
 
 // const configPattern = {
 //   key: '',
@@ -35,6 +36,18 @@ const generateFilePath = async (data) => {
   const defaultDirectory = await getDefaultDirectory()
   if (defaultDirectory.error !== 0) {
     return null
+  }
+  const defDirPath = defaultDirectory.data.value
+
+  if (data.type === 'directory') {
+    const dName = data.databaseOrPath.replace(/[^a-zA-Z0-9]/g, '_')
+    const dirName = `${data.type}_${year}${month}${day}_${hour}${minute}${second}_${dName}`
+    const tempPath = path.join(defDirPath, '.temp', dirName)
+
+    // File Path tar
+    const filePath = path.join(defDirPath, `${dirName}.tar`)
+
+    return [filePath, tempPath]
   }
 
   // File Name

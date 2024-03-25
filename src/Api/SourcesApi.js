@@ -228,13 +228,13 @@ const linkDestination = async (ev, data) => {
 
 // force backup
 const forceBackup = async (ev, id) => {
-  // Step-1: Collect backup path
-  const backupPath = await generateFilePath(id)
-  console.log('Backup Path:', backupPath)
-
   // Step-1: Get source configuration
   const sourceData = await getDocument(DB_SOURCE, id)
   console.log('Source Data:', sourceData)
+
+  // Step-2: Collect backup path
+  const backupPath = await generateFilePath(sourceData)
+  console.log('Backup Path:', backupPath)
 
   const destinationId = sourceData.destinationId
   console.log('Destination ID:', destinationId)
@@ -248,6 +248,8 @@ const forceBackup = async (ev, id) => {
   console.log('Backup Status:', backupSt)
 
   // Step-5: Upload to destination
+
+  return 'OK'
 }
 
 module.exports = {
