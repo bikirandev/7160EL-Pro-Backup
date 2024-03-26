@@ -5,7 +5,7 @@ const jobs = []
 const addTask = (id, fnName) => {
   // Schedule the task
   const job = cron.schedule(
-    '* * * * *',
+    `0 * * * *`,
     () => {
       console.log('Running ID: ' + id + ' || ' + new Date().toISOString())
       fnName(null, id)
