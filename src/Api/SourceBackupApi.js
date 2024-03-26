@@ -126,8 +126,106 @@ const forceBackup = async (ev, id) => {
   console.log('Running Tasks:', st)
 }
 
+
+// backup create and backup start
+const backupStart = async (sourceData) => {
+  try {
+    // Step-1: Get source configuration
+    if (!sourceData) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
+    const destinationId = sourceData.destinationId
+    if (!destinationId) {
+      return { error: 1, message: 'Destination not linked', data: [] }
+    }
+
+    // Step-3: Collect destination configuration
+    const destConfig = await getDestination(destinationId)
+    if (destConfig.title === '') {
+      return { error: 1, message: 'Destination config not found', data: [] }
+    }
+
+    // Step-4: Execute backup
+    const backupSt = validateAll([
+      await mssqlWinExec(sourceData),
+      await directoryBackup(sourceData),
+    ])
+    if (backupSt.error === 1) {
+      return backupSt
+    }
+    const backupPath = backupSt.data.backupPath
+
+    // Step-5: Upload to destination
+    await backupToBucket2(
+      backupPath,
+      destConfig,
+      `${sourceData.type}/${sourceData.databaseOrPath}`,
+      false,
+    )
+
+    // Step-6: Remove local file
+    await fs.unlinkSync(backupPath)
+
+    return { error: 0, message: 'Backup successful', data: {} }
+  } catch (e) {
+    // console.log('Error on force backup:', e)
+    return { error: 1, message: 'Error on force backup', data: [] }
+  }
+}
+
+// backup destroy and backup stop
+const backupStop = async (sourceData) => {
+  try {
+    // Step-1: Get source configuration
+    if (!sourceData) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
+    const destinationId = sourceData.destinationId
+    if (!destinationId) {
+      return { error: 1, message: 'Destination not linked', data: [] }
+    }
+
+    // Step-3: Collect destination configuration
+    const destConfig = await getDestination(destinationId)
+    if (destConfig.title === '') {
+      return { error: 1, message: 'Destination config not found', data: [] }
+    }
+
+    // Step-4: Execute backup
+    const backupSt = validateAll([
+      await mssqlWinExec(sourceData),
+      await directoryBackup(sourceData),
+    ])
+    if (backupSt.error === 1) {
+      return backupSt
+    }
+    const backupPath = backupSt.data.backupPath
+
+    // Step-5: Upload to destination
+    await backupToBucket2(
+      backupPath,
+      destConfig,
+      `${sourceData.type}/${sourceData.databaseOrPath}`,
+      false,
+    )
+
+    // Step-6: Remove local file
+    await fs.unlinkSync(backupPath)
+
+    return { error: 0, message: 'Backup successful', data: {} }
+  } catch (e) {
+    // console.log('Error on force backup:', e)
+    return { error: 1, message: 'Error on force backup', data: [] }
+  }
+}
+
 module.exports = {
   backupAction,
   linkDestination,
   forceBackup,
+
+  backupStart,
+  backupStop,
 }

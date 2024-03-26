@@ -25,6 +25,7 @@ const {
   getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
+const { backupStart, backupStop } = require('./SourceBackupApi')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -258,14 +259,6 @@ const forceBackup = async (ev, id) => {
   }
 }
 
-// const forceBackup = async (ev, id) => {
-//   addTask(id, forceBackup2)
-//   startTask(id)
-
-//   const st = getRunningTasks()
-//   console.log('Running Tasks:', st)
-// }
-
 module.exports = {
   getSources,
   addSource,
@@ -274,4 +267,6 @@ module.exports = {
   backupAction,
   linkDestination,
   forceBackup,
+  backupStart,
+  backupStop
 }
