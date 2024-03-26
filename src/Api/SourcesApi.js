@@ -212,7 +212,7 @@ const linkDestination = async (ev, data) => {
 }
 
 // force backup
-const forceBackup2 = async (ev, id) => {
+const forceBackup = async (ev, id) => {
   try {
     // Step-1: Get source configuration
     const sourceData = await getDocument(DB_SOURCE, id)
@@ -259,13 +259,13 @@ const forceBackup2 = async (ev, id) => {
   }
 }
 
-const forceBackup = async (ev, id) => {
-  addTask(id, forceBackup2)
-  startTask(id)
+// const forceBackup = async (ev, id) => {
+//   addTask(id, forceBackup2)
+//   startTask(id)
 
-  const st = getRunningTasks()
-  console.log('Running Tasks:', st)
-}
+//   const st = getRunningTasks()
+//   console.log('Running Tasks:', st)
+// }
 
 module.exports = {
   getSources,
