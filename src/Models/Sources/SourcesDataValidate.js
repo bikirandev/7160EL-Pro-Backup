@@ -3,7 +3,9 @@ const defaultValues = require('../../../Default/DefaultValue')
 
 const sourceDataPattern = {
   type: '',
+  title: '',
   host: 'localhost',
+  port: 0,
   databaseOrPath: '',
   user: '',
   password: '',
