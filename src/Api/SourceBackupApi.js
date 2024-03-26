@@ -1,13 +1,6 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
 const { mssqlWinExec, directoryBackup } = require('../Models/Sources/SourcesExecution')
-const {
-  addTask,
-  startTask,
-  getRunningTasks,
-  stopTask,
-  removeTask,
-} = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
@@ -124,29 +117,8 @@ const forceBackup = async (ev, id) => {
   }
 }
 
-// backup create and backup start
-const scheduleStart = async (ev, data) => {
-  addTask(data.id, forceBackup)
-  startTask(data.id)
-
-  const st = getRunningTasks()
-  console.log('Running Tasks:', st)
-}
-
-// backup destroy and backup stop
-const scheduleStop = async (ev, data) => {
-  stopTask(data.id)
-  removeTask(data.id)
-
-  const st = getRunningTasks()
-  console.log('Running Tasks:', st)
-}
-
 module.exports = {
   backupAction,
   linkDestination,
   forceBackup,
-
-  scheduleStart,
-  scheduleStop,
 }

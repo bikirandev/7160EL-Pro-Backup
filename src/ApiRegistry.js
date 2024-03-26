@@ -8,14 +8,9 @@ const {
 const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
-const {
-  backupAction,
-  linkDestination,
-  forceBackup,
-  scheduleStart,
-  scheduleStop,
-} = require('./Api/SourceBackupApi')
+const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
+const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 
 // /api/registration
 const closeWindow = (ev, data) => {
