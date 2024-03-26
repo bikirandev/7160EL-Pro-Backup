@@ -10,12 +10,10 @@ const {
   addSource,
   updateSource,
   deleteSource,
-  backupAction,
-  linkDestination,
-  forceBackup,
 } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
+const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBackupApi')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -35,6 +33,9 @@ const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   return result.filePaths[0]
 }
+
+
+
 module.exports = {
   closeWindow,
   minimizeWindow,
