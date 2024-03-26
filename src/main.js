@@ -1,15 +1,14 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-undef */
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const createWindow = require('./utils/createWindow')
 const apiRegistry = require('./ApiRegistry')
-const { api } = require('./Api/Api')
 
 const regKeys = Object.keys(apiRegistry)
 
 app
   .whenReady()
   .then(() => {
-    regKeys.forEach((key, index) => {
+    regKeys.forEach((key) => {
       ipcMain.handle(key, apiRegistry[key])
     })
 

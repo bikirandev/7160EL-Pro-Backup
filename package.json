@@ -2,7 +2,7 @@
   "name": "pro-backup",
   "author": "Bikiran",
   "description": "This APP is built by Bikiran",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "private": true,
   "homepage": "./",
   "main": "src/main.js",
@@ -21,7 +21,6 @@
     "win": {
       "target": "nsis",
       "requestedExecutionLevel": "highestAvailable",
-      "startupShortcut": "true",
       "icon": "./src/assets/Backup.png"
     },
     "mac": {
@@ -48,12 +47,14 @@
     "dayjs": "^1.11.10",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
+    "fs-extra": "^11.2.0",
     "moment": "^2.30.1",
     "mssql": "^10.0.2",
     "ncp": "^2.0.0",
     "node-cron": "^3.0.3",
     "pouchdb": "^8.0.1",
-    "progress-stream": "^2.0.0"
+    "progress-stream": "^2.0.0",
+    "tar": "^6.2.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.3.1",

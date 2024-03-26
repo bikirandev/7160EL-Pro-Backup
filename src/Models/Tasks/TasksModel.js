@@ -18,6 +18,7 @@ const addTask = (id, fnName) => {
   )
 
   job.id = id
+  console.log('Add id:', id)
 
   jobs.push(job)
 }
@@ -25,6 +26,7 @@ const addTask = (id, fnName) => {
 const startTask = (id) => {
   const job = jobs.find((job) => job.id === id)
   if (job) {
+    console.log('Start id:', id)
     job.start()
     job.options.status = 'running'
   }
@@ -33,6 +35,7 @@ const startTask = (id) => {
 const stopTask = (id) => {
   const task = cron.getTasks()[id]
   if (task) {
+    console.log('Stop id:', id)
     task.stop()
     task.options.status = 'stopped'
   }
@@ -41,6 +44,7 @@ const stopTask = (id) => {
 const removeTask = (id) => {
   const task = cron.getTasks()[id]
   if (task) {
+    console.log('Remove id:', id)
     task.destroy()
     jobs.splice(jobs.indexOf(task), 1)
   }
