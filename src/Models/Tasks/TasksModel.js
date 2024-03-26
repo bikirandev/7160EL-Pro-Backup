@@ -7,7 +7,7 @@ const addTask = (id, fnName) => {
   const job = cron.schedule(
     '* * * * *',
     () => {
-      console.log('Running: ' + new Date().toISOString())
+      console.log('Running ID: ' + id + ' || ' + new Date().toISOString())
       fnName(null, id)
     },
     {
@@ -25,16 +25,16 @@ const addTask = (id, fnName) => {
 const startTask = (id) => {
   const job = jobs.find((job) => job.id === id)
   if (job) {
-    job.options.status = 'running'
     job.start()
+    job.options.status = 'running'
   }
 }
 
 const stopTask = (id) => {
   const task = cron.getTasks()[id]
   if (task) {
-    task.options.status = 'stopped'
     task.stop()
+    task.options.status = 'stopped'
   }
 }
 
@@ -42,6 +42,7 @@ const removeTask = (id) => {
   const task = cron.getTasks()[id]
   if (task) {
     task.destroy()
+    jobs.splice(jobs.indexOf(task), 1)
   }
 }
 

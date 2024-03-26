@@ -13,7 +13,12 @@ const scheduleStart = async (ev, id) => {
   startTask(id)
 
   const st = getRunningTasks()
-  console.log('Running Tasks:', st)
+  console.log(
+    'Running Tasks:',
+    st.map((x) => {
+      return { Id: x.id, Status: x.options.status, Name: x.options.name }
+    }),
+  )
 }
 
 // backup destroy and backup stop
@@ -22,7 +27,12 @@ const scheduleStop = async (ev, id) => {
   removeTask(id)
 
   const st = getRunningTasks()
-  console.log('Running Tasks:', st)
+  console.log(
+    'Running Tasks:',
+    st.map((x) => {
+      return { Id: x.id, Status: x.options.status, Name: x.options.name }
+    }),
+  )
 }
 
 module.exports = {

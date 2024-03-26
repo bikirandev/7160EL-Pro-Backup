@@ -2,7 +2,6 @@ const validateAll = (values = []) => {
   for (let i = 0; i < values.length; i++) {
     const data = values[i]
     if (data.error !== 0) {
-      console.log('Validation Error:', data)
       return data
     }
   }
@@ -10,7 +9,6 @@ const validateAll = (values = []) => {
   for (let i = 0; i < values.length; i++) {
     const data = values[i]
     if (data.error === 0 && data.skipped === false) {
-      console.log('Validation Passed:', data)
       return data
     }
   }

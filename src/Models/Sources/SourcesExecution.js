@@ -45,7 +45,7 @@ const mssqlWinExec = async (data) => {
 
     return { error: 0, message: 'Backup', data: { ...result.data, backupPath }, skipped: false }
   } catch (e) {
-    console.log('Error on MSSQL Connection', e)
+    // console.log('Error on MSSQL Connection', e)
     return { error: 1, message: 'Error on MSSQL Connection', data: {}, skipped: false }
   }
 }
@@ -116,15 +116,15 @@ const directoryBackup = async (data) => {
     // create tar file of temp directory
     const tarPath = path.join(defDirPath, dirName + '.tar')
     await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [dirName])
-    console.log('Tar Created', tarPath)
+    // console.log('Tar Created', tarPath)
 
     // remove temp directory
     await fse.remove(tempPath)
-    console.log('Temp Removed', tempPath)
+    // console.log('Temp Removed', tempPath)
 
     return { error: 0, message: 'Backup', data: { backupPath: tarPath }, skipped: false }
   } catch (e) {
-    console.log('Error on Directory Backup', e)
+    // console.log('Error on Directory Backup', e)
     return { error: 1, message: 'Error on Directory Backup', data: {}, skipped: false }
   }
 }
