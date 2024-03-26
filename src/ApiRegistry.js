@@ -14,6 +14,7 @@ const {
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBackupApi')
+const exploreDirectory = require('./utils/exploreDirectory')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -63,4 +64,7 @@ module.exports = {
 
   getConfigs,
   setDefaultDirectory,
+
+  //open directory in file explorer
+  exploreDirectory
 }
