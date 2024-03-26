@@ -78,6 +78,8 @@ const forceBackup = async (ev, id) => {
       return { error: 1, message: 'Source not exists', data: [] }
     }
 
+    console.log('Force backup:', sourceData)
+
     const destinationId = sourceData.destinationId
     if (!destinationId) {
       return { error: 1, message: 'Destination not linked', data: [] }

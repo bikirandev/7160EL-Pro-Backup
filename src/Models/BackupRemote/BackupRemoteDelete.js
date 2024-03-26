@@ -1,0 +1,139 @@
+const dayjs = require('dayjs')
+
+class BackupDel {
+  constructor(frequency, quantity, retention, backups, timeStampNow) {
+    this.frequency = frequency
+    this.quantity = quantity
+    this.retention = retention
+    this.backups = backups
+    this.timeStampNow = timeStampNow
+    this.deleteIds = []
+  }
+
+  isDeleteRequired() {
+    return this.backups.length - this.deleteIds.length - this.quantity
+  }
+
+  dayCount() {
+    // backups group by date
+    const backupsGroupByDate = this.backups.reduce((acc, backup) => {
+      const key = backup.date
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(backup)
+      return acc
+    }, {})
+
+    // count by date
+    const countByDate = Object.keys(backupsGroupByDate).map((key) => {
+      return {
+        date: key,
+        count: backupsGroupByDate[key].length,
+        age: dayjs(this.timeStampNow).diff(dayjs(key), 'day'),
+      }
+    })
+
+    return countByDate
+  }
+
+  lastNumberOfDays() {
+    const days = []
+    const count = Math.floor((this.quantity - this.retention) / (24 / this.frequency - 1))
+
+    for (let i = 0; i < count; i++) {
+      const t = dayjs.unix(this.timeStampNow / 1000).subtract(i, 'day')
+      days.push(t.format('YYYY-MM-DD'))
+    }
+
+    return days
+  }
+
+  emptyByDate(date) {
+    const dBackups = this.backups.filter((x) => {
+      return x.date === date
+    })
+
+    for (const backup of dBackups) {
+      if (this.isDeleteRequired()) {
+        this.deleteIds.push(backup.id)
+      }
+    }
+  }
+
+  deleteByDays(date) {
+    const dBackups = this.backups.filter((x) => {
+      return x.date === date
+    })
+
+    // Remove the first element
+    dBackups.shift()
+
+    for (const backup of dBackups) {
+      if (this.isDeleteRequired()) {
+        this.deleteIds.push(backup.id)
+      }
+    }
+  }
+
+  deleteSelector() {
+    const cQuantity = this.backups.length
+
+    // if current quantity is less than the quantity, return null
+    if (cQuantity < this.quantity) {
+      return null
+    }
+
+    // Regular days
+    const regularDays = this.lastNumberOfDays()
+
+    // Count by date
+    let countByDate = this.dayCount()
+
+    // Filter non regular days
+    countByDate = countByDate.filter((x) => {
+      return !regularDays.includes(x.date)
+    })
+
+    // Delete by days
+    countByDate.map((x) => {
+      if (x.age >= this.retention) {
+        this.emptyByDate(x.date)
+      } else {
+        this.deleteByDays(x.date)
+      }
+    })
+
+    return this.deleteIds
+  }
+
+  debug() {
+    const delBack = this.backups.filter((x) => {
+      return this.deleteIds.includes(x.id)
+    })
+
+    // Group by date count
+    const delGroup = delBack.reduce((acc, backup) => {
+      const key = backup.date
+      if (!acc[key]) {
+        acc[key] = []
+      }
+      acc[key].push(backup)
+      return acc
+    }, {})
+
+    // count by date
+    const delCountByDate = Object.keys(delGroup).map((key) => {
+      return {
+        date: key,
+        count: delGroup[key].length,
+      }
+    })
+
+    return delCountByDate
+  }
+}
+
+module.exports = {
+  BackupDel,
+}
