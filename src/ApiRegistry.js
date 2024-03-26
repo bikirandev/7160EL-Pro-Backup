@@ -5,15 +5,16 @@ const {
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const {
-  getSources,
-  addSource,
-  updateSource,
-  deleteSource,
-} = require('./Api/SourcesApi')
+const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
-const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBackupApi')
+const {
+  backupAction,
+  linkDestination,
+  forceBackup,
+  scheduleStart,
+  scheduleStop,
+} = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 
 // /api/registration
@@ -35,8 +36,6 @@ const openDirectoryDialog = async () => {
   return result.filePaths[0]
 }
 
-
-
 module.exports = {
   closeWindow,
   minimizeWindow,
@@ -45,6 +44,9 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
+
+  scheduleStart,
+  scheduleStop,
 
   //link destination to source
   linkDestination,
@@ -66,5 +68,5 @@ module.exports = {
   setDefaultDirectory,
 
   //open directory in file explorer
-  exploreDirectory
+  exploreDirectory,
 }

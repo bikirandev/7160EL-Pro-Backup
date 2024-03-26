@@ -1,7 +1,13 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
 const { mssqlWinExec, directoryBackup } = require('../Models/Sources/SourcesExecution')
-const { addTask, startTask, getRunningTasks } = require('../Models/Tasks/TasksModel')
+const {
+  addTask,
+  startTask,
+  getRunningTasks,
+  stopTask,
+  removeTask,
+} = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
@@ -71,7 +77,7 @@ const linkDestination = async (ev, data) => {
 }
 
 // force backup
-const forceBackup2 = async (ev, id) => {
+const forceBackup = async (ev, id) => {
   try {
     // Step-1: Get source configuration
     const sourceData = await getDocument(DB_SOURCE, id)
@@ -118,107 +124,22 @@ const forceBackup2 = async (ev, id) => {
   }
 }
 
-const forceBackup = async (ev, id) => {
-  addTask(id, forceBackup2)
-  startTask(id)
+// backup create and backup start
+const scheduleStart = async (ev, data) => {
+  addTask(data.id, forceBackup)
+  startTask(data.id)
 
   const st = getRunningTasks()
   console.log('Running Tasks:', st)
 }
 
-
-// backup create and backup start
-const backupStart = async (sourceData) => {
-  try {
-    // Step-1: Get source configuration
-    if (!sourceData) {
-      return { error: 1, message: 'Source not exists', data: [] }
-    }
-
-    const destinationId = sourceData.destinationId
-    if (!destinationId) {
-      return { error: 1, message: 'Destination not linked', data: [] }
-    }
-
-    // Step-3: Collect destination configuration
-    const destConfig = await getDestination(destinationId)
-    if (destConfig.title === '') {
-      return { error: 1, message: 'Destination config not found', data: [] }
-    }
-
-    // Step-4: Execute backup
-    const backupSt = validateAll([
-      await mssqlWinExec(sourceData),
-      await directoryBackup(sourceData),
-    ])
-    if (backupSt.error === 1) {
-      return backupSt
-    }
-    const backupPath = backupSt.data.backupPath
-
-    // Step-5: Upload to destination
-    await backupToBucket2(
-      backupPath,
-      destConfig,
-      `${sourceData.type}/${sourceData.databaseOrPath}`,
-      false,
-    )
-
-    // Step-6: Remove local file
-    await fs.unlinkSync(backupPath)
-
-    return { error: 0, message: 'Backup successful', data: {} }
-  } catch (e) {
-    // console.log('Error on force backup:', e)
-    return { error: 1, message: 'Error on force backup', data: [] }
-  }
-}
-
 // backup destroy and backup stop
-const backupStop = async (sourceData) => {
-  try {
-    // Step-1: Get source configuration
-    if (!sourceData) {
-      return { error: 1, message: 'Source not exists', data: [] }
-    }
+const scheduleStop = async (ev, data) => {
+  stopTask(data.id)
+  removeTask(data.id)
 
-    const destinationId = sourceData.destinationId
-    if (!destinationId) {
-      return { error: 1, message: 'Destination not linked', data: [] }
-    }
-
-    // Step-3: Collect destination configuration
-    const destConfig = await getDestination(destinationId)
-    if (destConfig.title === '') {
-      return { error: 1, message: 'Destination config not found', data: [] }
-    }
-
-    // Step-4: Execute backup
-    const backupSt = validateAll([
-      await mssqlWinExec(sourceData),
-      await directoryBackup(sourceData),
-    ])
-    if (backupSt.error === 1) {
-      return backupSt
-    }
-    const backupPath = backupSt.data.backupPath
-
-    // Step-5: Upload to destination
-    await backupToBucket2(
-      backupPath,
-      destConfig,
-      `${sourceData.type}/${sourceData.databaseOrPath}`,
-      false,
-    )
-
-    // Step-6: Remove local file
-    await fs.unlinkSync(backupPath)
-
-    return { error: 0, message: 'Backup successful', data: {} }
-  } catch (e) {
-    // console.log('Error on force backup:', e)
-    return { error: 1, message: 'Error on force backup', data: [] }
-  }
+  const st = getRunningTasks()
+  console.log('Running Tasks:', st)
 }
 
 module.exports = {
@@ -226,6 +147,6 @@ module.exports = {
   linkDestination,
   forceBackup,
 
-  backupStart,
-  backupStop,
+  scheduleStart,
+  scheduleStop,
 }
