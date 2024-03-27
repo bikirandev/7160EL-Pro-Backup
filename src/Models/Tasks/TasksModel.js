@@ -1,65 +1,60 @@
 const cron = require('node-cron')
 
-const jobs = []
-
 const addTask = (id, fnName) => {
-  // Schedule the task
-  const job = cron.schedule(
+  // Schedule the job
+  cron.schedule(
     `0 * * * *`,
     () => {
-      console.log('Running ID: ' + id + ' || ' + new Date().toISOString())
       fnName(null, id)
     },
     {
       name: id,
-      scheduled: false, // This prevents the task from being started automatically
-      status: 'stopped',
+      scheduled: false, // This prevents the job from being started automatically
     },
   )
 
-  job.id = id
-  console.log('Add id:', id)
-
-  jobs.push(job)
+  // Schedule the job
+  cron.schedule(
+    `0 * * * *`,
+    () => {
+      console.log('Task 2')
+    },
+    {
+      name: id + '2',
+      scheduled: false, // This prevents the job from being started automatically
+    },
+  )
 }
 
 const startTask = (id) => {
-  const job = jobs.find((job) => job.id === id)
-  if (job) {
-    console.log('Start id:', id)
-    job.start()
-    job.options.status = 'running'
+  const task = cron.getTasks().get(id)
+  if (task) {
+    task.start()
   }
 }
 
 const stopTask = (id) => {
-  const task = cron.getTasks()[id]
+  const task = cron.getTasks().get(id)
   if (task) {
-    console.log('Stop id:', id)
     task.stop()
-    task.options.status = 'stopped'
   }
 }
 
-const removeTask = (id) => {
-  const task = cron.getTasks()[id]
-  if (task) {
-    console.log('Remove id:', id)
-    task.destroy()
-    jobs.splice(jobs.indexOf(task), 1)
-  }
-}
+const getTasksStatus = () => {
+  const status = []
 
-const getRunningTasks = () => {
-  const runningTasks = jobs.filter((job) => job.options.status === 'running')
-
-  return runningTasks
+  cron.getTasks().forEach((task) => {
+    status.push({
+      id: task.options.name,
+      running: !!task._scheduler.timeout,
+    })
+  })
+  return status
 }
 
 module.exports = {
   addTask,
   startTask,
   stopTask,
-  removeTask,
-  getRunningTasks,
+  getTasksStatus,
 }

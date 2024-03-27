@@ -4,6 +4,7 @@ const { mssqlWinExec, directoryBackup } = require('../Models/Sources/SourcesExec
 const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
+const path = require('path')
 
 // API for start or stop backup process
 const backupAction = async (ev, data) => {
@@ -80,8 +81,6 @@ const forceBackup = async (ev, id) => {
       return { error: 1, message: 'Source not exists', data: [] }
     }
 
-    console.log('Force backup:', sourceData)
-
     const destinationId = sourceData.destinationId
     if (!destinationId) {
       return { error: 1, message: 'Destination not linked', data: [] }
@@ -102,17 +101,13 @@ const forceBackup = async (ev, id) => {
       return backupSt
     }
     const backupPath = backupSt.data.backupPath
+    const basename = path.basename(sourceData.databaseOrPath) || sourceData.databaseOrPath
 
     // Step-5: Upload to destination
-    await backupToBucket2(
-      backupPath,
-      destConfig,
-      `${sourceData.type}/${sourceData.databaseOrPath}`,
-      false,
-    )
+    await backupToBucket2(backupPath, destConfig, `${sourceData.type}/${basename}`, false)
 
     // Step-6: Remove local file
-    await fs.unlinkSync(backupPath)
+    fs.unlinkSync(backupPath)
 
     return { error: 0, message: 'Backup successful', data: {} }
   } catch (err) {
