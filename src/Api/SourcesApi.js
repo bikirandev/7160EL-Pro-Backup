@@ -26,6 +26,7 @@ const {
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
+const { createErrorLog } = require('../Models/Logs/LogCreate')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -51,35 +52,36 @@ const addSource = async (ev, data) => {
   const hash = generateHash()
   const nData = { ...sourceDataPattern, ...data, _id: hash }
 
-  // Check if database and _id already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-  const ex = exData.find((x) => x.databaseOrPath === nData.databaseOrPath || x._id === hash)
-  if (ex) {
-    return { error: 1, message: 'Database already exists', data: [] }
-  }
-
-  const validationPerms = [
-    validateType(nData), // Validate Type
-    validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-    validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-    validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-    validateDirectory(nData), // Validate Directory Data, if type is directory
-    await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-    await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-    await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-    await directoryBackup(nData), // Validate Directory Backup
-  ]
-
-  // Data Validation
-  const validate = validateAll(validationPerms)
-  if (validate.error === 1) {
-    return validate
-  }
-
   try {
+    // Check if database and _id already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+    const ex = exData.find((x) => x.databaseOrPath === nData.databaseOrPath || x._id === hash)
+    if (ex) {
+      return { error: 1, message: 'Database already exists', data: [] }
+    }
+
+    const validationPerms = [
+      validateType(nData), // Validate Type
+      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+      validateDirectory(nData), // Validate Directory Data, if type is directory
+      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
+      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
+      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
+      await directoryBackup(nData), // Validate Directory Backup
+    ]
+
+    // Data Validation
+    const validate = validateAll(validationPerms)
+    if (validate.error === 1) {
+      return validate
+    }
+
     const result = await createDocument(DB_SOURCE, nData)
     return { error: 0, message: 'Source added', data: result }
   } catch (e) {
+    createErrorLog('Test - Error: ' + e)
     return { error: 1, message: 'Error on adding Source', data: [] }
   }
 }
@@ -268,5 +270,5 @@ module.exports = {
   linkDestination,
   forceBackup,
   backupStart,
-  backupStop
+  backupStop,
 }

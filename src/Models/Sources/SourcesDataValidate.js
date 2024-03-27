@@ -25,6 +25,15 @@ const sourceTypes = {
   TYPE_DIRECTORY: 'directory',
 }
 
+const validateType = (data) => {
+  const nTypes = Object.values(sourceTypes)
+  if (!nTypes.includes(data.type)) {
+    return { error: 1, message: 'Type is not valid', data: [] }
+  }
+
+  return { error: 0, message: 'Data is valid', data: [] }
+}
+
 const validateMssqlWin = (dbName) => {
   // mssql find db name, windows authentication
   const config = {
@@ -130,15 +139,6 @@ const validateDirectory = (data) => {
 
   if (!data.databaseOrPath) {
     return { error: 1, message: 'Path is required', data: [] }
-  }
-
-  return { error: 0, message: 'Data is valid', data: [] }
-}
-
-const validateType = (data) => {
-  const nTypes = Object.values(sourceTypes)
-  if (!nTypes.includes(data.type)) {
-    return { error: 1, message: 'Type is not valid', data: [] }
   }
 
   return { error: 0, message: 'Data is valid', data: [] }
