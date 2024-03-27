@@ -10,7 +10,6 @@ const {
 const getConfigs = async () => {
   try {
     const data = await getAllDocuments(DB_CONFIG)
-    console.log('Data Config:', data)
 
     return { error: 0, message: 'List of Sources', data: data }
   } catch (e) {

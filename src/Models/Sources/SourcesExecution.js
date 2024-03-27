@@ -133,7 +133,7 @@ const directoryBackup = async (data) => {
     await copyDir(sourcePath, tempPath)
 
     // create tar file of temp directory
-    const tarPath = tempPath + '.tar'
+    const tarPath = path.join(confBackupPath.data.defDirPath, confBackupPath.data.dirName) + '.tar'
     await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [
       confBackupPath.data.dirName,
     ])
