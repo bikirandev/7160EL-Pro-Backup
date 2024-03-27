@@ -126,7 +126,8 @@ const directoryBackup = async (data) => {
 
     return { error: 0, message: 'Backup', data: { backupPath: tarPath }, skipped: false }
   } catch (e) {
-    return { error: 1, message: 'Error on Directory Backup', data: {}, skipped: false }
+    console.log(e)
+    return { error: 1, message: e.message, data: {}, skipped: false }
   }
 }
 

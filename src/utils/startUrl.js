@@ -1,18 +1,17 @@
+/* eslint-disable no-constant-condition */
 const url = require('url')
-const path = require('path')
-const fs = require('fs')
+const process = require('process')
+const path = require('path') // Import the 'path' module
 
 const GetUrl = () => {
   const isDev = process.env.npm_lifecycle_event === 'electron'
-
-  if (isDev) {
+  if (!isDev || 1) {
     return 'http://localhost:3000'
   }
 
-  console.log('Path', url)
-
   return url.format({
-    pathname: path.join(__dirname, '/../../../build/index.html'),
+    // eslint-disable-next-line no-undef
+    pathname: path.resolve(__dirname, '/../../../build/index.html'), // Use path.resolve instead of path.join
     protocol: 'file:',
     slashes: true,
   })

@@ -30,25 +30,29 @@ const generateFilePath = async (data) => {
   const minute = date.getMinutes()
   const second = date.getSeconds()
 
-  // Default Directory
-  const defaultDirectory = await getDefaultDirectory()
-  if (defaultDirectory.error !== 0) {
-    return null
+  try {
+    // Default Directory
+    const defaultDirectory = await getDefaultDirectory()
+    if (defaultDirectory.error !== 0) {
+      return { error: 1, message: 'Default Directory Not Configured', data: {} }
+    }
+    const defDirPath = defaultDirectory.data.value
+
+    if (data.type === 'directory') {
+      const dName = data.databaseOrPath.replace(/[^a-zA-Z0-9]/g, '_')
+      const dirName = `${data.type}_${year}${month}${day}_${hour}${minute}${second}_${dName}`
+
+      return { error: 0, message: 'Directory Path', data: { defDirPath, fileName: null, dirName } }
+    }
+
+    // File Name
+    const fileName = `${data.type}_${data.databaseOrPath}_${year}${month}${day}_${hour}${minute}${second}.bak`
+
+    // File Path
+    return { error: 0, message: 'File Path', data: { defDirPath, fileName, dirName: null } }
+  } catch (e) {
+    return { error: 1, message: e.message, data: {} }
   }
-  const defDirPath = defaultDirectory.data.value
-
-  if (data.type === 'directory') {
-    const dName = data.databaseOrPath.replace(/[^a-zA-Z0-9]/g, '_')
-    const dirName = `${data.type}_${year}${month}${day}_${hour}${minute}${second}_${dName}`
-
-    return { defDirPath, fileName: null, dirName }
-  }
-
-  // File Name
-  const fileName = `${data.type}_${data.databaseOrPath}_${year}${month}${day}_${hour}${minute}${second}.bak`
-
-  // File Path
-  return { defDirPath, fileName, dirName: null }
 }
 
 module.exports = {
