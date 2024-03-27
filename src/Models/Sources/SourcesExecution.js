@@ -5,23 +5,20 @@ const tar = require('tar')
 //const ncp = require('ncp').ncp
 const { generateFilePath } = require('../Configs/ConfigModel')
 const { copyDir, createDirForce, removeDir } = require('../../utils/FileOperation')
-const { createErrorLog } = require('../Logs/LogCreate')
 
 const mssqlWinExec = async (data) => {
-  createErrorLog('Test - 08')
   const database = data.databaseOrPath
 
   if (data.type !== 'mssql-win' || data.operation !== 'exec') {
     return { error: 0, message: 'Skipped', data: {}, skipped: true }
   }
 
-  const { defDirPath, fileName } = await generateFilePath(data)
-  const backupPath = path.join(defDirPath, fileName)
-  if (!backupPath) {
-    return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
-  }
-
   try {
+    const { defDirPath, fileName } = await generateFilePath(data)
+    const backupPath = path.join(defDirPath, fileName)
+    if (!backupPath) {
+      return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
+    }
     // SQL
     const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
 
@@ -52,20 +49,19 @@ const mssqlWinExec = async (data) => {
 }
 
 const mssqlWinConnect = async (data) => {
-  createErrorLog('Test - 09')
   const database = data.databaseOrPath
 
   if (data.type !== 'mssql-win' || data.operation !== 'mssql-connection') {
     return { error: 0, message: 'Skipped', data: {}, skipped: true }
   }
 
-  const { defDirPath, fileName } = await generateFilePath(data)
-  const backupPath = path.join(defDirPath, fileName)
-  if (!backupPath) {
-    return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
-  }
-
   try {
+    const { defDirPath, fileName } = await generateFilePath(data)
+    const backupPath = path.join(defDirPath, fileName)
+    if (!backupPath) {
+      return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
+    }
+
     mssql.connect({
       server: 'localhost',
       database: database,
@@ -86,8 +82,6 @@ const mssqlWinConnect = async (data) => {
 }
 
 const mssqlWinDemo = async (data) => {
-  createErrorLog('Test - 10')
-
   const database = data.databaseOrPath
   console.log('database', database)
 
@@ -99,8 +93,6 @@ const mssqlWinDemo = async (data) => {
 }
 
 const directoryBackup = async (data) => {
-  createErrorLog('Test - 11')
-
   const sourcePath = data.databaseOrPath
 
   if (data.type !== 'directory') {

@@ -7,16 +7,16 @@ const fs = require('fs')
 
 // API for start or stop backup process
 const backupAction = async (ev, data) => {
-  // Check if database already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
   try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
     const nData = {
       _id: data._id,
       type: data.type,
@@ -39,16 +39,16 @@ const backupAction = async (ev, data) => {
 
 // API for link destination to source
 const linkDestination = async (ev, data) => {
-  // Check if database already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
   try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
     const nData = {
       _id: data._id,
       type: data.type,

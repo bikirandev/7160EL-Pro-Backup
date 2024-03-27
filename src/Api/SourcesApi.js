@@ -90,38 +90,38 @@ const addSource = async (ev, data) => {
 const updateSource = async (ev, data) => {
   const nData = { ...sourceDataPattern, ...data }
 
-  // Check if database already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-  const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
-  if (exDbName) {
-    return { error: 1, message: 'Source already exists', data: [] }
-  }
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
-  const validationPerms = [
-    validateType(nData), // Validate Type
-    validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-    validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-    validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-    validateDirectory(nData), // Validate Directory Data, if type is directory
-    await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-    await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-    await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-    await directoryBackup(nData), // Validate Directory Backup
-  ]
-
-  // Data Validation
-  const validate = validateAll(validationPerms)
-  if (validate.error === 1) {
-    return validate
-  }
-
   try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+    const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
+    if (exDbName) {
+      return { error: 1, message: 'Source already exists', data: [] }
+    }
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
+    const validationPerms = [
+      validateType(nData), // Validate Type
+      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+      validateDirectory(nData), // Validate Directory Data, if type is directory
+      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
+      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
+      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
+      await directoryBackup(nData), // Validate Directory Backup
+    ]
+
+    // Data Validation
+    const validate = validateAll(validationPerms)
+    if (validate.error === 1) {
+      return validate
+    }
+
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: 'Source updated', data: result }
@@ -131,16 +131,16 @@ const updateSource = async (ev, data) => {
 }
 
 const deleteSource = async (ev, data) => {
-  // Check if database and _id already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
   try {
+    // Check if database and _id already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
     const result = await deleteDocument(DB_SOURCE, data._id)
 
     return { error: 0, message: 'Source deleted', data: result }
@@ -151,16 +151,16 @@ const deleteSource = async (ev, data) => {
 
 // API for start or stop backup process
 const backupAction = async (ev, data) => {
-  // Check if database already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
   try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
     const nData = {
       _id: data._id,
       type: data.type,
@@ -183,16 +183,16 @@ const backupAction = async (ev, data) => {
 
 // API for link destination to source
 const linkDestination = async (ev, data) => {
-  // Check if database already exists
-  const exData = await getAllDocuments(DB_SOURCE)
-
-  // Check if _id not exists
-  const exId = exData.find((x) => x._id === data._id)
-  if (!exId) {
-    return { error: 1, message: 'Source not exists', data: [] }
-  }
-
   try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if _id not exists
+    const exId = exData.find((x) => x._id === data._id)
+    if (!exId) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
     const nData = {
       _id: data._id,
       type: data.type,

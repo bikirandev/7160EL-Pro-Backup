@@ -53,9 +53,13 @@ const getDestination = async (id) => {
     return defaultValues.destinations[0]
   }
 
-  // Collect Destination by ID
-  const destination = await getDocument(DB_DESTINATION, id)
-  return destination
+  try {
+    // Collect Destination by ID
+    const destination = await getDocument(DB_DESTINATION, id)
+    return destination
+  } catch (e) {
+    return { error: 1, message: 'Error on finding Destination', data: {} }
+  }
 }
 
 module.exports = {
