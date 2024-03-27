@@ -1,11 +1,10 @@
 const Execute = require('../../utils/Execute')
 const mssql = require('mssql')
 const path = require('path')
-const fs = require('fs')
-const fse = require('fs-extra')
 const tar = require('tar')
 //const ncp = require('ncp').ncp
 const { generateFilePath } = require('../Configs/ConfigModel')
+const { copyDir, createDirForce, removeDir } = require('../../utils/FileOperation')
 
 const mssqlWinExec = async (data) => {
   const database = data.databaseOrPath
@@ -95,36 +94,31 @@ const mssqlWinDemo = async (data) => {
 }
 
 const directoryBackup = async (data) => {
-  const sourcePath = data.databaseOrPath
-
-  if (data.type !== 'directory') {
-    return { error: 0, message: 'Skipped', data: [], skipped: true }
-  }
-
-  const { defDirPath, dirName } = await generateFilePath(data)
-  const tempPath = path.join(defDirPath, '.temp', dirName)
-
   try {
-    // Create Directory if not exists
-    if (!fs.existsSync(tempPath)) {
-      fse.ensureDirSync(tempPath)
+    const sourcePath = data.databaseOrPath
+
+    if (data.type !== 'directory') {
+      return { error: 0, message: 'Skipped', data: [], skipped: true }
     }
 
-    // copy file from source to temp
-    await fse.copy(sourcePath, tempPath, { overwrite: true })
+    const { defDirPath, dirName } = await generateFilePath(data)
+    const tempPath = path.join(defDirPath, '.temp', dirName)
+
+    // Create Directory if not exists
+    await createDirForce(tempPath)
+
+    // copy directory from source dir to temp dir
+    await copyDir(sourcePath, tempPath)
 
     // create tar file of temp directory
     const tarPath = path.join(defDirPath, dirName + '.tar')
     await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [dirName])
-    // console.log('Tar Created', tarPath)
 
     // remove temp directory
-    await fse.remove(tempPath)
-    // console.log('Temp Removed', tempPath)
+    await removeDir(tempPath)
 
     return { error: 0, message: 'Backup', data: { backupPath: tarPath }, skipped: false }
   } catch (e) {
-    // console.log('Error on Directory Backup', e)
     return { error: 1, message: 'Error on Directory Backup', data: {}, skipped: false }
   }
 }
