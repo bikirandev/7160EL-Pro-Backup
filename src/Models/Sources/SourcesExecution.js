@@ -14,8 +14,16 @@ const mssqlWinExec = async (data) => {
   }
 
   try {
-    const { defDirPath, fileName } = await generateFilePath(data)
-    const backupPath = path.join(defDirPath, fileName)
+    const confBackupPath = await generateFilePath(data)
+    if (confBackupPath.error !== 0) {
+      return confBackupPath
+    }
+
+    if (!confBackupPath.data.fileName) {
+      return { error: 1, message: 'Unable to generate file name', data: {}, skipped: false }
+    }
+
+    const backupPath = path.join(confBackupPath.data.defDirPath, confBackupPath.data.fileName)
     if (!backupPath) {
       return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
     }
@@ -56,8 +64,16 @@ const mssqlWinConnect = async (data) => {
   }
 
   try {
-    const { defDirPath, fileName } = await generateFilePath(data)
-    const backupPath = path.join(defDirPath, fileName)
+    const confBackupPath = await generateFilePath(data)
+    if (confBackupPath.error !== 0) {
+      return confBackupPath
+    }
+
+    if (!confBackupPath.data.fileName) {
+      return { error: 1, message: 'Unable to generate file name', data: {}, skipped: false }
+    }
+
+    const backupPath = path.join(confBackupPath.data.defDirPath, confBackupPath.data.fileName)
     if (!backupPath) {
       return { error: 1, message: 'Error on Default Backup Path', data: {}, skipped: false }
     }
@@ -100,8 +116,15 @@ const directoryBackup = async (data) => {
   }
 
   try {
-    const { defDirPath, dirName } = await generateFilePath(data)
-    const tempPath = path.join(defDirPath, '.temp', dirName)
+    const confBackupPath = await generateFilePath(data)
+    if (confBackupPath.error !== 0) {
+      return confBackupPath
+    }
+
+    if (!confBackupPath.data.dirName) {
+      return { error: 1, message: 'Unable to generate directory name', data: {}, skipped: false }
+    }
+    const tempPath = path.join(confBackupPath.data.defDirPath, '.temp', confBackupPath.data.dirName)
 
     // Create Directory if not exists
     await createDirForce(tempPath)
@@ -110,8 +133,10 @@ const directoryBackup = async (data) => {
     await copyDir(sourcePath, tempPath)
 
     // create tar file of temp directory
-    const tarPath = path.join(defDirPath, dirName + '.tar')
-    await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [dirName])
+    const tarPath = tempPath + '.tar'
+    await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [
+      confBackupPath.data.dirName,
+    ])
 
     // remove temp directory
     await removeDir(tempPath)

@@ -14,6 +14,9 @@ const getDefaultDirectory = async () => {
     // Collect Default Directory
     const configs = await getAllDocuments(DB_CONFIG)
     const defaultDirectory = configs.find((x) => x.key === configKeys.CONF_DEFAULT_DIRECTORY)
+    if (!defaultDirectory) {
+      return { error: 1, message: 'Default Directory Not Configured', data: {} }
+    }
 
     return { error: 0, message: 'Default Directory', data: defaultDirectory }
   } catch (e) {
@@ -34,7 +37,7 @@ const generateFilePath = async (data) => {
     // Default Directory
     const defaultDirectory = await getDefaultDirectory()
     if (defaultDirectory.error !== 0) {
-      return { error: 1, message: 'Default Directory Not Configured', data: {} }
+      return defaultDirectory
     }
     const defDirPath = defaultDirectory.data.value
 

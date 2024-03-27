@@ -26,7 +26,6 @@ const {
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
-const { createErrorLog } = require('../Models/Logs/LogCreate')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -39,7 +38,6 @@ const { createErrorLog } = require('../Models/Logs/LogCreate')
 const getSources = async () => {
   try {
     const data = await getAllDocuments(DB_SOURCE)
-    //console.log('Data:', data)
 
     return { error: 0, message: 'List of Sources', data: data }
   } catch (e) {
@@ -81,8 +79,7 @@ const addSource = async (ev, data) => {
     const result = await createDocument(DB_SOURCE, nData)
     return { error: 0, message: 'Source added', data: result }
   } catch (e) {
-    createErrorLog('Test - Error: ' + e)
-    return { error: 1, message: 'Error on adding Source', data: [] }
+    return { error: 1, message: e, data: [] }
   }
 }
 

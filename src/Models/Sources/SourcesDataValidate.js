@@ -46,7 +46,6 @@ const validateMssqlWin = (dbName) => {
 
   return new Promise((resolve, reject) => {
     mssql.connect(config, (err) => {
-      console.log(err)
       if (err) {
         reject('Error connecting to the database')
       } else {
