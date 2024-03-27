@@ -40,7 +40,8 @@ const getSources = async () => {
     const data = await getAllDocuments(DB_SOURCE)
 
     return { error: 0, message: 'List of Sources', data: data }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: [] }
   }
 }
@@ -78,8 +79,9 @@ const addSource = async (ev, data) => {
 
     const result = await createDocument(DB_SOURCE, nData)
     return { error: 0, message: 'Source added', data: result }
-  } catch (e) {
-    return { error: 1, message: e, data: [] }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: err, data: [] }
   }
 }
 
@@ -122,7 +124,8 @@ const updateSource = async (ev, data) => {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: 'Source updated', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on updating Source', data: [] }
   }
 }
@@ -141,7 +144,8 @@ const deleteSource = async (ev, data) => {
     const result = await deleteDocument(DB_SOURCE, data._id)
 
     return { error: 0, message: 'Source deleted', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on deleting Source', data: [] }
   }
 }
@@ -173,7 +177,8 @@ const backupAction = async (ev, data) => {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: data.running ? 'Backup started' : 'Backup stopped', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on start backup', data: [] }
   }
 }
@@ -205,7 +210,8 @@ const linkDestination = async (ev, data) => {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: 'Destination linked', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on linking destination', data: [] }
   }
 }
@@ -252,8 +258,8 @@ const forceBackup = async (ev, id) => {
     await fs.unlinkSync(backupPath)
 
     return { error: 0, message: 'Backup successful', data: {} }
-  } catch (e) {
-    // console.log('Error on force backup:', e)
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on force backup', data: [] }
   }
 }

@@ -32,7 +32,8 @@ const backupAction = async (ev, data) => {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: data.running ? 'Backup started' : 'Backup stopped', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on start backup', data: [] }
   }
 }
@@ -64,7 +65,8 @@ const linkDestination = async (ev, data) => {
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
     return { error: 0, message: 'Destination linked', data: result }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on linking destination', data: [] }
   }
 }
@@ -113,8 +115,8 @@ const forceBackup = async (ev, id) => {
     await fs.unlinkSync(backupPath)
 
     return { error: 0, message: 'Backup successful', data: {} }
-  } catch (e) {
-    // console.log('Error on force backup:', e)
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on force backup', data: [] }
   }
 }

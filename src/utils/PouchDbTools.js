@@ -14,7 +14,7 @@ const getAllDocuments = (dbName) => {
       return result.rows.map((row) => row.doc)
     })
     .catch((err) => {
-      console.error('Error getting all documents:', err)
+      console.error(err)
       throw err // Propagate the error
     })
 }
@@ -29,7 +29,7 @@ const getDocument = (dbName, id) => {
       return doc
     })
     .catch((err) => {
-      console.error('Error getting document:', err)
+      console.error(err)
       throw err
     })
 }
@@ -45,7 +45,7 @@ const createDocument = (dbName, data) => {
       return result
     })
     .catch((err) => {
-      console.error('Error adding document:', err)
+      console.error(err)
       throw err
     })
 }
@@ -63,7 +63,7 @@ const updateDocument = (dbName, id, data) => {
       return result
     })
     .catch((err) => {
-      console.error('Error updating document:', err)
+      console.error(err)
       throw err
     })
 }
@@ -81,7 +81,7 @@ const deleteDocument = (dbName, id) => {
       return result
     })
     .catch((err) => {
-      console.error('Error deleting document:', err)
+      console.error(err)
       throw err
     })
 }

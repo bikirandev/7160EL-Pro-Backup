@@ -12,7 +12,8 @@ const getConfigs = async () => {
     const data = await getAllDocuments(DB_CONFIG)
 
     return { error: 0, message: 'List of Sources', data: data }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: [] }
   }
 }
@@ -38,7 +39,8 @@ const setDefaultDirectory = async (ev, data) => {
       })
     }
     return { error: 0, message: 'Default Directory Set', data: [] }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: [] }
   }
 }

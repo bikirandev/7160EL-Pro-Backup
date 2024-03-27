@@ -19,7 +19,8 @@ const getDefaultDirectory = async () => {
     }
 
     return { error: 0, message: 'Default Directory', data: defaultDirectory }
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on finding Default Directory', data: {} }
   }
 }
@@ -53,8 +54,9 @@ const generateFilePath = async (data) => {
 
     // File Path
     return { error: 0, message: 'File Path', data: { defDirPath, fileName, dirName: null } }
-  } catch (e) {
-    return { error: 1, message: e.message, data: {} }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: err.message, data: {} }
   }
 }
 

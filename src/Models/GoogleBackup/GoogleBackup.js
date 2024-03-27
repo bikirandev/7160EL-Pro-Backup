@@ -39,8 +39,7 @@ const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip =
 
     return { error: 0, message: 'Backup successful', data: {} }
   } catch (err) {
-    console.log('Backup failed', err)
-    return { error: 1, message: 'Backup failed', data: {} }
+    throw new Error(err)
   }
 }
 
@@ -61,7 +60,7 @@ const backupToBucket2 = async (filePath, destConfig, remoteDir = 'backup', gzip 
 
     return { error: 0, message: 'Backup successful', data: status }
   } catch (err) {
-    return { error: 1, message: 'Backup failed', data: err }
+    throw new Error(err)
   }
 }
 

@@ -50,8 +50,8 @@ const mssqlWinExec = async (data) => {
     }
 
     return { error: 0, message: 'Backup', data: { ...result.data, backupPath }, skipped: false }
-  } catch (e) {
-    // console.log('Error on MSSQL Connection', e)
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on MSSQL Connection', data: {}, skipped: false }
   }
 }
@@ -91,15 +91,14 @@ const mssqlWinConnect = async (data) => {
 
     console.log('result', result)
     return { error: 0, message: 'Connected', data: { ...result, backupPath }, skipped: false }
-  } catch (e) {
-    console.log('Error on MSSQL Connection', e)
+  } catch (err) {
+    console.log(err)
     return { error: 1, message: 'Error on MSSQL Connection', data: {}, skipped: false }
   }
 }
 
 const mssqlWinDemo = async (data) => {
-  const database = data.databaseOrPath
-  console.log('database', database)
+  //const database = data.databaseOrPath
 
   if (data.type !== 'mssql-win' || data.operation !== 'mssql-demo') {
     return { error: 0, message: 'Skipped', data: [] }
@@ -142,9 +141,9 @@ const directoryBackup = async (data) => {
     await removeDir(tempPath)
 
     return { error: 0, message: 'Backup', data: { backupPath: tarPath }, skipped: false }
-  } catch (e) {
-    console.log(e)
-    return { error: 1, message: e.message, data: {}, skipped: false }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: err.message, data: {}, skipped: false }
   }
 }
 
