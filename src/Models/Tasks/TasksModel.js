@@ -1,26 +1,17 @@
 const cron = require('node-cron')
+const { evSendTaskStatus } = require('./Ev')
 
-const addTask = (id, fnName) => {
+const addTask = (id, pattern = '* * * * *', fnName) => {
   // Schedule the job
   cron.schedule(
-    `0 * * * *`,
-    () => {
-      fnName(null, id)
+    pattern,
+    async () => {
+      evSendTaskStatus(id, 'running')
+      await fnName(null, id)
+      evSendTaskStatus(id, 'done')
     },
     {
       name: id,
-      scheduled: false, // This prevents the job from being started automatically
-    },
-  )
-
-  // Schedule the job
-  cron.schedule(
-    `0 * * * *`,
-    () => {
-      console.log('Task 2')
-    },
-    {
-      name: id + '2',
       scheduled: false, // This prevents the job from being started automatically
     },
   )

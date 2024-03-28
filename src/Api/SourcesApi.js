@@ -26,6 +26,7 @@ const {
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
+const { setEv } = require('../Models/Tasks/Ev')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -35,9 +36,14 @@ const { backupStart, backupStop } = require('./SourceBackupApi')
 // data = {id: '', type: '', databaseOrPath: '', host: '', user: '', password: '', directory: ''  }
 
 // Get Lists of Sources // ev, data
-const getSources = async () => {
+const getSources = async (ev) => {
   try {
     const data = await getAllDocuments(DB_SOURCE)
+
+    // EV
+    setEv(ev)
+
+    //getEv().sender.send('task-status', { id: 'OK', status: 'running' })
 
     return { error: 0, message: 'List of Sources', data: data }
   } catch (err) {
