@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
 var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
+const { app } = require('electron');
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
@@ -50,7 +52,7 @@ const backupToBucket2 = async (filePath, destConfig, remoteDir = 'backup', gzip 
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
-      keyFilename: destConfig.keyFilename,
+      keyFilename: path.resolve(app.getAppPath(), destConfig.keyFilename),
     })
 
     const status = await storage.bucket(destConfig.bucket).upload(filePath, {
