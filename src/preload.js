@@ -13,13 +13,9 @@ if (electron && electron.ipcRenderer) {
     obj[key] = (data) => ipcRenderer.invoke(key, data)
   })
 
-  // add Listener
-  ipcRenderer.on('task-status', (ev, data) => {
-    console.log('T Status: ', data, ev)
-  })
-
-  // remove Listener
-  ipcRenderer.removeAllListeners('task-status')
+  // Message Sender
+  obj.messageOn = (id, fn) => ipcRenderer.on(id, fn)
+  obj.messageOff = (id) => ipcRenderer.removeAllListeners(id)
 
   contextBridge.exposeInMainWorld('electronAPI', obj)
 } else {

@@ -26,7 +26,7 @@ const {
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
-const { setEv } = require('../Models/Tasks/Ev')
+const { setEv, evSendTaskStatus } = require('../Models/Tasks/Ev')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -42,6 +42,9 @@ const getSources = async (ev) => {
 
     // EV
     setEv(ev)
+
+    // Sending test message
+    evSendTaskStatus('OK', 'running')
 
     //getEv().sender.send('task-status', { id: 'OK', status: 'running' })
 
