@@ -11,6 +11,7 @@ const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
+const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -64,4 +65,7 @@ module.exports = {
 
   //open directory in file explorer
   exploreDirectory,
+
+  //get tasks status
+  getTasksStatus
 }
