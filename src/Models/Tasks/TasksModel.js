@@ -24,10 +24,11 @@ const startTask = (id) => {
   }
 }
 
-const stopTask = (id) => {
+const stopTask = async (id) => {
   const task = cron.getTasks().get(id)
   if (task) {
-    task.stop()
+    await task.stop()
+    evSendTaskStatus(id, 'stopped')
   }
 }
 
