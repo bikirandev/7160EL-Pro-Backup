@@ -1,14 +1,21 @@
 const cron = require('node-cron')
 const { evSendTaskStatus } = require('./Ev')
+const { createErrorLog } = require('../Logs/LogCreate')
 
 const addTask = (id, fnName, pattern = '* * * * *') => {
   // Schedule the job
   cron.schedule(
     pattern,
     async () => {
-      evSendTaskStatus(id, 'running')
-      await fnName(null, id)
-      evSendTaskStatus(id, 'done')
+      try {
+        evSendTaskStatus(id, 'running')
+        await fnName(null, id)
+        evSendTaskStatus(id, 'done')
+      } catch (err) {
+        createErrorLog(`Task ${id} error: ${err.message}`)
+        createErrorLog(JSON.stringify(err))
+        evSendTaskStatus(id, 'error')
+      }
     },
     {
       name: id,
