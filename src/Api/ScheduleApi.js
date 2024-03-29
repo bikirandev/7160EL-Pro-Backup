@@ -8,8 +8,11 @@ const scheduleStart = async (ev, id) => {
   const sourceInfo = await getDocument(DB_SOURCE, id)
   console.log('sourceInfo', sourceInfo)
 
+  // generate random number between 0 and 59
+  const random = Math.floor(Math.random() * 60)
+
   // Creating a new task
-  addTask(id, forceBackup, sourceInfo.frequencyPattern || '0 * * * *')
+  addTask(id, forceBackup, sourceInfo.frequencyPattern || `${random} * * * *`)
 
   // Start the task
   startTask(id)
