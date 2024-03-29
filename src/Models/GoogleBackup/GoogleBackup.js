@@ -46,7 +46,13 @@ const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip =
   }
 }
 
-const backupToBucket2 = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
+const backupToBucket2 = async (
+  sourceId,
+  filePath,
+  destConfig,
+  remoteDir = 'backup',
+  gzip = false,
+) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
   const destination = `${remoteDir}/${fileName}`
 

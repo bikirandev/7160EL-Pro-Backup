@@ -1,7 +1,19 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
-const { sourceDataPattern, validateType, validateMssqlWinData, validateMssqlHostData, validatePgsqlData, validateDirectory } = require('../Models/Sources/SourcesDataValidate')
-const { mssqlWinExec, directoryBackup, mssqlWinConnect, mssqlWinDemo } = require('../Models/Sources/SourcesExecution')
+const {
+  sourceDataPattern,
+  validateType,
+  validateMssqlWinData,
+  validateMssqlHostData,
+  validatePgsqlData,
+  validateDirectory,
+} = require('../Models/Sources/SourcesDataValidate')
+const {
+  mssqlWinExec,
+  directoryBackup,
+  mssqlWinConnect,
+  mssqlWinDemo,
+} = require('../Models/Sources/SourcesExecution')
 const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
@@ -105,7 +117,7 @@ const forceBackup = async (ev, id) => {
     const basename = path.basename(sourceData.databaseOrPath) || sourceData.databaseOrPath
 
     // Step-5: Upload to destination
-    await backupToBucket2(backupPath, destConfig, `${sourceData.type}/${basename}`, false)
+    await backupToBucket2(id, backupPath, destConfig, `${sourceData.type}/${basename}`, false)
 
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
@@ -123,7 +135,6 @@ const updateAutoStart = async (ev, data) => {
   try {
     // Check if database already exists
     const exData = await getAllDocuments(DB_SOURCE)
-    
 
     // Check if source not exists
     const nExtData = exData.find((x) => x._id === data._id)
@@ -162,5 +173,5 @@ module.exports = {
   backupAction,
   linkDestination,
   forceBackup,
-  updateAutoStart
+  updateAutoStart,
 }

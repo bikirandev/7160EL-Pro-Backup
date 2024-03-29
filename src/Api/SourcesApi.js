@@ -25,13 +25,6 @@ const { backupStart, backupStop } = require('./SourceBackupApi')
 const { setEv } = require('../Models/Tasks/Ev')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
 
-// eslint-disable-next-line no-unused-vars
-//const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
-
-// ## Note
-// type: 'mssql-win', 'mssql-host', 'directory'
-// data = {id: '', type: '', databaseOrPath: '', host: '', user: '', password: '', directory: ''  }
-
 // Get Lists of Sources // ev, data
 const getSources = async (ev) => {
   try {
