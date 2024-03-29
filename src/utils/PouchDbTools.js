@@ -95,6 +95,7 @@ const generateHash = () => {
 module.exports = {
   DB_SOURCE: 'db_sources',
   DB_DESTINATION: 'db_destinations',
+  DB_BACKUPS: 'db_backups',
   DB_CONFIG: 'db_config',
   getAllDocuments,
   getDocument,

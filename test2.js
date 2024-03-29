@@ -1,9 +1,49 @@
 const { getRecentBackups } = require('./src/Models/GoogleBackup/GoogleBackup')
 const { destinations } = require('./Default/DefaultValue')
+const { DB_BACKUPS, getAllDocuments, createDocument } = require('./src/utils/PouchDbTools')
 
-const abc = async () => {
-  const aaa = await getRecentBackups(destinations[0])
-  return aaa
+const dataPattern = {
+  _id: '',
+  name: '',
+  timeCreated: 0,
+  timeUpdated: 0,
+  size: 0,
+  sourceId: '',
+  destinationId: '',
+  status: 'active', // active, deleted
 }
 
-console.log(abc())
+const abc = async () => {
+  try {
+    const files = await getRecentBackups(destinations[0], '')
+
+    // Collect Local records of backup
+    const localRec = await getAllDocuments(DB_BACKUPS)
+
+    // Update Local records of backup
+    for (const file of files.data) {
+      if (localRec.find((x) => x._id === file._id)) {
+        continue
+      }
+      await createDocument(DB_BACKUPS, { ...dataPattern, ...file })
+    }
+
+    // Update Local records of backup
+    // for (const rec of localRec) {
+    //   if (!files.data.find((x) => x._id === rec._id)) {
+    //     await updateDocument(DB_BACKUPS, rec._id, { ...rec, status: 'deleted' })
+    //   }
+    // }
+
+    // Collect Local records of backup
+    const localRec2 = await getAllDocuments(DB_BACKUPS)
+
+    return { error: 0, message: 'Backup records updated', data: localRec2 }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+abc().then((res) => {
+  console.log(res.data)
+})

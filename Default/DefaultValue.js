@@ -1,6 +1,7 @@
 const values = {
   destinations: [
     {
+      _id: 'default',
       type: 'gcloud-bucket',
       title: 'Sea Resources Group',
       location: 'SG',
