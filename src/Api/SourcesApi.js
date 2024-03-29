@@ -22,7 +22,8 @@ const {
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
-const { setEv, evSendTaskStatus } = require('../Models/Tasks/Ev')
+const { setEv } = require('../Models/Tasks/Ev')
+const { getTasksStatus } = require('../Models/Tasks/TasksModel')
 
 // eslint-disable-next-line no-unused-vars
 //const { validateMssqlWin } = require('../Models/Sources/SourcesValidate')
@@ -36,15 +37,13 @@ const getSources = async (ev) => {
   try {
     const data = await getAllDocuments(DB_SOURCE)
 
-    // EV
+    // Set Default EV
     setEv(ev)
 
     // Sending test message
-    evSendTaskStatus('OK', 'running')
+    const tasks = getTasksStatus()
 
-    //getEv().sender.send('task-status', { id: 'OK', status: 'running' })
-
-    return { error: 0, message: 'List of Sources', data: data }
+    return { error: 0, message: 'List of Sources', data: data, tasks: tasks }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: [] }
