@@ -2,7 +2,7 @@ const cron = require('node-cron')
 const { evSendTaskStatus } = require('./Ev')
 const { createErrorLog } = require('../Logs/LogCreate')
 
-const addTask = (id, fnName, pattern = '* * * * *') => {
+const addTask = (id, fnName, pattern) => {
   // Schedule the job
   cron.schedule(
     pattern,

@@ -1,9 +1,17 @@
 const { addTask, startTask, stopTask, getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { getDocument, DB_SOURCE } = require('../utils/PouchDbTools')
 const { forceBackup } = require('./SourceBackupApi')
 
 // backup create and backup start
 const scheduleStart = async (ev, id) => {
-  addTask(id, forceBackup)
+  // Collect the backup source
+  const sourceInfo = await getDocument(DB_SOURCE, id)
+  console.log('sourceInfo', sourceInfo)
+
+  // Creating a new task
+  addTask(id, forceBackup, sourceInfo.frequencyPattern || '0 * * * *')
+
+  // Start the task
   startTask(id)
 
   const st = getTasksStatus()
