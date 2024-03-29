@@ -1,6 +1,3 @@
-const fs = require('fs')
-const { getDestination } = require('../Models/Destinations/DestinationModel')
-const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
 const {
   validateMssqlWinData,
   sourceDataPattern,
@@ -22,7 +19,6 @@ const {
   deleteDocument,
   updateDocument,
   generateHash,
-  getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { backupStart, backupStop } = require('./SourceBackupApi')
@@ -225,54 +221,6 @@ const linkDestination = async (ev, data) => {
   }
 }
 
-// force backup
-const forceBackup = async (ev, id) => {
-  try {
-    // Step-1: Get source configuration
-    const sourceData = await getDocument(DB_SOURCE, id)
-    if (!sourceData) {
-      return { error: 1, message: 'Source not exists', data: [] }
-    }
-
-    const destinationId = sourceData.destinationId
-    if (!destinationId) {
-      return { error: 1, message: 'Destination not linked', data: [] }
-    }
-
-    // Step-3: Collect destination configuration
-    const destConfig = await getDestination(destinationId)
-    if (destConfig.title === '') {
-      return { error: 1, message: 'Destination config not found', data: [] }
-    }
-
-    // Step-4: Execute backup
-    const backupSt = validateAll([
-      await mssqlWinExec(sourceData),
-      await directoryBackup(sourceData),
-    ])
-    if (backupSt.error === 1) {
-      return backupSt
-    }
-    const backupPath = backupSt.data.backupPath
-
-    // Step-5: Upload to destination
-    await backupToBucket2(
-      backupPath,
-      destConfig,
-      `${sourceData.type}/${sourceData.databaseOrPath}`,
-      false,
-    )
-
-    // Step-6: Remove local file
-    await fs.unlinkSync(backupPath)
-
-    return { error: 0, message: 'Backup successful', data: {} }
-  } catch (err) {
-    console.log(err)
-    return { error: 1, message: 'Error on force backup', data: [] }
-  }
-}
-
 module.exports = {
   getSources,
   addSource,
@@ -280,7 +228,6 @@ module.exports = {
   deleteSource,
   backupAction,
   linkDestination,
-  forceBackup,
   backupStart,
   backupStop,
 }
