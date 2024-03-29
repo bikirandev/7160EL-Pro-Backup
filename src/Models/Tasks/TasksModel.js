@@ -1,6 +1,7 @@
 const cron = require('node-cron')
 const { evSendTaskStatus } = require('./Ev')
 const { createErrorLog } = require('../Logs/LogCreate')
+const { getNextRunTime } = require('../../utils/Cron')
 
 const addTask = (id, fnName, pattern) => {
   // Schedule the job
@@ -20,6 +21,7 @@ const addTask = (id, fnName, pattern) => {
     {
       name: id,
       scheduled: false, // This prevents the job from being started automatically
+      pattern: pattern,
     },
   )
 }
@@ -34,8 +36,7 @@ const startTask = (id) => {
 const stopTask = async (id) => {
   const task = cron.getTasks().get(id)
   if (task) {
-    await task.stop()
-    evSendTaskStatus(id, 'stopped')
+    task.stop()
   }
 }
 
@@ -43,11 +44,17 @@ const getTasksStatus = () => {
   const status = []
 
   cron.getTasks().forEach((task) => {
+    const pattern = task.options.pattern // 30 * * * *
+
     status.push({
       id: task.options.name,
       running: !!task._scheduler.timeout,
+      nextRun: getNextRunTime(pattern).unix(),
+      timeRemaining: getNextRunTime(pattern).diff(new Date(), 'seconds'),
+      pattern,
     })
   })
+
   return status
 }
 
