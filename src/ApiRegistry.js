@@ -12,6 +12,7 @@ const { backupAction, linkDestination, forceBackup } = require('./Api/SourceBack
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
+const { inti } = require('./Api/InitApi')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -33,6 +34,7 @@ const openDirectoryDialog = async () => {
 }
 
 module.exports = {
+  inti,
   closeWindow,
   minimizeWindow,
 
@@ -67,5 +69,5 @@ module.exports = {
   exploreDirectory,
 
   //get tasks status
-  getTasksStatus
+  getTasksStatus,
 }
