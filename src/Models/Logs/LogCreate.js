@@ -15,10 +15,16 @@ function createLog(logType, logText) {
 }
 
 function createErrorLog(logText) {
+  if (typeof logText === 'object') {
+    logText = JSON.stringify(logText)
+  }
   createLog('Error', logText)
 }
 
 function createSuccessLog(logText) {
+  if (typeof logText === 'object') {
+    logText = JSON.stringify(logText)
+  }
   createLog('Success', logText)
 }
 

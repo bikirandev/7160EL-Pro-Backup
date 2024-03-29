@@ -3,7 +3,8 @@ var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
-const { app } = require('electron');
+const { app } = require('electron')
+const { createErrorLog } = require('../Logs/LogCreate')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
@@ -66,7 +67,35 @@ const backupToBucket2 = async (filePath, destConfig, remoteDir = 'backup', gzip 
   }
 }
 
+const getRecentBackups = async (destConfig, remoteDir = 'backup') => {
+  try {
+    const storage = new Storage({
+      projectId: destConfig.projectId,
+      keyFilename: destConfig.keyFilename,
+    })
+
+    console.log(remoteDir)
+    const [files] = await storage.bucket(destConfig.bucket).getFiles()
+
+    createErrorLog(
+      files.map((file) => {
+        return {
+          name: file.name,
+          timeCreated: file.metadata.timeCreated,
+          updated: file.metadata.updated,
+          size: file.metadata.size,
+        }
+      }),
+    )
+
+    return { error: 0, message: 'Backup successful', data: files }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 module.exports = {
   backupToBucket,
   backupToBucket2,
+  getRecentBackups,
 }

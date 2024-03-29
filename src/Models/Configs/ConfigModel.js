@@ -1,4 +1,5 @@
 const { getAllDocuments, DB_CONFIG } = require('../../utils/PouchDbTools')
+const moment = require('moment')
 
 // const configPattern = {
 //   key: '',
@@ -26,13 +27,7 @@ const getDefaultDirectory = async () => {
 }
 
 const generateFilePath = async (data) => {
-  const date = new Date()
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
+  const dateNow = moment().format('YYYYMMDD_HHmmss')
 
   try {
     // Default Directory
@@ -44,13 +39,13 @@ const generateFilePath = async (data) => {
 
     if (data.type === 'directory') {
       const dName = data.databaseOrPath.replace(/[^a-zA-Z0-9]/g, '_')
-      const dirName = `${data.type}_${year}${month}${day}_${hour}${minute}${second}_${dName}`
+      const dirName = `${data.type}_${dateNow}_${dName}`
 
       return { error: 0, message: 'Directory Path', data: { defDirPath, fileName: null, dirName } }
     }
 
     // File Name
-    const fileName = `${data.type}_${data.databaseOrPath}_${year}${month}${day}_${hour}${minute}${second}.bak`
+    const fileName = `${data.type}_${data.databaseOrPath}_${dateNow}.bak`
 
     // File Path
     return { error: 0, message: 'File Path', data: { defDirPath, fileName, dirName: null } }
