@@ -128,6 +128,7 @@ const forceBackup = async (ev, id) => {
     return { error: 1, message: 'Error on force backup', data: [] }
   }
 }
+
 // update source autoStart property only
 const updateAutoStart = async (ev, data) => {
   const nData = { ...sourceDataPattern, ...data }
@@ -169,9 +170,51 @@ const updateAutoStart = async (ev, data) => {
   }
 }
 
+// update frequency
+const updateFrequency = async (ev, data) => {
+  const nData = { ...sourceDataPattern, ...data }
+
+  try {
+    // Check if database already exists
+    const exData = await getAllDocuments(DB_SOURCE)
+
+    // Check if source not exists
+    const nExtData = exData.find((x) => x._id === data._id)
+    if (!nExtData) {
+      return { error: 1, message: 'Source not exists', data: [] }
+    }
+
+    const validationPerms = [
+      validateType(nData), // Validate Type
+      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+      validateDirectory(nData), // Validate Directory Data, if type is directory
+      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
+      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
+      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
+      await directoryBackup(nData), // Validate Directory Backup
+    ]
+
+    // Data Validation
+    const validate = validateAll(validationPerms)
+    if (validate.error === 1) {
+      return validate
+    }
+
+    const result = await updateDocument(DB_SOURCE, data._id, nData)
+
+    return { error: 0, message: 'Frequency updated', data: result }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on updating Frequency', data: [] }
+  }
+}
+
 module.exports = {
   backupAction,
   linkDestination,
   forceBackup,
   updateAutoStart,
+  updateFrequency
 }

@@ -8,7 +8,7 @@ const {
 const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
-const { backupAction, linkDestination, forceBackup, updateAutoStart } = require('./Api/SourceBackupApi')
+const { backupAction, linkDestination, forceBackup, updateAutoStart, updateFrequency } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
@@ -42,6 +42,7 @@ module.exports = {
   addSource,
   updateSource,
   updateAutoStart,
+  updateFrequency,
   deleteSource,
 
   scheduleStart,
