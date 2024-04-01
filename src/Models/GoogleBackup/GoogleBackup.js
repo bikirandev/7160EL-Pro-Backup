@@ -4,7 +4,6 @@ var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
 const { app } = require('electron')
-const isoToUnix = require('../../../isoToUnix')
 //const { createErrorLog } = require('../Logs/LogCreate')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
@@ -83,24 +82,24 @@ const backupToBucket2 = async (
   }
 }
 
-const getRecentBackups = async (ev, data) => {
+const getRecentBackups = async (destConfig, remoteDir = '') => {
   try {
     const storage = new Storage({
-      projectId: data?.projectId,
-      keyFilename: data?.keyFilename,
+      projectId: destConfig.projectId,
+      keyFilename: destConfig.keyFilename,
     })
 
     // Find by metadata sourceId
-    const [files] = await storage.bucket(data?.bucket).getFiles({
-      prefix: data?.remoteDir,
+    const [files] = await storage.bucket(destConfig.bucket).getFiles({
+      prefix: remoteDir,
     })
 
     const nFiles = files.map((file) => {
       return {
         _id: file.id,
         name: file.name,
-        timeCreated: isoToUnix(file.metadata.timeCreated),
-        timeUpdated: isoToUnix(file.metadata.updated),
+        timeCreated: file.metadata.timeCreated,
+        timeUpdated: file.metadata.updated,
         size: file.metadata.size,
         sourceId: file.metadata.metadata.sourceId,
         destinationId: file.metadata.metadata.destinationId,

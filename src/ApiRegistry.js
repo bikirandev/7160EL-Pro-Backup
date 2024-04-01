@@ -13,7 +13,6 @@ const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { inti } = require('./Api/InitApi')
-const { getRecentBackups } = require('./Models/GoogleBackup/GoogleBackup')
 
 // /api/registration
 const closeWindow = (ev, data) => {
@@ -55,7 +54,6 @@ module.exports = {
   //backup process
   backupAction,
   forceBackup,
-  getRecentBackups,
 
   getDestinations,
   addDestination,
