@@ -18,72 +18,10 @@ const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
 const path = require('path')
+const isoToUnix = require('../utils/isoToUnix')
 
-// API for start or stop backup process
-const backupAction = async (ev, data) => {
-  try {
-    // Check if database already exists
-    const exData = await getAllDocuments(DB_SOURCE)
 
-    // Check if _id not exists
-    const exId = exData.find((x) => x._id === data._id)
-    if (!exId) {
-      return { error: 1, message: 'Source not exists', data: [] }
-    }
 
-    const nData = {
-      _id: data._id,
-      type: data.type,
-      databaseOrPath: data.databaseOrPath,
-      host: data.host,
-      user: data.user,
-      password: data.password,
-      directory: data.directory,
-      running: data.running,
-      destination: data.destination,
-    }
-
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
-
-    return { error: 0, message: data.running ? 'Backup started' : 'Backup stopped', data: result }
-  } catch (err) {
-    console.log(err)
-    return { error: 1, message: 'Error on start backup', data: [] }
-  }
-}
-
-// API for link destination to source
-const linkDestination = async (ev, data) => {
-  try {
-    // Check if database already exists
-    const exData = await getAllDocuments(DB_SOURCE)
-
-    // Check if _id not exists
-    const exId = exData.find((x) => x._id === data._id)
-    if (!exId) {
-      return { error: 1, message: 'Source not exists', data: [] }
-    }
-
-    const nData = {
-      _id: data._id,
-      type: data.type,
-      databaseOrPath: data.databaseOrPath,
-      host: data.host,
-      user: data.user,
-      password: data.password,
-      directory: data.directory,
-      running: data.running,
-      destination: data.destination,
-    }
-
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
-
-    return { error: 0, message: 'Destination linked', data: result }
-  } catch (err) {
-    console.log(err)
-    return { error: 1, message: 'Error on linking destination', data: [] }
-  }
-}
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -211,10 +149,41 @@ const updateFrequency = async (ev, data) => {
   }
 }
 
+
+// get recent backups
+const getRecentBackups = async (ev, data) => {
+  try {
+    const storage = new Storage({
+      projectId: data?.projectId,
+      keyFilename: data?.keyFilename,
+    })
+
+    // Find by metadata sourceId
+    const [files] = await storage.bucket(data?.bucket).getFiles({
+      prefix: data?.remoteDir,
+    })
+
+    const nFiles = files.map((file) => {
+      return {
+        _id: file.id,
+        name: file.name,
+        timeCreated: isoToUnix(file.metadata.timeCreated),
+        timeUpdated: isoToUnix(file.metadata.updated),
+        size: file.metadata.size,
+        sourceId: file.metadata.metadata.sourceId,
+        destinationId: file.metadata.metadata.destinationId,
+      }
+    })
+
+    return { error: 0, message: 'List of Backups', data: nFiles }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 module.exports = {
-  backupAction,
-  linkDestination,
   forceBackup,
   updateAutoStart,
-  updateFrequency
+  updateFrequency,
+  getRecentBackups
 }
