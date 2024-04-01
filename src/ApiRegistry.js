@@ -12,7 +12,7 @@ const { forceBackup, updateAutoStart, updateFrequency, getRecentBackups } = requ
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
-const { inti } = require('./Api/InitApi')
+const { init } = require('./Api/InitApi')
 // /api/registration
 const closeWindow = (ev, data) => {
   console.log(ev, data)
@@ -33,7 +33,7 @@ const openDirectoryDialog = async () => {
 }
 
 module.exports = {
-  inti,
+  init,
   closeWindow,
   minimizeWindow,
 

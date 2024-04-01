@@ -3,7 +3,7 @@ const { addTask, startTask } = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE } = require('../utils/PouchDbTools')
 const { forceBackup } = require('./SourceBackupApi')
 
-const inti = async (ev) => {
+const init = async (ev) => {
   // EV
   setEv(ev)
 
@@ -30,5 +30,5 @@ const inti = async (ev) => {
 }
 
 module.exports = {
-  inti,
+  init,
 }
