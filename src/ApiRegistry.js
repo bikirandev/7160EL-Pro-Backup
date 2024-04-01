@@ -5,15 +5,14 @@ const {
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const { getSources, addSource, updateSource, deleteSource } = require('./Api/SourcesApi')
+const { getSources, addSource, updateSource, deleteSource, linkDestination } = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
-const { linkDestination, forceBackup, updateAutoStart, updateFrequency, getRecentBackups } = require('./Api/SourceBackupApi')
+const { forceBackup, updateAutoStart, updateFrequency, getRecentBackups } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { inti } = require('./Api/InitApi')
-
 // /api/registration
 const closeWindow = (ev, data) => {
   console.log(ev, data)
