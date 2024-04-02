@@ -126,23 +126,23 @@ const updateFrequency = async (ev, data) => {
       return { error: 1, message: 'Source not exists', data: [] }
     }
 
-    const validationPerms = [
-      validateType(nData), // Validate Type
-      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-      validateDirectory(nData), // Validate Directory Data, if type is directory
-      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await dirBackup(nData), // Validate Directory Backup
-    ]
+    // const validationPerms = [
+    //   validateType(nData), // Validate Type
+    //   validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
+    //   validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
+    //   validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
+    //   validateDirectory(nData), // Validate Directory Data, if type is directory
+    //   await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
+    //   await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
+    //   await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
+    //   await dirBackup(nData), // Validate Directory Backup
+    // ]
 
-    // Data Validation
-    const validate = validateAll(validationPerms)
-    if (validate.error === 1) {
-      return validate
-    }
+    // // Data Validation
+    // const validate = validateAll(validationPerms)
+    // if (validate.error === 1) {
+    //   return validate
+    // }
 
     const result = await updateDocument(DB_SOURCE, data._id, nData)
 
@@ -155,6 +155,8 @@ const updateFrequency = async (ev, data) => {
       stopTask(data._id)
       startTask(data._id, forceBackup, data.frequencyPattern)
     }
+
+    stopTask(data._id)
 
     return { error: 0, message: 'Frequency updated', data: result }
   } catch (err) {

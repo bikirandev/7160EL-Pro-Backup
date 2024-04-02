@@ -1,6 +1,6 @@
 const { generateFilePath } = require('../Configs/ConfigModel')
 const path = require('path')
-const { Execute } = require('../../utils/Execute')
+const Execute = require('../../utils/Execute')
 
 const mssqlWinExecBackup = async (sourceData) => {
   const database = sourceData.databaseOrPath
