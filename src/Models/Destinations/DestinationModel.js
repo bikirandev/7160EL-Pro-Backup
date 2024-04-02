@@ -57,7 +57,7 @@ const getDestination = async (id) => {
     return destination
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Destination', data: {} }
+    return { error: 1, message: 'Error on finding Destination', data: null }
   }
 }
 

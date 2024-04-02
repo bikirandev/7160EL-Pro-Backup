@@ -10,7 +10,6 @@ const {
   mssqlWinExec,
   mssqlWinConnect,
   mssqlWinDemo,
-  directoryBackup,
 } = require('../Models/Sources/SourcesExecution')
 const {
   getAllDocuments,
@@ -23,6 +22,7 @@ const {
 const { validateAll } = require('../utils/Validate')
 const { setEv } = require('../Models/Tasks/Ev')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
 
 // Get Lists of Sources // ev, data
 const getSources = async (ev) => {
@@ -64,7 +64,7 @@ const addSource = async (ev, data) => {
       await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
       await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
       await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await directoryBackup(nData), // Validate Directory Backup
+      await dirBackup(nData), // Validate Directory Backup
     ]
 
     // Data Validation
@@ -108,7 +108,7 @@ const updateSource = async (ev, data) => {
       await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
       await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
       await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await directoryBackup(nData), // Validate Directory Backup
+      await dirBackup(nData), // Validate Directory Backup
     ]
 
     // Data Validation
@@ -185,5 +185,5 @@ module.exports = {
   addSource,
   updateSource,
   deleteSource,
-  linkDestination
+  linkDestination,
 }

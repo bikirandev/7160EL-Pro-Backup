@@ -10,7 +10,6 @@ const {
 } = require('../Models/Sources/SourcesDataValidate')
 const {
   mssqlWinExec,
-  directoryBackup,
   mssqlWinConnect,
   mssqlWinDemo,
 } = require('../Models/Sources/SourcesExecution')
@@ -20,9 +19,7 @@ const fs = require('fs')
 const path = require('path')
 const isoToUnix = require('../utils/isoToUnix')
 const { Storage } = require('@google-cloud/storage')
-
-
-
+const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -45,10 +42,7 @@ const forceBackup = async (ev, id) => {
     }
 
     // Step-4: Execute backup
-    const backupSt = validateAll([
-      await mssqlWinExec(sourceData),
-      await directoryBackup(sourceData),
-    ])
+    const backupSt = validateAll([await mssqlWinExec(sourceData), await dirBackup(sourceData)])
     if (backupSt.error === 1) {
       return backupSt
     }
@@ -61,7 +55,7 @@ const forceBackup = async (ev, id) => {
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
 
-    return { error: 0, message: 'Backup successful', data: {} }
+    return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on force backup', data: [] }
@@ -91,7 +85,7 @@ const updateAutoStart = async (ev, data) => {
       await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
       await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
       await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await directoryBackup(nData), // Validate Directory Backup
+      await dirBackup(nData), // Validate Directory Backup
     ]
 
     // Data Validation
@@ -132,7 +126,7 @@ const updateFrequency = async (ev, data) => {
       await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
       await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
       await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await directoryBackup(nData), // Validate Directory Backup
+      await dirBackup(nData), // Validate Directory Backup
     ]
 
     // Data Validation
@@ -149,7 +143,6 @@ const updateFrequency = async (ev, data) => {
     return { error: 1, message: 'Error on updating Frequency', data: [] }
   }
 }
-
 
 // get recent backups
 const getRecentBackups = async (ev, data) => {
@@ -186,5 +179,5 @@ module.exports = {
   forceBackup,
   updateAutoStart,
   updateFrequency,
-  getRecentBackups
+  getRecentBackups,
 }
