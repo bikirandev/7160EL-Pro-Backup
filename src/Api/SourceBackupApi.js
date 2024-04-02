@@ -1,19 +1,6 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { backupToBucket2 } = require('../Models/GoogleBackup/GoogleBackup')
-const {
-  sourceDataPattern,
-  validateType,
-  validateMssqlWinData,
-  validateMssqlHostData,
-  validatePgsqlData,
-  validateDirectory,
-} = require('../Models/Sources/SourcesDataValidate')
-const {
-  mssqlWinExec,
-  mssqlWinConnect,
-  mssqlWinDemo,
-} = require('../Models/Sources/SourcesExecution')
-const { getAllDocuments, DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
+const { DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const fs = require('fs')
 const path = require('path')
@@ -77,37 +64,27 @@ const forceBackup = async (ev, id) => {
 
 // update source autoStart property only
 const updateAutoStart = async (ev, data) => {
-  const nData = { ...sourceDataPattern, ...data }
+  // Data
+  // _id: '------------------------',
+  // autostart: true,
+
+  if (!data._id) {
+    return { error: 1, message: 'Source ID not found', data: null }
+  }
 
   try {
     // Check if database already exists
-    const exData = await getAllDocuments(DB_SOURCE)
+    const exData = await getDocument(DB_SOURCE, data._id)
 
     // Check if source not exists
-    const nExtData = exData.find((x) => x._id === data._id)
-    if (!nExtData) {
+    if (!exData?._id) {
       return { error: 1, message: 'Source not exists', data: null }
     }
 
-    const validationPerms = [
-      validateType(nData), // Validate Type
-      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-      validateDirectory(nData), // Validate Directory Data, if type is directory
-      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await dirBackup(nData), // Validate Directory Backup
-    ]
-
-    // Data Validation
-    const validate = validateAll(validationPerms)
-    if (validate.error === 1) {
-      return validate
-    }
-
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
+    const result = await updateDocument(DB_SOURCE, data._id, {
+      ...exData,
+      autostart: !!data.autostart,
+    })
 
     return { error: 0, message: 'Auto start status updated', data: result }
   } catch (err) {
