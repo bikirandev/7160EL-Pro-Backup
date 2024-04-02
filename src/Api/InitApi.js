@@ -23,7 +23,7 @@ const init = async (ev) => {
     return { error: 0, message: 'Application Init Success', data: data }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: [] }
+    return { error: 1, message: 'Error on finding Sources', data: null }
   }
 }
 

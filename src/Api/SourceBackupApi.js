@@ -20,8 +20,12 @@ const path = require('path')
 const isoToUnix = require('../utils/isoToUnix')
 const { Storage } = require('@google-cloud/storage')
 const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
-const { getTasksStatus, stopTask, startTask } = require('../Models/Tasks/TasksModel')
+const { restartIfRunning } = require('../Models/Tasks/TasksModel')
 const { mssqlWinExecBackup } = require('../Models/BackupLocal/BackupLocalMssql')
+const cornParser = require('cron-parser')
+
+// frequency = hourly, daily
+const allowedFrequency = ['hourly', 'daily']
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -67,7 +71,7 @@ const forceBackup = async (ev, id) => {
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on force backup', data: [] }
+    return { error: 1, message: 'Error on force backup', data: null }
   }
 }
 
@@ -82,7 +86,7 @@ const updateAutoStart = async (ev, data) => {
     // Check if source not exists
     const nExtData = exData.find((x) => x._id === data._id)
     if (!nExtData) {
-      return { error: 1, message: 'Source not exists', data: [] }
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
     const validationPerms = [
@@ -108,60 +112,66 @@ const updateAutoStart = async (ev, data) => {
     return { error: 0, message: 'Auto start status updated', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on updating Auto start', data: [] }
+    return { error: 1, message: 'Error on updating Auto start', data: null }
   }
 }
 
 // update frequency
 const updateFrequency = async (ev, data) => {
-  const nData = { ...sourceDataPattern, ...data }
+  // Data
+  // _id: '------------------------',
+  // frequency: 'hourly',
+  // frequencyPattern: '0 49 * * * *',
+  // backupQuantity: 100,
+  // backupRetention: 30,
+
+  if (!data._id) {
+    return { error: 1, message: 'Source ID not found', data: null }
+  }
+
+  if (!allowedFrequency.includes(data.frequency)) {
+    return { error: 1, message: 'Frequency (' + data.frequency + ') not allowed', data: null }
+  }
+
+  // Validate Pattern
+  try {
+    cornParser.parseExpression(data.frequencyPattern)
+  } catch (err) {
+    return { error: 1, message: 'Invalid frequency pattern', data: null }
+  }
+
+  if (data.backupQuantity < 10) {
+    return { error: 1, message: 'Backup quantity must be greater or equal than 10', data: null }
+  }
+
+  if (data.backupRetention < 7) {
+    return { error: 1, message: 'Backup retention must be greater or equal than 7', data: null }
+  }
 
   try {
     // Check if database already exists
-    const exData = await getAllDocuments(DB_SOURCE)
+    const exData = await getDocument(DB_SOURCE, data._id)
 
     // Check if source not exists
-    const nExtData = exData.find((x) => x._id === data._id)
-    if (!nExtData) {
-      return { error: 1, message: 'Source not exists', data: [] }
+    if (!exData?._id) {
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
-    // const validationPerms = [
-    //   validateType(nData), // Validate Type
-    //   validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-    //   validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-    //   validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-    //   validateDirectory(nData), // Validate Directory Data, if type is directory
-    //   await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-    //   await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-    //   await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-    //   await dirBackup(nData), // Validate Directory Backup
-    // ]
+    const result = await updateDocument(DB_SOURCE, data._id, {
+      ...exData,
+      frequency: data.frequency,
+      frequencyPattern: data.frequencyPattern,
+      backupQuantity: data.backupQuantity,
+      backupRetention: data.backupRetention,
+    })
 
-    // // Data Validation
-    // const validate = validateAll(validationPerms)
-    // if (validate.error === 1) {
-    //   return validate
-    // }
+    // Restart Task
+    restartIfRunning(data._id, forceBackup, data.frequencyPattern)
 
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
-
-    // check task running or not. if running then stop and start again with new frequency and if not running then do nothing
-    const task = getTasksStatus()
-
-    const currentSourceTaskStatus = task.find((x) => x.id === data._id)?.running
-
-    if (currentSourceTaskStatus) {
-      stopTask(data._id)
-      startTask(data._id, forceBackup, data.frequencyPattern)
-    }
-
-    stopTask(data._id)
-
-    return { error: 0, message: 'Frequency updated', data: result }
+    return { error: 0, message: 'Frequency updated successfully', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on updating Frequency', data: [] }
+    return { error: 1, message: 'Error on updating Frequency', data: null }
   }
 }
 

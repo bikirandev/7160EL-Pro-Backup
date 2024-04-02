@@ -7,7 +7,7 @@ const dirBackup = async (sourceData) => {
   const sourcePath = sourceData.databaseOrPath
 
   if (sourceData.type !== 'directory') {
-    return { error: 0, message: 'Skipped', data: [], skipped: true }
+    return { error: 0, message: 'Skipped', data: null, skipped: true }
   }
 
   try {

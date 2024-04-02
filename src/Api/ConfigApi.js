@@ -14,7 +14,7 @@ const getConfigs = async () => {
     return { error: 0, message: 'List of Sources', data: data }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: [] }
+    return { error: 1, message: 'Error on finding Sources', data: null }
   }
 }
 
@@ -38,10 +38,10 @@ const setDefaultDirectory = async (ev, data) => {
         value: directory,
       })
     }
-    return { error: 0, message: 'Default Directory Set', data: [] }
+    return { error: 0, message: 'Default Directory Set', data: null }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: [] }
+    return { error: 1, message: 'Error on finding Sources', data: null }
   }
 }
 

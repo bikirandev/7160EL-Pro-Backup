@@ -49,6 +49,21 @@ const stopTask = async (id) => {
   }
 }
 
+const restartTask = async (id, fnName, pattern) => {
+  stopTask(id)
+  startTask(id, fnName, pattern)
+}
+
+const restartIfRunning = async (id, fnName, pattern) => {
+  const oTask = cron.getTasks().get(id)
+
+  if (oTask) {
+    if (oTask._scheduler.timeout) {
+      restartTask(id, fnName, pattern)
+    }
+  }
+}
+
 const getTasksStatus = () => {
   const status = []
 
@@ -64,13 +79,13 @@ const getTasksStatus = () => {
     })
   })
 
-  console.log(status)
-
   return status
 }
 
 module.exports = {
   startTask,
   stopTask,
+  restartTask,
+  restartIfRunning,
   getTasksStatus,
 }

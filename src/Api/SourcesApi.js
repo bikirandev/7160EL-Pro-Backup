@@ -38,7 +38,7 @@ const getSources = async (ev) => {
     return { error: 0, message: 'List of Sources', data: data, tasks: tasks }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: [] }
+    return { error: 1, message: 'Error on finding Sources', data: null }
   }
 }
 
@@ -52,7 +52,7 @@ const addSource = async (ev, data) => {
     const exData = await getAllDocuments(DB_SOURCE)
     const ex = exData.find((x) => x.databaseOrPath === nData.databaseOrPath || x._id === hash)
     if (ex) {
-      return { error: 1, message: 'Database already exists', data: [] }
+      return { error: 1, message: 'Database already exists', data: null }
     }
 
     const validationPerms = [
@@ -77,7 +77,7 @@ const addSource = async (ev, data) => {
     return { error: 0, message: 'Source added', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: err, data: [] }
+    return { error: 1, message: err, data: null }
   }
 }
 
@@ -90,13 +90,13 @@ const updateSource = async (ev, data) => {
     const exData = await getAllDocuments(DB_SOURCE)
     const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
     if (exDbName) {
-      return { error: 1, message: 'Source already exists', data: [] }
+      return { error: 1, message: 'Source already exists', data: null }
     }
 
     // Check if _id not exists
     const exId = exData.find((x) => x._id === data._id)
     if (!exId) {
-      return { error: 1, message: 'Source not exists', data: [] }
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
     const validationPerms = [
@@ -122,7 +122,7 @@ const updateSource = async (ev, data) => {
     return { error: 0, message: 'Source updated', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on updating Source', data: [] }
+    return { error: 1, message: 'Error on updating Source', data: null }
   }
 }
 
@@ -134,7 +134,7 @@ const deleteSource = async (ev, data) => {
     // Check if _id not exists
     const exId = exData.find((x) => x._id === data._id)
     if (!exId) {
-      return { error: 1, message: 'Source not exists', data: [] }
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
     const result = await deleteDocument(DB_SOURCE, data._id)
@@ -142,7 +142,7 @@ const deleteSource = async (ev, data) => {
     return { error: 0, message: 'Source deleted', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on deleting Source', data: [] }
+    return { error: 1, message: 'Error on deleting Source', data: null }
   }
 }
 
@@ -156,7 +156,7 @@ const linkDestination = async (ev, data) => {
     // Check if _id not exists
     const exId = exData.find((x) => x._id === data._id)
     if (!exId) {
-      return { error: 1, message: 'Source not exists', data: [] }
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
     const nData = {
@@ -176,7 +176,7 @@ const linkDestination = async (ev, data) => {
     return { error: 0, message: 'Destination linked', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on linking destination', data: [] }
+    return { error: 1, message: 'Error on linking destination', data: null }
   }
 }
 

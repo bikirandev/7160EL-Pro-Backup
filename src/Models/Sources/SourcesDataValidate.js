@@ -29,10 +29,10 @@ const sourceTypes = {
 const validateType = (data) => {
   const nTypes = Object.values(sourceTypes)
   if (!nTypes.includes(data.type)) {
-    return { error: 1, message: 'Type is not valid', data: [] }
+    return { error: 1, message: 'Type is not valid', data: null }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'Data is valid', data: null }
 }
 
 const validateMssqlWin = (dbName) => {
@@ -50,7 +50,7 @@ const validateMssqlWin = (dbName) => {
       if (err) {
         reject('Error connecting to the database')
       } else {
-        resolve({ error: 0, message: 'Connection to the database successful', data: [] })
+        resolve({ error: 0, message: 'Connection to the database successful', data: null })
       }
     })
   })
@@ -58,90 +58,90 @@ const validateMssqlWin = (dbName) => {
 
 const validateMssqlWinData = (data) => {
   if (data.type !== 'mssql-win') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: null }
   }
 
   if (!data.host) {
-    return { error: 1, message: 'Host is required', data: [] }
+    return { error: 1, message: 'Host is required', data: null }
   }
 
   if (!data.databaseOrPath) {
-    return { error: 1, message: 'Database is required', data: [] }
+    return { error: 1, message: 'Database is required', data: null }
   }
 
   if (!data.operation) {
-    return { error: 1, message: 'Operation is required', data: [] }
+    return { error: 1, message: 'Operation is required', data: null }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'Data is valid', data: null }
 }
 
 const validateMssqlHostData = (data) => {
   if (data.type !== 'mssql-host') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: null }
   }
 
   if (!data.host) {
-    return { error: 1, message: 'Host is required', data: [] }
+    return { error: 1, message: 'Host is required', data: null }
   }
 
   if (!data.databaseOrPath) {
-    return { error: 1, message: 'Database is required', data: [] }
+    return { error: 1, message: 'Database is required', data: null }
   }
 
   if (!data.user) {
-    return { error: 1, message: 'User is required', data: [] }
+    return { error: 1, message: 'User is required', data: null }
   }
 
   if (!data.password) {
-    return { error: 1, message: 'Password is required', data: [] }
+    return { error: 1, message: 'Password is required', data: null }
   }
 
   if (!data.operation) {
-    return { error: 1, message: 'Operation is required', data: [] }
+    return { error: 1, message: 'Operation is required', data: null }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'Data is valid', data: null }
 }
 
 const validatePgsqlData = (data) => {
   if (data.type !== 'pgsql') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: null }
   }
 
   if (!data.host) {
-    return { error: 1, message: 'Host is required', data: [] }
+    return { error: 1, message: 'Host is required', data: null }
   }
 
   if (!data.databaseOrPath) {
-    return { error: 1, message: 'Database is required', data: [] }
+    return { error: 1, message: 'Database is required', data: null }
   }
 
   if (!data.user) {
-    return { error: 1, message: 'User is required', data: [] }
+    return { error: 1, message: 'User is required', data: null }
   }
 
   if (!data.password) {
-    return { error: 1, message: 'Password is required', data: [] }
+    return { error: 1, message: 'Password is required', data: null }
   }
 
   if (!data.operation) {
-    return { error: 1, message: 'Operation is required', data: [] }
+    return { error: 1, message: 'Operation is required', data: null }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'Data is valid', data: null }
 }
 
 const validateDirectory = (data) => {
   if (data.type !== 'directory') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: null }
   }
 
   if (!data.databaseOrPath) {
-    return { error: 1, message: 'Path is required', data: [] }
+    return { error: 1, message: 'Path is required', data: null }
   }
 
-  return { error: 0, message: 'Data is valid', data: [] }
+  return { error: 0, message: 'Data is valid', data: null }
 }
 
 // Export

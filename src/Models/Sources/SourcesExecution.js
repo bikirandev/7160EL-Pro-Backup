@@ -46,10 +46,10 @@ const mssqlWinDemo = async (data) => {
   //const database = data.databaseOrPath
 
   if (data.type !== 'mssql-win' || data.operation !== 'mssql-demo') {
-    return { error: 0, message: 'Skipped', data: [] }
+    return { error: 0, message: 'Skipped', data: null }
   }
 
-  return { error: 0, message: 'Demo', data: [] }
+  return { error: 0, message: 'Demo', data: null }
 }
 
 module.exports = {
