@@ -20,6 +20,7 @@ const path = require('path')
 const isoToUnix = require('../utils/isoToUnix')
 const { Storage } = require('@google-cloud/storage')
 const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
+const { getTasksStatus, stopTask, startTask } = require('../Models/Tasks/TasksModel')
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -143,6 +144,16 @@ const updateFrequency = async (ev, data) => {
     }
 
     const result = await updateDocument(DB_SOURCE, data._id, nData)
+
+    // check task running or not. if running then stop and start again with new frequency and if not running then do nothing
+    const task = getTasksStatus()
+
+    const currentSourceTaskStatus = task.find((x) => x.id === data._id)?.running
+
+    if (currentSourceTaskStatus) {
+      stopTask(data._id)
+      startTask(data._id, forceBackup, data.frequencyPattern)
+    }
 
     return { error: 0, message: 'Frequency updated', data: result }
   } catch (err) {
