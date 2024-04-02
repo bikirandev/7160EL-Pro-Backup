@@ -1,5 +1,5 @@
 const { createDirForce, copyDir, removeDir } = require('../../utils/FileOperation')
-const { generateFilePath } = require('../Configs/ConfigModel')
+const { generateDirPath } = require('../Configs/ConfigModel')
 const path = require('path')
 const tar = require('tar')
 
@@ -11,7 +11,7 @@ const dirBackup = async (data) => {
   }
 
   try {
-    const confBackupPath = await generateFilePath(data)
+    const confBackupPath = await generateDirPath(data)
     if (confBackupPath.error !== 0) {
       return confBackupPath
     }
