@@ -10,26 +10,30 @@ const mssqlWinExecBackup = async (sourceData) => {
   }
 
   try {
+    // Step-1: Generate File Path
     const confBackupPath = await generateFilePath(sourceData)
     if (confBackupPath.error !== 0) {
       return confBackupPath
     }
 
+    // Verify File Name
     if (!confBackupPath.data.fileName) {
       return { error: 1, message: 'Unable to generate file name', data: null }
     }
 
+    // Verify Backup Path
     const backupPath = path.join(confBackupPath.data.defDirPath, confBackupPath.data.fileName)
     if (!backupPath) {
       return { error: 1, message: 'Error on Default Backup Path', data: null }
     }
+
     // SQL
     const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
 
     // Command
     const command = `sqlcmd -S localhost -E -Q "${sql}"`
 
-    // Execute
+    // Step-2: Execute Backup
     const result = await Execute(command)
     const stdout = result?.data?.stdout || ''
 
@@ -40,6 +44,7 @@ const mssqlWinExecBackup = async (sourceData) => {
       return { error: 1, message: msg, data: null }
     }
 
+    // Check if error
     if (stdout.includes('Incorrect syntax near the keyword')) {
       const msg = stdout.split('\n')[1]?.replace('\r', '') || 'Incorrect syntax near the keyword'
       return { error: 1, message: msg, data: null }
