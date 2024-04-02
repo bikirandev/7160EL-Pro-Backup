@@ -3,9 +3,9 @@ const { evSendTaskStatus } = require('./Ev')
 const { createErrorLog } = require('../Logs/LogCreate')
 const { getNextRunTime } = require('../../utils/Cron')
 
-const addTask = (id, fnName, pattern) => {
+const startTask = (id, fnName, pattern) => {
   // Schedule the job
-  cron.schedule(
+  const task = cron.schedule(
     pattern,
     async () => {
       try {
@@ -24,18 +24,19 @@ const addTask = (id, fnName, pattern) => {
       pattern: pattern,
     },
   )
-}
 
-const startTask = (id) => {
-  const task = cron.getTasks().get(id)
-  if (task) {
-    task.start()
-  }
+  task.start()
 }
 
 const stopTask = async (id) => {
-  const task = cron.getTasks().get(id)
-  if (task) {
+  const oTask = cron.getTasks().get(id)
+
+  if (oTask) {
+    const pattern = oTask.options.pattern
+    var task = cron.schedule(pattern, () => {
+      console.log('will execute every minute until stopped')
+    })
+
     task.stop()
   }
 }
@@ -45,6 +46,8 @@ const getTasksStatus = () => {
 
   cron.getTasks().forEach((task) => {
     const pattern = task.options.pattern // 30 * * * *
+
+    console.log(task)
 
     status.push({
       id: task.options.name,
@@ -61,7 +64,6 @@ const getTasksStatus = () => {
 }
 
 module.exports = {
-  addTask,
   startTask,
   stopTask,
   getTasksStatus,

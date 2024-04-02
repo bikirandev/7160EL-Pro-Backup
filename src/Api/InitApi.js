@@ -1,5 +1,5 @@
 const { setEv } = require('../Models/Tasks/Ev')
-const { addTask, startTask } = require('../Models/Tasks/TasksModel')
+const { startTask } = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE } = require('../utils/PouchDbTools')
 const { forceBackup } = require('./SourceBackupApi')
 
@@ -16,8 +16,7 @@ const init = async (ev) => {
     //--Apply Autostart
     data.forEach((source) => {
       if (source.autostart) {
-        addTask(source._id, forceBackup, source.frequencyPattern || `${random} * * * *`)
-        startTask(source._id)
+        startTask(source._id, forceBackup, source.frequencyPattern || `${random} * * * *`)
       }
     })
 
