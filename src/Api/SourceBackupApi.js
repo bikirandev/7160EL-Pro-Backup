@@ -27,27 +27,34 @@ const forceBackup = async (ev, id) => {
     // Step-1: Get source configuration
     const sourceData = await getDocument(DB_SOURCE, id)
     if (!sourceData) {
-      return { error: 1, message: 'Source not exists', data: [] }
+      return { error: 1, message: 'Source not exists', data: null }
     }
 
     const destinationId = sourceData.destinationId
     if (!destinationId) {
-      return { error: 1, message: 'Destination not linked', data: [] }
+      return { error: 1, message: 'Destination not linked', data: null }
     }
 
     // Step-3: Collect destination configuration
     const destConfig = await getDestination(destinationId)
     if (destConfig.title === '') {
-      return { error: 1, message: 'Destination config not found', data: [] }
+      return { error: 1, message: 'Destination config not found', data: null }
     }
 
+    // Execution
+    const exe1 = await mssqlWinExec(sourceData)
+    const exe2 = await dirBackup(sourceData)
+
     // Step-4: Execute backup
-    const backupSt = validateAll([await mssqlWinExec(sourceData), await dirBackup(sourceData)])
-    if (backupSt.error === 1) {
+    const backupSt = validateAll([exe1, exe2])
+    if (backupSt.error !== 0) {
       return backupSt
     }
-    const backupPath = backupSt.data.backupPath
-    const basename = path.basename(sourceData.databaseOrPath) || sourceData.databaseOrPath
+    if (!backupSt?.data?.backupPath) {
+      return { error: 1, message: 'Backup path not found', data: null }
+    }
+    const backupPath = backupSt.data.backupPath // Important
+    const basename = path.basename(sourceData.databaseOrPath)
 
     // Step-5: Upload to destination
     await backupToBucket2(id, backupPath, destConfig, `${sourceData.type}/${basename}`, false)

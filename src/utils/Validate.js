@@ -8,7 +8,7 @@ const validateAll = (values = []) => {
 
   for (let i = 0; i < values.length; i++) {
     const data = values[i]
-    if (data.error === 0 && data.skipped === false) {
+    if (data.error === 0 && data.skipped !== true) {
       return data
     }
   }
