@@ -1,16 +1,22 @@
 const { exec } = require('child_process')
 
 // Open file explorer function
-const exploreDirectory = (ev,directoryPath) => {
-
+const exploreDirectory = (ev, directoryPath) => {
   exec(`start "" "${directoryPath}"`, (err) => {
     if (err) {
-      console.error(err)
-      return
+      return {
+        error: 1,
+        message: 'Error on opening directory',
+        data: null,
+      }
     }
-    // console.log('File explorer opened')
+
+    return {
+      error: 0,
+      message: 'Directory opened',
+      data: null,
+    }
   })
 }
-
 
 module.exports = exploreDirectory

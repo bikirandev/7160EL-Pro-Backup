@@ -13,6 +13,7 @@ const dataPattern = {
   status: 'active', // active, deleted
 }
 
+// eslint-disable-next-line no-unused-vars
 const abc = async () => {
   try {
     const files = await getRecentBackups(destinations[0], '')
@@ -43,7 +44,3 @@ const abc = async () => {
     console.log(err)
   }
 }
-
-abc().then((res) => {
-  console.log(res.data)
-})

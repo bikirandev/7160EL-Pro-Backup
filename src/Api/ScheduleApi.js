@@ -6,7 +6,6 @@ const { forceBackup } = require('./SourceBackupApi')
 const scheduleStart = async (ev, id) => {
   // Collect the backup source
   const sourceInfo = await getDocument(DB_SOURCE, id)
-  console.log('sourceInfo', sourceInfo)
 
   // generate random number between 0 and 59
   const random = Math.floor(Math.random() * 60)

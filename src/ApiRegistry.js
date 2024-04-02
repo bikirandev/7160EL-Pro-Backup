@@ -1,31 +1,42 @@
-const { BrowserWindow, dialog } = require('electron')
+const { dialog } = require('electron') // BrowserWindow,
 const {
   getDestinations,
   addDestination,
   updateDestination,
   deleteDestination,
 } = require('./Api/DestinationsApi')
-const { getSources, addSource, updateSource, deleteSource, linkDestination } = require('./Api/SourcesApi')
+const {
+  getSources,
+  addSource,
+  updateSource,
+  deleteSource,
+  linkDestination,
+} = require('./Api/SourcesApi')
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
-const { forceBackup, updateAutoStart, updateFrequency, getRecentBackups } = require('./Api/SourceBackupApi')
+const {
+  forceBackup,
+  updateAutoStart,
+  updateFrequency,
+  getRecentBackups,
+} = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { init } = require('./Api/InitApi')
+
 // /api/registration
-const closeWindow = (ev, data) => {
-  console.log(ev, data)
+// const closeWindow = (ev, data) => {
+//   // app.quit();
+// }
 
-  // app.quit();
-}
+// const minimizeWindow = () => {
+//   const focusedWindow = BrowserWindow.getFocusedWindow()
+//   if (focusedWindow) {
+//     focusedWindow.minimize()
+//   }
+// }
 
-const minimizeWindow = () => {
-  const focusedWindow = BrowserWindow.getFocusedWindow()
-  if (focusedWindow) {
-    focusedWindow.minimize()
-  }
-}
 // Open Directory Dialog
 const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
@@ -34,8 +45,6 @@ const openDirectoryDialog = async () => {
 
 module.exports = {
   init,
-  closeWindow,
-  minimizeWindow,
 
   getSources,
   addSource,

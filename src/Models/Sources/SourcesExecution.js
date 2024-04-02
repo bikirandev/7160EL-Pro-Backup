@@ -89,7 +89,6 @@ const mssqlWinConnect = async (data) => {
     const pool = await mssql.connect()
     const result = await pool.request().query('SELECT 1')
 
-    console.log('result', result)
     return { error: 0, message: 'Connected', data: { ...result, backupPath }, skipped: false }
   } catch (err) {
     console.log(err)

@@ -18,8 +18,6 @@ const destinationTypes = {
 }
 
 const verifyGcloudData = (data) => {
-  console.log(data)
-
   if (data.type !== destinationTypes.DEST_GCLOUD) {
     return { error: 0, message: 'Skipped', data: [] }
   }

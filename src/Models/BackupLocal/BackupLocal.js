@@ -24,7 +24,8 @@ const backupMssql = async ({ database, localDir }) => {
 
     // Execute
     const result = await Execute(command)
-    console.log(result)
+
+    return { error: 0, message: 'Backup Success', data: { filename, backupPath, result } }
   } catch (err) {
     console.log(err)
   }
@@ -39,7 +40,6 @@ const backupMssqlHost = async (host, username, password, database, localDir) => 
 
     // SQL
     const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
-    //console.log('sql', sql)
 
     // SQL Connection Config
     const connection = {
@@ -61,14 +61,11 @@ const backupMssqlHost = async (host, username, password, database, localDir) => 
 
     // Execute
     const result = await sqlConnection.query(sql)
-    console.log('result', result)
 
-    console.log('++')
+    return { error: 0, message: 'Backup Success', data: { filename, backupPath, result } }
   } catch (err) {
     console.log(err)
   }
-
-  return
 }
 
 module.exports = {

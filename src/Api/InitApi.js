@@ -9,7 +9,6 @@ const init = async (ev) => {
 
   try {
     const data = await getAllDocuments(DB_SOURCE)
-    console.log('data', data)
 
     // Generate random number between 0 and 59
     const random = Math.floor(Math.random() * 60)

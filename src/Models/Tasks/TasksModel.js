@@ -55,6 +55,8 @@ const getTasksStatus = () => {
     })
   })
 
+  console.log(status)
+
   return status
 }
 
