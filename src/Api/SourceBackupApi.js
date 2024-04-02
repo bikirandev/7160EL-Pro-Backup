@@ -21,6 +21,7 @@ const isoToUnix = require('../utils/isoToUnix')
 const { Storage } = require('@google-cloud/storage')
 const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
 const { getTasksStatus, stopTask, startTask } = require('../Models/Tasks/TasksModel')
+const { mssqlWinExecBackup } = require('../Models/BackupLocal/BackupLocalMssql')
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -43,7 +44,7 @@ const forceBackup = async (ev, id) => {
     }
 
     // Execution
-    const exe1 = await mssqlWinExec(sourceData)
+    const exe1 = await mssqlWinExecBackup(sourceData)
     const exe2 = await dirBackup(sourceData)
 
     // Step-4: Execute backup

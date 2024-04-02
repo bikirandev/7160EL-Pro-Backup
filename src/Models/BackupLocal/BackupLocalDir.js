@@ -3,37 +3,39 @@ const { generateDirPath } = require('../Configs/ConfigModel')
 const path = require('path')
 const tar = require('tar')
 
-const dirBackup = async (data) => {
-  const sourcePath = data.databaseOrPath
+const dirBackup = async (sourceData) => {
+  const sourcePath = sourceData.databaseOrPath
 
-  if (data.type !== 'directory') {
+  if (sourceData.type !== 'directory') {
     return { error: 0, message: 'Skipped', data: [], skipped: true }
   }
 
   try {
-    const confBackupPath = await generateDirPath(data)
+    // Step-1: Generate Directory Path
+    const confBackupPath = await generateDirPath(sourceData)
     if (confBackupPath.error !== 0) {
       return confBackupPath
     }
 
+    // Verify Directory Name
     if (!confBackupPath.data.dirName) {
       return { error: 1, message: 'Unable to generate directory name', data: null }
     }
-    const tempPath = path.join(confBackupPath.data.defDirPath, '.temp', confBackupPath.data.dirName)
 
-    // Create Directory if not exists
+    // Step-2: Create Temp Directory
+    const tempPath = path.join(confBackupPath.data.defDirPath, '.temp', confBackupPath.data.dirName)
     await createDirForce(tempPath)
 
-    // copy directory from source dir to temp dir
+    // Step-3: copy directory from source dir to temp dir
     await copyDir(sourcePath, tempPath)
 
-    // create tar file of temp directory
+    // Step-4: create tar file of temp directory
     const tarPath = path.join(confBackupPath.data.defDirPath, confBackupPath.data.dirName) + '.tar'
     await tar.create({ gzip: true, file: tarPath, cwd: path.dirname(tempPath) }, [
       confBackupPath.data.dirName,
     ])
 
-    // remove temp directory
+    // Step-5: Remove temp directory
     await removeDir(tempPath)
 
     return { error: 0, message: 'Backup', data: { backupPath: tarPath } }
