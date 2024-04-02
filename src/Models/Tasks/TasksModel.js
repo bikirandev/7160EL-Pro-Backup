@@ -33,9 +33,17 @@ const stopTask = async (id) => {
 
   if (oTask) {
     const pattern = oTask.options.pattern
-    var task = cron.schedule(pattern, () => {
-      console.log('will execute every minute until stopped')
-    })
+    var task = cron.schedule(
+      pattern,
+      () => {
+        console.log('will execute every minute until stopped')
+      },
+      {
+        name: id,
+        scheduled: false, // This prevents the job from being started automatically
+        pattern: pattern,
+      },
+    )
 
     task.stop()
   }
@@ -45,9 +53,7 @@ const getTasksStatus = () => {
   const status = []
 
   cron.getTasks().forEach((task) => {
-    const pattern = task.options.pattern // 30 * * * *
-
-    console.log(task)
+    const pattern = task.options.pattern // 0 30 * * * *
 
     status.push({
       id: task.options.name,

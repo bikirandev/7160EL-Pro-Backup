@@ -12,7 +12,7 @@ const sourceDataPattern = {
   operation: '',
   destinationId: 'default', // default or destinationId
   frequency: defaultValues.frequency,
-  frequencyPattern: '* * * * *', // Hourly
+  frequencyPattern: '0 * * * * *', // Hourly
   backupQuantity: defaultValues.backupQuantity,
   backupRetention: defaultValues.backupRetention,
   autostart: true,
