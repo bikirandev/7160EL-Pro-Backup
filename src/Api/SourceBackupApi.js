@@ -183,9 +183,62 @@ const getRecentBackups = async (ev, data) => {
   }
 }
 
+const downloadBackup = async (ev, data) => {
+  // data
+  // data.sourceId = ''
+  // data.backupId = ''
+  // data.downloadPath = ''
+
+  if (!data.sourceId) {
+    return { error: 1, message: 'Source ID not found', data: null }
+  }
+
+  if (!data.backupId) {
+    return { error: 1, message: 'Backup ID not found', data: null }
+  }
+
+  if (!data.downloadPath) {
+    return { error: 1, message: 'Download path not found', data: null }
+  }
+
+  // Check if download path exists
+  if (!fs.existsSync(data.downloadPath)) {
+    return { error: 1, message: 'Download path not exists', data: null }
+  }
+
+  try {
+    // Collect source configuration
+    const sourceData = await getDocument(DB_SOURCE, data.sourceId)
+    if (!sourceData) {
+      return { error: 1, message: 'Source not exists', data: null }
+    }
+
+    // Collect destination configuration
+    const destConfig = await getDestination(sourceData.destinationId)
+    if (destConfig.title === '') {
+      return { error: 1, message: 'Destination config not found', data: null }
+    }
+
+    const storage = new Storage({
+      projectId: data?.projectId,
+      keyFilename: data?.keyFilename,
+    })
+
+    const destPath = path.join(data?.localDir, data?.localFile)
+    const file = storage.bucket(data?.bucket).file(data?.remoteFile)
+
+    await file.download({ destination: destPath })
+
+    return { error: 0, message: 'Downloaded', data: destPath }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 module.exports = {
   forceBackup,
   updateAutoStart,
   updateFrequency,
   getRecentBackups,
+  downloadBackup,
 }

@@ -68,7 +68,6 @@ module.exports = {
   getDestinations,
   addDestination,
   updateDestination,
-
   deleteDestination,
 
   //open link in external browser
