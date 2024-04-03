@@ -213,8 +213,6 @@ const downloadBackup = async (ev, data) => {
   // data.backupId = ''
   // data.downloadPath = ''
 
-  console.log(data)
-
   // Error: Error invoking remote method 'downloadBackup': Error: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
 
   if (!data.sourceId) {
