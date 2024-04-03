@@ -213,6 +213,8 @@ const downloadBackup = async (ev, data) => {
   // data.backupId = ''
   // data.downloadPath = ''
 
+  console.log(data)
+
   if (!data.sourceId) {
     return { error: 1, message: 'Source ID not found', data: null }
   }
