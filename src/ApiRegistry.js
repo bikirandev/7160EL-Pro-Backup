@@ -19,6 +19,7 @@ const {
   updateAutoStart,
   updateFrequency,
   getRecentBackups,
+  downloadBackup,
 } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
@@ -42,7 +43,6 @@ const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   return result.filePaths[0]
 }
-
 module.exports = {
   init,
 
@@ -51,6 +51,7 @@ module.exports = {
   updateSource,
   updateAutoStart,
   updateFrequency,
+  downloadBackup,
   deleteSource,
 
   scheduleStart,
