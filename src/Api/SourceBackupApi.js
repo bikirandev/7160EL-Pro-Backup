@@ -215,6 +215,8 @@ const downloadBackup = async (ev, data) => {
 
   console.log(data)
 
+  // Error: Error invoking remote method 'downloadBackup': Error: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+
   if (!data.sourceId) {
     return { error: 1, message: 'Source ID not found', data: null }
   }
@@ -246,16 +248,20 @@ const downloadBackup = async (ev, data) => {
     }
 
     const storage = new Storage({
-      projectId: data?.projectId,
-      keyFilename: data?.keyFilename,
+      projectId: destConfig?.projectId,
+      keyFilename: destConfig?.keyFilename,
     })
 
-    const destPath = path.join(data?.localDir, data?.localFile)
-    const file = storage.bucket(data?.bucket).file(data?.remoteFile)
+    // Download path
+    data.backupId = data.backupId.split('%2F').join('/')
+    const filename = path.basename(data.backupId)
+    const localPath = path.join(data.downloadPath, filename)
 
-    await file.download({ destination: destPath })
+    // Download
+    const file = storage.bucket(destConfig.bucket).file(data.backupId)
+    await file.download({ destination: localPath })
 
-    return { error: 0, message: 'Downloaded', data: destPath }
+    return { error: 0, message: 'File Downloaded Successfully', data: { localPath } }
   } catch (err) {
     throw new Error(err)
   }
