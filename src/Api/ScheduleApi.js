@@ -1,17 +1,13 @@
-const { stopTask, getTasksStatus, restartTask } = require('../Models/Tasks/TasksModel')
+const { addTask, stopTask, getTasksStatus } = require('../Models/Tasks/TasksModel')
 const { getDocument, DB_SOURCE } = require('../utils/PouchDbTools')
-const { forceBackup } = require('./SourceBackupApi')
 
 // backup create and backup start
 const scheduleStart = async (ev, id) => {
   // Collect the backup source
   const sourceInfo = await getDocument(DB_SOURCE, id)
 
-  // generate random number between 0 and 59
-  const random = Math.floor(Math.random() * 60)
-
   // Creating a new task
-  restartTask(id, forceBackup, sourceInfo.frequencyPattern || `${random} * * * *`)
+  addTask(sourceInfo)
 
   const st = getTasksStatus()
   return { error: 0, message: 'Backup Schedule Started', data: st }
@@ -19,7 +15,11 @@ const scheduleStart = async (ev, id) => {
 
 // backup destroy and backup stop
 const scheduleStop = async (ev, id) => {
-  stopTask(id)
+  // Collect the backup source
+  const sourceInfo = await getDocument(DB_SOURCE, id)
+
+  // Remove the task
+  stopTask(sourceInfo)
 
   const st = getTasksStatus()
   return { error: 0, message: 'Backup Schedule Stopped', data: st }

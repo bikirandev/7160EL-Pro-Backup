@@ -1,91 +1,101 @@
-const cron = require('node-cron')
-const { evSendTaskStatus } = require('./Ev')
+const { forceBackup } = require('../../Api/SourceBackupApi')
 const { createErrorLog } = require('../Logs/LogCreate')
+const { evSendTaskStatus } = require('./Ev')
 const { getNextRunTime } = require('../../utils/Cron')
+const moment = require('moment')
 
-const startTask = (id, fnName, pattern) => {
-  // Schedule the job
-  const task = cron.schedule(
-    pattern,
-    async () => {
-      try {
-        evSendTaskStatus(id, 'running')
-        await fnName(null, id)
-        evSendTaskStatus(id, 'done')
-      } catch (err) {
-        createErrorLog(`Task ${id} error: ${err.message}`)
-        createErrorLog(JSON.stringify(err))
-        evSendTaskStatus(id, 'error')
-      }
-    },
-    {
-      name: id,
-      scheduled: false, // This prevents the job from being started automatically
-      pattern: pattern,
-    },
-  )
+const tasks = []
+let isTaskRunning = false
 
-  task.start()
-}
+const executeTask = async () => {
+  console.log('\n')
+  for (const task of tasks) {
+    console.log('Task Executing', getNextRunTime(task.frequencyPattern).unix(), moment().unix())
+    if (getNextRunTime(task.frequencyPattern).unix() !== moment().unix()) {
+      continue
+    }
 
-const stopTask = async (id) => {
-  const oTask = cron.getTasks().get(id)
-
-  if (oTask) {
-    const pattern = oTask.options.pattern
-    var task = cron.schedule(
-      pattern,
-      () => {
-        console.log('will execute every minute until stopped')
-      },
-      {
-        name: id,
-        scheduled: false, // This prevents the job from being started automatically
-        pattern: pattern,
-      },
-    )
-
-    task.stop()
-  }
-}
-
-const restartTask = async (id, fnName, pattern) => {
-  stopTask(id)
-  startTask(id, fnName, pattern)
-}
-
-const restartIfRunning = async (id, fnName, pattern) => {
-  const oTask = cron.getTasks().get(id)
-
-  if (oTask) {
-    if (oTask._scheduler.timeout) {
-      restartTask(id, fnName, pattern)
+    console.log('Task Running: ' + task._id)
+    const id = task._id
+    try {
+      evSendTaskStatus(id, 'running')
+      await forceBackup(null, id)
+      evSendTaskStatus(id, 'done')
+    } catch (err) {
+      createErrorLog(`Task ${id} error: ${err.message}`)
+      createErrorLog(JSON.stringify(err))
+      evSendTaskStatus(id, 'error')
     }
   }
 }
 
+const startTask = () => {
+  console.log(isTaskRunning)
+  if (isTaskRunning) {
+    return
+  }
+
+  setInterval(executeTask, 1000)
+  isTaskRunning = true
+}
+
+const stopTask = () => {
+  // clear timeout
+  clearInterval(executeTask)
+  isTaskRunning = false
+}
+
+const addTask = (source, restart = true) => {
+  if (tasks.find((task) => task._id === source._id)) {
+    return
+  }
+  tasks.push(source)
+
+  // Restart the task
+  if (restart) {
+    stopTask()
+    startTask()
+  }
+}
+
+const removeTask = (source, restart = true) => {
+  const index = tasks.indexOf(source)
+  tasks.splice(index, 1)
+
+  // Restart the task
+  if (restart) {
+    stopTask()
+    startTask()
+  }
+}
+
+const restartTask = () => {
+  stopTask()
+  startTask()
+}
+
+const getTasks = () => {
+  return tasks
+}
+
 const getTasksStatus = () => {
-  const status = []
-
-  cron.getTasks().forEach((task) => {
-    const pattern = task.options.pattern // 0 30 * * * *
-
-    status.push({
-      id: task.options.name,
-      running: !!task._scheduler.timeout,
-      nextRun: getNextRunTime(pattern).unix(),
-      timeRemaining: getNextRunTime(pattern).diff(new Date(), 'seconds'),
-      pattern,
-    })
+  return tasks.map((task) => {
+    return {
+      id: task._id,
+      running: true,
+      nextRun: getNextRunTime(task.frequencyPattern).unix(),
+      timeRemaining: getNextRunTime(task.frequencyPattern).diff(new Date(), 'seconds'),
+      pattern: task.frequencyPattern,
+    }
   })
-
-  return status
 }
 
 module.exports = {
   startTask,
   stopTask,
   restartTask,
-  restartIfRunning,
+  addTask,
+  removeTask,
+  getTasks,
   getTasksStatus,
 }
