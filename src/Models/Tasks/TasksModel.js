@@ -5,7 +5,7 @@ const { getNextRunTime } = require('../../utils/Cron')
 const moment = require('moment')
 
 const tasks = []
-let isTaskRunning = false
+let isTaskRunning = null
 
 const executeTask = async () => {
   console.log('\n')
@@ -15,7 +15,7 @@ const executeTask = async () => {
       continue
     }
 
-    console.log('Task Running: ' + task._id)
+    // console.log('Task Running: ' + task._id)
     const id = task._id
     try {
       evSendTaskStatus(id, 'running')
@@ -35,14 +35,12 @@ const startTask = () => {
     return
   }
 
-  setInterval(executeTask, 1000)
-  isTaskRunning = true
+  isTaskRunning = setInterval(executeTask, 1000)
 }
 
 const stopTask = () => {
   // clear timeout
-  clearInterval(executeTask)
-  isTaskRunning = false
+  clearInterval(isTaskRunning)
 }
 
 const addTask = (source, restart = true) => {
