@@ -7,11 +7,6 @@ const {
   validateType,
 } = require('../Models/Sources/SourcesDataValidate')
 const {
-  mssqlWinExec,
-  mssqlWinConnect,
-  mssqlWinDemo,
-} = require('../Models/Sources/SourcesExecution')
-const {
   getAllDocuments,
   DB_SOURCE,
   createDocument,
@@ -22,7 +17,6 @@ const {
 const { validateAll } = require('../utils/Validate')
 const { setEv } = require('../Models/Tasks/Ev')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
-const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
 
 // Get Lists of Sources // ev, data
 const getSources = async (ev) => {
@@ -55,20 +49,15 @@ const addSource = async (ev, data) => {
       return { error: 1, message: 'Database already exists', data: null }
     }
 
-    const validationPerms = [
-      validateType(nData), // Validate Type
-      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-      validateDirectory(nData), // Validate Directory Data, if type is directory
-      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await dirBackup(nData), // Validate Directory Backup
-    ]
+    // Validation Permissions
+    const exe1 = validateType(nData) // Validate Type
+    const exe2 = validateMssqlWinData(nData) // Validate MSSQL-Win Data, if type is mssql-win
+    const exe3 = validateMssqlHostData(nData) // Validate MSSQL-Host Data, if type is mssql-host
+    const exe4 = validatePgsqlData(nData) // Validate PGSQL Data, if type is pgsql
+    const exe5 = validateDirectory(nData) // Validate Directory Data, if type is directory
 
     // Data Validation
-    const validate = validateAll(validationPerms)
+    const validate = validateAll([exe1, exe2, exe3, exe4, exe5])
     if (validate.error === 1) {
       return validate
     }
@@ -99,20 +88,14 @@ const updateSource = async (ev, data) => {
       return { error: 1, message: 'Source not exists', data: null }
     }
 
-    const validationPerms = [
-      validateType(nData), // Validate Type
-      validateMssqlWinData(nData), // Validate MSSQL-Win Data, if type is mssql-win
-      validateMssqlHostData(nData), // Validate MSSQL-Host Data, if type is mssql-host
-      validatePgsqlData(nData), // Validate PGSQL Data, if type is pgsql
-      validateDirectory(nData), // Validate Directory Data, if type is directory
-      await mssqlWinExec(nData), // Validate MSSQL-Win exec Connection
-      await mssqlWinConnect(nData), // Validate MSSQL-Win connect Connection
-      await mssqlWinDemo(nData), // Validate MSSQL-Win demo Connection
-      await dirBackup(nData), // Validate Directory Backup
-    ]
+    const exe1 = validateType(nData) // Validate Type
+    const exe2 = validateMssqlWinData(nData) // Validate MSSQL-Win Data, if type is mssql-win
+    const exe3 = validateMssqlHostData(nData) // Validate MSSQL-Host Data, if type is mssql-host
+    const exe4 = validatePgsqlData(nData) // Validate PGSQL Data, if type is pgsql
+    const exe5 = validateDirectory(nData) // Validate Directory Data, if type is directory
 
     // Data Validation
-    const validate = validateAll(validationPerms)
+    const validate = validateAll([exe1, exe2, exe3, exe4, exe5])
     if (validate.error === 1) {
       return validate
     }
