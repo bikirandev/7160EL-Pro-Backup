@@ -10,6 +10,8 @@ const { dirBackup } = require('../Models/BackupLocal/BackupLocalDir')
 const { restartIfRunning } = require('../Models/Tasks/TasksModel')
 const { mssqlWinExecBackup } = require('../Models/BackupLocal/BackupLocalMssql')
 const cornParser = require('cron-parser')
+const { createBackupLog, createErrorLog } = require('../Models/Logs/LogCreate')
+const moment = require('moment')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -17,20 +19,27 @@ const allowedFrequency = ['hourly', 'daily']
 // force backup
 const forceBackup = async (ev, id) => {
   try {
+    // Message & Log
+    var timeStart = moment().unix()
+    createBackupLog(id, 'Backup started')
+
     // Step-1: Get source configuration
     const sourceData = await getDocument(DB_SOURCE, id)
     if (!sourceData) {
+      createBackupLog(id, 'Source not exists')
       return { error: 1, message: 'Source not exists', data: null }
     }
 
     const destinationId = sourceData.destinationId
     if (!destinationId) {
+      createBackupLog(id, 'Destination not linked')
       return { error: 1, message: 'Destination not linked', data: null }
     }
 
     // Step-3: Collect destination configuration
     const destConfig = await getDestination(destinationId)
     if (destConfig.title === '') {
+      createBackupLog(id, 'Destination config not found')
       return { error: 1, message: 'Destination config not found', data: null }
     }
 
@@ -41,9 +50,11 @@ const forceBackup = async (ev, id) => {
     // Step-4: Execute backup
     const backupSt = validateAll([exe1, exe2])
     if (backupSt.error !== 0) {
+      createBackupLog(id, 'Backup failed: ' + backupSt.message)
       return backupSt
     }
     if (!backupSt?.data?.backupPath) {
+      createBackupLog(id, 'Backup path not found')
       return { error: 1, message: 'Backup path not found', data: null }
     }
     const backupPath = backupSt.data.backupPath // Important
@@ -55,9 +66,10 @@ const forceBackup = async (ev, id) => {
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
 
+    createBackupLog(id, 'Backup completed after ' + (moment().unix() - timeStart) + ' seconds\n\n')
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
-    console.log(err)
+    createErrorLog(id, 'Error on force backup: ' + err)
     return { error: 1, message: 'Error on force backup', data: null }
   }
 }

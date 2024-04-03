@@ -2,7 +2,7 @@ const fs = require('fs')
 const moment = require('moment')
 const dir = './Logs'
 
-function createLog(logType, logText) {
+const createLog = (logType, logText) => {
   const logFilename = `${dir}/Log_${logType}_${moment().format('YYYY_MM_DD_HH')}.log`
   const logEntry = `${moment().format('YYYY-MM-DD HH:mm:ss')} - ${logText}\n`
 
@@ -14,21 +14,30 @@ function createLog(logType, logText) {
   fs.appendFileSync(logFilename, logEntry)
 }
 
-function createErrorLog(logText) {
+const createErrorLog = (logText) => {
   if (typeof logText === 'object') {
     logText = JSON.stringify(logText)
   }
   createLog('Error', logText)
 }
 
-function createSuccessLog(logText) {
+const createSuccessLog = (logText) => {
   if (typeof logText === 'object') {
     logText = JSON.stringify(logText)
   }
   createLog('Success', logText)
 }
 
+const createBackupLog = (sourceId, logText) => {
+  if (typeof logText === 'object') {
+    logText = JSON.stringify(logText)
+  }
+  console.log(`${sourceId} - ${logText}`)
+  createLog('Backup', `${sourceId} - ${logText}`)
+}
+
 module.exports = {
   createErrorLog,
   createSuccessLog,
+  createBackupLog,
 }
