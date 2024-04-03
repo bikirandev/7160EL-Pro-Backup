@@ -12,6 +12,7 @@ const { mssqlWinExecBackup } = require('../Models/BackupLocal/BackupLocalMssql')
 const cornParser = require('cron-parser')
 const { createBackupLog, createErrorLog } = require('../Models/Logs/LogCreate')
 const moment = require('moment')
+const { getFileSizeHr } = require('../utils/FileOperation')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -63,10 +64,21 @@ const forceBackup = async (ev, id) => {
     // Step-5: Upload to destination
     await backupToBucket2(id, backupPath, destConfig, `${sourceData.type}/${basename}`, false)
 
+    // Get file size human readable
+    const fileSize = fs.statSync(backupPath).size
+    const fileSizeHr = getFileSizeHr(fileSize)
+
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
 
-    createBackupLog(id, 'Backup completed after ' + (moment().unix() - timeStart) + ' seconds\n\n')
+    createBackupLog(
+      id,
+      'Backup completed after ' +
+        (moment().unix() - timeStart) +
+        ' seconds, File size: ' +
+        fileSizeHr +
+        '\n\n',
+    )
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
     createErrorLog(id, 'Error on force backup: ' + err)
