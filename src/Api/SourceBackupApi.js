@@ -81,7 +81,7 @@ const forceBackup = async (ev, id) => {
     )
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
-    createErrorLog(id, 'Error on force backup: ' + err)
+    createErrorLog(id + ' Error on force backup: ' + err)
     return { error: 1, message: 'Error on force backup', data: null }
   }
 }

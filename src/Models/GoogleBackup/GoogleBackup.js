@@ -4,7 +4,6 @@ var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
 const { app } = require('electron')
-//const { createErrorLog } = require('../Logs/LogCreate')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
