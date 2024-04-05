@@ -6,7 +6,7 @@ const destinationPattern = {
   title: '',
   location: '',
   projectId: '',
-  keyFilename: '',
+  credentials: {},
   bucket: '',
 }
 

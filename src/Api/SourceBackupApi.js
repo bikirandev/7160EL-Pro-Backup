@@ -112,7 +112,7 @@ const getRecentBackups = async (ev, data) => {
   try {
     const storage = new Storage({
       projectId: data?.projectId,
-      keyFilename: data?.keyFilename,
+      credentials: data?.credentials,
     })
 
     // Find by metadata sourceId
@@ -178,7 +178,7 @@ const downloadBackup = async (ev, data) => {
 
     const storage = new Storage({
       projectId: destConfig?.projectId,
-      keyFilename: destConfig?.keyFilename,
+      credentials: destConfig?.credentials,
     })
 
     // Download path

@@ -1,11 +1,6 @@
 const { getAllDocuments, DB_CONFIG } = require('../../utils/PouchDbTools')
 const moment = require('moment')
 
-// const configPattern = {
-//   key: '',
-//   value: '',
-// }
-
 const configKeys = {
   CONF_DEFAULT_DIRECTORY: 'defaultDirectory',
 }

@@ -3,7 +3,7 @@ var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
-const { app } = require('electron')
+// const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
@@ -12,7 +12,7 @@ const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip =
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
-      keyFilename: destConfig.keyFilename,
+      credentials: destConfig.credentials,
     })
 
     var stat = fs.statSync(filePath)
@@ -58,7 +58,7 @@ const backupToBucket2 = async (
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
-      keyFilename: path.resolve(app.getAppPath(), destConfig.keyFilename),
+      credentials: destConfig.credentials,
     })
 
     // Add metadata to the file.
@@ -85,7 +85,7 @@ const getRecentBackups = async (destConfig, remoteDir = '') => {
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
-      keyFilename: destConfig.keyFilename,
+      credentials: destConfig.credentials,
     })
 
     // Find by metadata sourceId

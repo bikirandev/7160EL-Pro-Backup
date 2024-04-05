@@ -7,33 +7,32 @@ const { forceBackup } = require('../Backup/BackupForce')
 const tasks = []
 let isTaskRunning = null
 
-const executeTask = () => {
-  for (const task of tasks) {
-    const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
-    const now = moment().unix()
-    const def = nextRun - now
-    console.log(
-      'Task: ',
-      task._id,
-      getNextRunTime(task.frequencyPattern).unix(),
-      moment().unix(),
-      def,
-    )
-    if (nextRun !== now) {
-      continue
-    }
-
-    const id = task._id
-    try {
-      evSendTaskStatus(id, 'running')
-      forceBackup(null, id)
-      evSendTaskStatus(id, 'done')
-    } catch (err) {
-      createErrorLog(`Task ${id} error: ${err.message}`)
-      createErrorLog(JSON.stringify(err))
-      evSendTaskStatus(id, 'error')
-    }
+const backActionByTask = async (task) => {
+  const id = task._id
+  const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
+  const now = moment().unix()
+  if (nextRun !== now) {
+    return
   }
+
+  try {
+    evSendTaskStatus(id, 'running')
+    forceBackup(null, id)
+    evSendTaskStatus(id, 'done')
+  } catch (err) {
+    createErrorLog(`Task ${id} error: ${err.message}`)
+    createErrorLog(JSON.stringify(err))
+    evSendTaskStatus(id, 'error')
+  }
+}
+
+const executeTask = () => {
+  // Backup Task
+  for (const task of tasks) {
+    backActionByTask(task)
+  }
+
+  // Clean up
 }
 
 const startTask = () => {
