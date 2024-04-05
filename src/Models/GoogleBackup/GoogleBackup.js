@@ -111,8 +111,48 @@ const getRecentBackups = async (destConfig, remoteDir = '') => {
   }
 }
 
+const removeFiles = async (destConfig, fileId) => {
+  try {
+    const storage = new Storage({
+      projectId: destConfig.projectId,
+      credentials: destConfig.credentials,
+    })
+
+    const file = storage.bucket(destConfig.bucket).file(fileId)
+
+    await file.delete()
+
+    return { error: 0, message: 'Backup deleted', data: null }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+const removeMultipleFiles = async (destConfig, fileIds) => {
+  try {
+    const storage = new Storage({
+      projectId: destConfig.projectId,
+      credentials: destConfig.credentials,
+    })
+
+    const files = fileIds.map((fileId) => {
+      return storage.bucket(destConfig.bucket).file(fileId)
+    })
+
+    await storage.bucket(destConfig.bucket).deleteFiles({
+      files,
+    })
+
+    return { error: 0, message: 'Backups deleted', data: null }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 module.exports = {
   backupToBucket,
   backupToBucket2,
   getRecentBackups,
+  removeFiles,
+  removeMultipleFiles,
 }

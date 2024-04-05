@@ -31,8 +31,6 @@ const executeTask = () => {
   for (const task of tasks) {
     backActionByTask(task)
   }
-
-  // Clean up
 }
 
 const startTask = () => {

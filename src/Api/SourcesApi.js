@@ -1,11 +1,4 @@
-const {
-  validateMssqlWinData,
-  sourceDataPattern,
-  validateMssqlHostData,
-  validatePgsqlData,
-  validateDirectory,
-  validateType,
-} = require('../Models/Sources/SourcesDataValidate')
+const { sourceDataPattern } = require('../Models/Sources/SourcesData')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -17,6 +10,13 @@ const {
 const { validateAll } = require('../utils/Validate')
 const { setEv } = require('../Models/Tasks/Ev')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
+const {
+  validateType,
+  validateDirectory,
+  validateMssqlWinData,
+  validateMssqlHostData,
+  validatePgsqlData,
+} = require('../Models/Sources/SourcesValidate')
 
 // Get Lists of Sources // ev, data
 const getSources = async (ev) => {
