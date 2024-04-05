@@ -1,4 +1,4 @@
-const dayjs = require('dayjs')
+const moment = require('moment')
 
 class BackupDel {
   constructor(frequency, quantity, retention, backups, timeStampNow) {
@@ -27,10 +27,12 @@ class BackupDel {
 
     // count by date
     const countByDate = Object.keys(backupsGroupByDate).map((key) => {
+      const age = moment(this.timeStampNow).diff(moment(key), 'day')
+
       return {
         date: key,
         count: backupsGroupByDate[key].length,
-        age: dayjs(this.timeStampNow).diff(dayjs(key), 'day'),
+        age,
       }
     })
 
@@ -42,7 +44,7 @@ class BackupDel {
     const count = Math.floor((this.quantity - this.retention) / (24 / this.frequency - 1))
 
     for (let i = 0; i < count; i++) {
-      const t = dayjs.unix(this.timeStampNow / 1000).subtract(i, 'day')
+      const t = moment.unix(this.timeStampNow / 1000).subtract(i, 'day')
       days.push(t.format('YYYY-MM-DD'))
     }
 
