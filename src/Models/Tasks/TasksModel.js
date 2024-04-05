@@ -58,8 +58,10 @@ const addTask = (source) => {
 }
 
 const removeTask = (source) => {
-  console.log('Removing Task: ', source)
   const index = tasks.findIndex((task) => task._id === source._id)
+  if (index === -1) {
+    return
+  }
   tasks.splice(index, 1)
 }
 

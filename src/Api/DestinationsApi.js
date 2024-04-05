@@ -1,4 +1,4 @@
-const { destinations } = require('../../Default/DefaultValue')
+const { destinations } = require('../utils/DefaultValue')
 
 const getDestinations = async () => {
   return destinations

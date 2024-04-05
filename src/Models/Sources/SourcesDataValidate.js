@@ -1,5 +1,5 @@
 const mssql = require('mssql')
-const defaultValues = require('../../../Default/DefaultValue')
+const defaultValues = require('../../utils/DefaultValue')
 
 const sourceDataPattern = {
   type: '',

@@ -1,4 +1,4 @@
-const defaultValues = require('../../../Default/DefaultValue')
+const defaultValues = require('../../utils/DefaultValue')
 const { getDocument, DB_DESTINATION } = require('../../utils/PouchDbTools')
 
 const destinationPattern = {
