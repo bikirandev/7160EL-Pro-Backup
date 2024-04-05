@@ -9,7 +9,7 @@
   "publisher": "bikiran",
   "license": "CC0-1.0",
   "scripts": {
-    "electron": "electron .",
+    "electron": "electron  --trace-warnings .",
     "electron:start": "electron-forge start",
     "electron:package": "electron-forge package",
     "electron:make": "electron-forge make",

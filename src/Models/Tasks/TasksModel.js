@@ -1,25 +1,32 @@
-const { forceBackup } = require('../../Api/SourceBackupApi')
 const { createErrorLog } = require('../Logs/LogCreate')
 const { evSendTaskStatus } = require('./Ev')
 const { getNextRunTime } = require('../../utils/Cron')
 const moment = require('moment')
+const { forceBackup } = require('../Backup/BackupForce')
 
 const tasks = []
 let isTaskRunning = null
 
-const executeTask = async () => {
-  console.log('\n')
+const executeTask = () => {
   for (const task of tasks) {
-    console.log('Task Executing', getNextRunTime(task.frequencyPattern).unix(), moment().unix())
-    if (getNextRunTime(task.frequencyPattern).unix() !== moment().unix()) {
+    const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
+    const now = moment().unix()
+    const def = nextRun - now
+    console.log(
+      'Task: ',
+      task._id,
+      getNextRunTime(task.frequencyPattern).unix(),
+      moment().unix(),
+      def,
+    )
+    if (nextRun !== now) {
       continue
     }
 
-    // console.log('Task Running: ' + task._id)
     const id = task._id
     try {
       evSendTaskStatus(id, 'running')
-      await forceBackup(null, id)
+      forceBackup(null, id)
       evSendTaskStatus(id, 'done')
     } catch (err) {
       createErrorLog(`Task ${id} error: ${err.message}`)
@@ -30,7 +37,6 @@ const executeTask = async () => {
 }
 
 const startTask = () => {
-  console.log(isTaskRunning)
   if (isTaskRunning) {
     return
   }
@@ -41,30 +47,20 @@ const startTask = () => {
 const stopTask = () => {
   // clear timeout
   clearInterval(isTaskRunning)
+  isTaskRunning = null
 }
 
-const addTask = (source, restart = true) => {
+const addTask = (source) => {
   if (tasks.find((task) => task._id === source._id)) {
     return
   }
   tasks.push(source)
-
-  // Restart the task
-  if (restart) {
-    stopTask()
-    startTask()
-  }
 }
 
-const removeTask = (source, restart = true) => {
-  const index = tasks.indexOf(source)
+const removeTask = (source) => {
+  console.log('Removing Task: ', source)
+  const index = tasks.findIndex((task) => task._id === source._id)
   tasks.splice(index, 1)
-
-  // Restart the task
-  if (restart) {
-    stopTask()
-    startTask()
-  }
 }
 
 const restartTask = () => {
@@ -89,8 +85,6 @@ const getTasksStatus = () => {
 }
 
 module.exports = {
-  startTask,
-  stopTask,
   restartTask,
   addTask,
   removeTask,

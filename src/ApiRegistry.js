@@ -15,7 +15,6 @@ const {
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 const {
-  forceBackup,
   updateAutoStart,
   updateFrequency,
   getRecentBackups,
@@ -43,6 +42,7 @@ const openDirectoryDialog = async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   return result.filePaths[0]
 }
+
 module.exports = {
   init,
 
@@ -59,9 +59,6 @@ module.exports = {
 
   //link destination to source
   linkDestination,
-
-  // backup force
-  forceBackup,
 
   //all completed backups
   getRecentBackups,

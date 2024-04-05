@@ -1,4 +1,4 @@
-const { addTask, stopTask, getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { addTask, getTasksStatus, removeTask, restartTask } = require('../Models/Tasks/TasksModel')
 const { getDocument, DB_SOURCE } = require('../utils/PouchDbTools')
 
 // backup create and backup start
@@ -8,6 +8,7 @@ const scheduleStart = async (ev, id) => {
 
   // Creating a new task
   addTask(sourceInfo)
+  restartTask()
 
   const st = getTasksStatus()
   return { error: 0, message: 'Backup Schedule Started', data: st }
@@ -19,7 +20,8 @@ const scheduleStop = async (ev, id) => {
   const sourceInfo = await getDocument(DB_SOURCE, id)
 
   // Remove the task
-  stopTask(sourceInfo)
+  removeTask(sourceInfo)
+  restartTask()
 
   const st = getTasksStatus()
   return { error: 0, message: 'Backup Schedule Stopped', data: st }
