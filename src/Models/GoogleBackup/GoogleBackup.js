@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 var fs = require('fs')
@@ -81,7 +80,7 @@ const backupToBucket2 = async (
   }
 }
 
-const getRecentBackups = async (destConfig, remoteDir = '') => {
+const getFiles = async (destConfig, remoteDir = '') => {
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
@@ -111,6 +110,23 @@ const getRecentBackups = async (destConfig, remoteDir = '') => {
   }
 }
 
+const downloadFile = async (destConfig, fileId, localPath) => {
+  try {
+    const storage = new Storage({
+      projectId: destConfig.projectId,
+      credentials: destConfig.credentials,
+    })
+
+    // Download file
+    const file = storage.bucket(destConfig.bucket).file(fileId)
+    await file.download({ destination: localPath })
+
+    return { error: 0, message: 'Download successful', data: null }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 const removeFiles = async (destConfig, fileId) => {
   try {
     const storage = new Storage({
@@ -118,8 +134,8 @@ const removeFiles = async (destConfig, fileId) => {
       credentials: destConfig.credentials,
     })
 
+    // Delete file
     const file = storage.bucket(destConfig.bucket).file(fileId)
-
     await file.delete()
 
     return { error: 0, message: 'Backup deleted', data: null }
@@ -152,7 +168,8 @@ const removeMultipleFiles = async (destConfig, fileIds) => {
 module.exports = {
   backupToBucket,
   backupToBucket2,
-  getRecentBackups,
+  getFiles,
+  downloadFile,
   removeFiles,
   removeMultipleFiles,
 }

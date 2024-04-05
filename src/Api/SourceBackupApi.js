@@ -2,10 +2,9 @@ const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
 const fs = require('fs')
 const path = require('path')
-const isoToUnix = require('../utils/isoToUnix')
-const { Storage } = require('@google-cloud/storage')
 const cornParser = require('cron-parser')
 const { addTask, removeTask, restartTask } = require('../Models/Tasks/TasksModel')
+const { getFiles, downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -108,31 +107,14 @@ const updateFrequency = async (ev, data) => {
 }
 
 // get recent backups
-const getRecentBackups = async (ev, data) => {
+const getRecentBackups = async () => {
   try {
-    const storage = new Storage({
-      projectId: data?.projectId,
-      credentials: data?.credentials,
-    })
+    const filesSt = await getFiles()
+    if (filesSt.error) {
+      return filesSt
+    }
 
-    // Find by metadata sourceId
-    const [files] = await storage.bucket(data?.bucket).getFiles({
-      prefix: data?.remoteDir,
-    })
-
-    const nFiles = files.map((file) => {
-      return {
-        _id: file.id,
-        name: file.name,
-        timeCreated: isoToUnix(file.metadata.timeCreated),
-        timeUpdated: isoToUnix(file.metadata.updated),
-        size: file.metadata.size,
-        sourceId: file.metadata.metadata.sourceId,
-        destinationId: file.metadata.metadata.destinationId,
-      }
-    })
-
-    return { error: 0, message: 'List of Backups', data: nFiles }
+    return { error: 0, message: 'List of Backups', data: filesSt.data }
   } catch (err) {
     throw new Error(err)
   }
@@ -143,8 +125,6 @@ const downloadBackup = async (ev, data) => {
   // data.sourceId = ''
   // data.backupId = ''
   // data.downloadPath = ''
-
-  // Error: Error invoking remote method 'downloadBackup': Error: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
 
   if (!data.sourceId) {
     return { error: 1, message: 'Source ID not found', data: null }
@@ -176,19 +156,13 @@ const downloadBackup = async (ev, data) => {
       return { error: 1, message: 'Destination config not found', data: null }
     }
 
-    const storage = new Storage({
-      projectId: destConfig?.projectId,
-      credentials: destConfig?.credentials,
-    })
-
     // Download path
-    data.backupId = data.backupId.split('%2F').join('/')
-    const filename = path.basename(data.backupId)
+    const backupId = data.backupId.split('%2F').join('/')
+    const filename = path.basename(backupId)
     const localPath = path.join(data.downloadPath, filename)
 
     // Download
-    const file = storage.bucket(destConfig.bucket).file(data.backupId)
-    await file.download({ destination: localPath })
+    await downloadFile(destConfig, backupId, localPath)
 
     return { error: 0, message: 'File Downloaded Successfully', data: { localPath } }
   } catch (err) {
