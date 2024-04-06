@@ -28,7 +28,7 @@
       "icon": "./src/assets/Backup.png"
     },
     "linux": {
-      "target": "AppImage",
+      "target": "deb",
       "icon": "./src/assets/Backup.png"
     },
     "extraResources": [
