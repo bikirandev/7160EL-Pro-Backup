@@ -1,4 +1,4 @@
-const { configKeys } = require('../Models/Configs/ConfigGenerateFs')
+const { CONF_DEFAULT_DIRECTORY } = require('../Models/Configs/ConfigKeys')
 const {
   getAllDocuments,
   DB_CONFIG,
@@ -25,16 +25,16 @@ const setDefaultDirectory = async (ev, data) => {
   // Create of Update new Line
   try {
     const data = await getAllDocuments(DB_CONFIG)
-    const defaultDirectory = data.find((x) => x.key === configKeys.CONF_DEFAULT_DIRECTORY)
+    const defaultDirectory = data.find((x) => x.key === CONF_DEFAULT_DIRECTORY)
     if (!defaultDirectory) {
       await createDocument(DB_CONFIG, {
         _id: id,
-        key: configKeys.CONF_DEFAULT_DIRECTORY,
+        key: CONF_DEFAULT_DIRECTORY,
         value: directory,
       })
     } else {
       await updateDocument(DB_CONFIG, defaultDirectory._id, {
-        key: configKeys.CONF_DEFAULT_DIRECTORY,
+        key: CONF_DEFAULT_DIRECTORY,
         value: directory,
       })
     }

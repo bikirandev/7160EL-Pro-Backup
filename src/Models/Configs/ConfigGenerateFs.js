@@ -1,25 +1,5 @@
-const { getAllDocuments, DB_CONFIG } = require('../../utils/PouchDbTools')
 const moment = require('moment')
-
-const configKeys = {
-  CONF_DEFAULT_DIRECTORY: 'defaultDirectory',
-}
-
-const getDefaultDirectory = async () => {
-  try {
-    // Collect Default Directory
-    const configs = await getAllDocuments(DB_CONFIG)
-    const defaultDirectory = configs.find((x) => x.key === configKeys.CONF_DEFAULT_DIRECTORY)
-    if (!defaultDirectory) {
-      return { error: 1, message: 'Default Directory Not Configured', data: null }
-    }
-
-    return { error: 0, message: 'Default Directory', data: defaultDirectory }
-  } catch (err) {
-    console.log(err)
-    return { error: 1, message: 'Error on finding Default Directory', data: null }
-  }
-}
+const { getDefaultDirectory } = require('./ConfigDefaultDir')
 
 const generateFilePath = async (sourceData) => {
   const dateNow = moment().format('YYYYMMDD_HHmmss')
@@ -31,10 +11,10 @@ const generateFilePath = async (sourceData) => {
   try {
     // Default Directory
     const defaultDirectory = await getDefaultDirectory()
-    if (defaultDirectory.error !== 0) {
+    if (defaultDirectory.error) {
       return defaultDirectory
     }
-    const defDirPath = defaultDirectory.data.value
+    const defDirPath = defaultDirectory.data
 
     // File Name
     const fileName = `${sourceData.type}_${sourceData.databaseOrPath}_${dateNow}.bak`
@@ -57,10 +37,10 @@ const generateDirPath = async (sourceData) => {
   try {
     // Default Directory
     const defaultDirectory = await getDefaultDirectory()
-    if (defaultDirectory.error !== 0) {
+    if (defaultDirectory.error) {
       return defaultDirectory
     }
-    const defDirPath = defaultDirectory.data.value
+    const defDirPath = defaultDirectory.data
 
     const dName = sourceData.databaseOrPath.replace(/[^a-zA-Z0-9]/g, '_')
     const dirName = `directory_${dateNow}_${dName}`
@@ -73,8 +53,6 @@ const generateDirPath = async (sourceData) => {
 }
 
 module.exports = {
-  configKeys,
-  getDefaultDirectory,
   generateFilePath,
   generateDirPath,
 }
