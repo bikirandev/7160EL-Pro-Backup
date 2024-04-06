@@ -1,9 +1,4 @@
-const {
-  DB_CONFIG,
-  getDocument,
-  createDocument,
-  updateDocument,
-} = require('../../utils/PouchDbTools')
+const { DB_CONFIG, getDocument, createDocument } = require('../../utils/PouchDbTools')
 const { CONF_APP_KEY } = require('./ConfigKeys')
 
 const generateAppId = () => {
@@ -18,13 +13,9 @@ const fixAppId = async () => {
       // create new appId
       const appId = generateAppId()
       await createDocument(DB_CONFIG, { _id: CONF_APP_KEY, value: appId })
-    } else {
-      // update appId
-      const appId = generateAppId()
-      await updateDocument(DB_CONFIG, configSt.data._id, { value: appId })
     }
   } catch (err) {
-    console.log(err)
+    throw new Error(err)
   }
 }
 

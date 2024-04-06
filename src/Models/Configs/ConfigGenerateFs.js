@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { getDefaultDirectory } = require('./ConfigDefaultDir')
+const { getDefDirectory } = require('./ConfigDefaultDir')
 
 const generateFilePath = async (sourceData) => {
   const dateNow = moment().format('YYYYMMDD_HHmmss')
@@ -10,7 +10,7 @@ const generateFilePath = async (sourceData) => {
 
   try {
     // Default Directory
-    const defaultDirectory = await getDefaultDirectory()
+    const defaultDirectory = await getDefDirectory()
     if (defaultDirectory.error) {
       return defaultDirectory
     }
@@ -36,7 +36,7 @@ const generateDirPath = async (sourceData) => {
 
   try {
     // Default Directory
-    const defaultDirectory = await getDefaultDirectory()
+    const defaultDirectory = await getDefDirectory()
     if (defaultDirectory.error) {
       return defaultDirectory
     }

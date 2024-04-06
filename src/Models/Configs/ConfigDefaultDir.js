@@ -6,7 +6,7 @@ const {
 } = require('../../utils/PouchDbTools')
 const { CONF_DEFAULT_DIRECTORY } = require('./ConfigKeys')
 
-const getDefaultDirectory = async () => {
+const getDefDirectory = async () => {
   try {
     // Collect Default Directory
     const confDir = await getDocument(DB_CONFIG, CONF_DEFAULT_DIRECTORY)
@@ -26,7 +26,7 @@ const getDefaultDirectory = async () => {
   }
 }
 
-const setDefaultDirectory = async (defaultDirectory) => {
+const setDefDirectory = async (defaultDirectory) => {
   try {
     // Create of Update new Line
     const confDir = await getDocument(DB_CONFIG, CONF_DEFAULT_DIRECTORY)
@@ -49,6 +49,6 @@ const setDefaultDirectory = async (defaultDirectory) => {
 }
 
 module.exports = {
-  getDefaultDirectory,
-  setDefaultDirectory,
+  getDefDirectory,
+  setDefDirectory,
 }

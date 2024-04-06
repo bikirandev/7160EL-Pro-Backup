@@ -1,11 +1,5 @@
-const { CONF_DEFAULT_DIRECTORY } = require('../Models/Configs/ConfigKeys')
-const {
-  getAllDocuments,
-  DB_CONFIG,
-  createDocument,
-  updateDocument,
-  generateHash,
-} = require('../utils/PouchDbTools')
+const { setDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
+const { getAllDocuments, DB_CONFIG } = require('../utils/PouchDbTools')
 
 const getConfigs = async () => {
   try {
@@ -20,24 +14,11 @@ const getConfigs = async () => {
 
 const setDefaultDirectory = async (ev, data) => {
   const directory = data.directory
-  const id = generateHash()
 
   // Create of Update new Line
   try {
-    const data = await getAllDocuments(DB_CONFIG)
-    const defaultDirectory = data.find((x) => x.key === CONF_DEFAULT_DIRECTORY)
-    if (!defaultDirectory) {
-      await createDocument(DB_CONFIG, {
-        _id: id,
-        key: CONF_DEFAULT_DIRECTORY,
-        value: directory,
-      })
-    } else {
-      await updateDocument(DB_CONFIG, defaultDirectory._id, {
-        key: CONF_DEFAULT_DIRECTORY,
-        value: directory,
-      })
-    }
+    await setDefDirectory(directory)
+
     return { error: 0, message: 'Default Directory Set', data: null }
   } catch (err) {
     console.log(err)
