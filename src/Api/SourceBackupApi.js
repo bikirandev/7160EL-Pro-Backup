@@ -21,12 +21,11 @@ const updateAutoStart = async (ev, data) => {
 
   try {
     // Check if database already exists
-    const exData = await getDocument(DB_SOURCE, data._id)
-
-    // Check if source not exists
-    if (!exData?._id) {
+    const dataSt = await getDocument(DB_SOURCE, data._id)
+    if (dataSt.error) {
       return { error: 1, message: 'Source not exists', data: null }
     }
+    const exData = dataSt.data
 
     const result = await updateDocument(DB_SOURCE, data._id, {
       ...exData,
@@ -74,12 +73,11 @@ const updateFrequency = async (ev, data) => {
 
   try {
     // Check if database already exists
-    const exData = await getDocument(DB_SOURCE, data._id)
-
-    // Check if source not exists
-    if (!exData?._id) {
+    const dataSt = await getDocument(DB_SOURCE, data._id)
+    if (dataSt.error) {
       return { error: 1, message: 'Source not exists', data: null }
     }
+    const exData = dataSt.data
 
     const result = await updateDocument(DB_SOURCE, data._id, {
       ...exData,
@@ -92,8 +90,14 @@ const updateFrequency = async (ev, data) => {
     // Remove Source from Task
     removeTask(exData)
 
-    // Collect and ass the backup source
-    const sourceInfo = await getDocument(DB_SOURCE, data._id)
+    // Collect and add the backup source
+    const sourceSt = await getDocument(DB_SOURCE, data._id)
+    if (sourceSt.error) {
+      return { error: 1, message: 'Source not found', data: null }
+    }
+    const sourceInfo = sourceSt.data
+
+    // Adding the task
     addTask(sourceInfo)
 
     // Restart Task
@@ -145,10 +149,11 @@ const downloadBackup = async (ev, data) => {
 
   try {
     // Collect source configuration
-    const sourceData = await getDocument(DB_SOURCE, data.sourceId)
-    if (!sourceData) {
+    const sourceSt = await getDocument(DB_SOURCE, data.sourceId)
+    if (sourceSt.error) {
       return { error: 1, message: 'Source not exists', data: null }
     }
+    const sourceData = sourceSt.data
 
     // Collect destination configuration
     const destConfig = await getDestination(sourceData.destinationId)

@@ -54,7 +54,11 @@ const getDestination = async (id) => {
   try {
     // Collect Destination by ID
     const destination = await getDocument(DB_DESTINATION, id)
-    return destination
+    if (destination.error) {
+      return { error: 1, message: 'Destination not found', data: null }
+    }
+
+    return { error: 0, message: 'Success', data: destination.data }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Destination', data: null }

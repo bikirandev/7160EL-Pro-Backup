@@ -24,6 +24,7 @@ const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { init } = require('./Api/InitApi')
+const { forceBackup } = require('./Models/Backup/BackupForce')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -52,6 +53,7 @@ module.exports = {
   updateAutoStart,
   updateFrequency,
   downloadBackup,
+  forceBackup,
   deleteSource,
 
   scheduleStart,

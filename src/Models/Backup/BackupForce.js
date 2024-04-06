@@ -9,20 +9,23 @@ const { mssqlWinExecBackup } = require('../BackupLocal/BackupLocalMssql')
 const { dirBackup } = require('../BackupLocal/BackupLocalDir')
 const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
 const { getFileSizeHr } = require('../../utils/FileOperation')
+const { evSendTaskStatus } = require('../Tasks/Ev')
 
 // force backup
 const forceBackup = async (ev, id) => {
+  evSendTaskStatus(id, 'running')
   try {
     // Message & Log
     var timeStart = moment().unix()
     createBackupLog(id, 'Backup started')
 
     // Step-1: Get source configuration
-    const sourceData = await getDocument(DB_SOURCE, id)
-    if (!sourceData) {
+    const sourceSt = await getDocument(DB_SOURCE, id)
+    if (sourceSt.error) {
       createBackupLog(id, 'Source not exists')
       return { error: 1, message: 'Source not exists', data: null }
     }
+    const sourceData = sourceSt.data
 
     const destinationId = sourceData.destinationId
     if (!destinationId) {
@@ -72,8 +75,11 @@ const forceBackup = async (ev, id) => {
         fileSizeHr +
         '\n\n',
     )
+
+    evSendTaskStatus(id, 'done')
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
+    evSendTaskStatus(id, 'error')
     createErrorLog(id + ' Error on force backup: ' + err)
     return { error: 1, message: 'Error on force backup', data: null }
   }

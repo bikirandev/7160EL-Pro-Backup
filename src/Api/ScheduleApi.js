@@ -5,9 +5,12 @@ const { getDocument, DB_SOURCE } = require('../utils/PouchDbTools')
 const scheduleStart = async (ev, id) => {
   // Collect the backup source
   const sourceInfo = await getDocument(DB_SOURCE, id)
+  if (sourceInfo.error === 1) {
+    return { error: 1, message: 'Source not found', data: null }
+  }
 
   // Creating a new task
-  addTask(sourceInfo)
+  addTask(sourceInfo.data)
   restartTask()
 
   const st = getTasksStatus()
@@ -18,9 +21,12 @@ const scheduleStart = async (ev, id) => {
 const scheduleStop = async (ev, id) => {
   // Collect the backup source
   const sourceInfo = await getDocument(DB_SOURCE, id)
+  if (sourceInfo.error === 1) {
+    return { error: 1, message: 'Source not found', data: null }
+  }
 
   // Remove the task
-  removeTask(sourceInfo)
+  removeTask(sourceInfo.data)
   restartTask()
 
   const st = getTasksStatus()

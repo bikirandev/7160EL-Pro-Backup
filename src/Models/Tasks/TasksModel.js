@@ -16,9 +16,7 @@ const backActionByTask = async (task) => {
   }
 
   try {
-    evSendTaskStatus(id, 'running')
-    forceBackup(null, id)
-    evSendTaskStatus(id, 'done')
+    await forceBackup(null, id)
   } catch (err) {
     createErrorLog(`Task ${id} error: ${err.message}`)
     createErrorLog(JSON.stringify(err))

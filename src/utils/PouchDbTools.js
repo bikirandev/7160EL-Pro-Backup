@@ -26,11 +26,15 @@ const getDocument = (dbName, id) => {
   return localDB
     .get(id)
     .then((doc) => {
-      return doc
+      return { error: 0, message: 'Success', data: doc }
     })
     .catch((err) => {
-      console.error(err)
-      throw err
+      if (err.status === 404) {
+        return { error: 1, message: 'Not found on DB', data: null }
+      } else {
+        console.error('doc not found', err)
+        throw err
+      }
     })
 }
 
