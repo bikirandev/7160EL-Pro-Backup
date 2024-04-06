@@ -1,6 +1,9 @@
 {
   "name": "pro-backup",
-  "author": "Bikiran",
+  "author": {
+    "name": "Bikiran",
+    "email": "info@bikiran.com"
+  },
   "description": "This APP is built by Bikiran",
   "version": "1.1.8",
   "private": true,
