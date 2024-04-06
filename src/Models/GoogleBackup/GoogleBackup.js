@@ -2,6 +2,7 @@ var { Storage } = require('@google-cloud/storage')
 var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
+const isoToUnix = require('../../utils/isoToUnix')
 // const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
@@ -96,8 +97,8 @@ const getFiles = async (destConfig, remoteDir = '') => {
       return {
         _id: file.id,
         name: file.name,
-        timeCreated: file.metadata.timeCreated,
-        timeUpdated: file.metadata.updated,
+        timeCreated: isoToUnix(file.metadata.timeCreated),
+        timeUpdated: isoToUnix(file.metadata.updated),
         size: file.metadata.size,
         sourceId: file.metadata.metadata.sourceId,
         destinationId: file.metadata.metadata.destinationId,

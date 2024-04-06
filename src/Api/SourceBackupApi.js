@@ -107,9 +107,9 @@ const updateFrequency = async (ev, data) => {
 }
 
 // get recent backups
-const getRecentBackups = async () => {
+const getRecentBackups = async (ev, data) => {
   try {
-    const filesSt = await getFiles()
+    const filesSt = await getFiles(data)
     if (filesSt.error) {
       return filesSt
     }
@@ -162,7 +162,9 @@ const downloadBackup = async (ev, data) => {
     const localPath = path.join(data.downloadPath, filename)
 
     // Download
-    await downloadFile(destConfig, backupId, localPath)
+    const dFile = await downloadFile(destConfig, backupId, localPath)
+
+    console.log(dFile)
 
     return { error: 0, message: 'File Downloaded Successfully', data: { localPath } }
   } catch (err) {
