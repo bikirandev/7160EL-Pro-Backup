@@ -67,16 +67,24 @@ const forceBackup = async (ev, id) => {
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
 
+    // Seep-7: Add to Backup Table
+
+    //
+
+    // Create Log
     createBackupLog(
       id,
       'Backup completed after ' +
         (moment().unix() - timeStart) +
         ' seconds, File size: ' +
         fileSizeHr +
-        '\n\n',
+        '\n',
     )
 
+    // Send Message to Frontend
     evSendTaskStatus(id, 'done')
+
+    // Return
     return { error: 0, message: 'Backup successful', data: null }
   } catch (err) {
     evSendTaskStatus(id, 'error')

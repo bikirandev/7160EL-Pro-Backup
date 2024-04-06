@@ -106,7 +106,7 @@ const updateFrequency = async (ev, data) => {
     return { error: 0, message: 'Frequency updated successfully', data: result }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on updating Frequency', data: null }
+    return { error: 1, message: 'Error on updating frequency', data: null }
   }
 }
 
@@ -117,6 +117,8 @@ const getRecentBackups = async (ev, data) => {
     if (filesSt.error) {
       return filesSt
     }
+
+    console.log(filesSt.data)
 
     return { error: 0, message: 'List of Backups', data: filesSt.data }
   } catch (err) {
@@ -177,9 +179,48 @@ const downloadBackup = async (ev, data) => {
   }
 }
 
+const removeBackup = async (ev, data) => {
+  // data.sourceId = ''
+  // data.backupId = ''
+
+  console.log(data)
+
+  if (!data.sourceId) {
+    return { error: 1, message: 'Source ID not found', data: null }
+  }
+
+  if (!data.backupId) {
+    return { error: 1, message: 'Backup ID not found', data: null }
+  }
+
+  try {
+    // Collect source configuration
+    const sourceSt = await getDocument(DB_SOURCE, data.sourceId)
+    if (sourceSt.error) {
+      return { error: 1, message: 'Source not exists', data: null }
+    }
+    const sourceData = sourceSt.data
+
+    // Collect destination configuration
+    const destSt = await getDestination(sourceData.destinationId)
+    if (destSt.error) {
+      return { error: 1, message: 'Destination config not found', data: null }
+    }
+    const destConfig = destSt.data
+
+    // Remove Backup
+    const result = await removeBackup(destConfig, data.backupId)
+
+    return { error: 0, message: 'Backup removed successfully', data: result }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
 module.exports = {
   updateAutoStart,
   updateFrequency,
   getRecentBackups,
   downloadBackup,
+  removeBackup,
 }

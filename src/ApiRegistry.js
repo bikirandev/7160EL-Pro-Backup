@@ -19,6 +19,7 @@ const {
   updateFrequency,
   getRecentBackups,
   downloadBackup,
+  removeBackup,
 } = require('./Api/SourceBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
@@ -61,6 +62,7 @@ module.exports = {
 
   //link destination to source
   linkDestination,
+  removeBackup,
 
   //all completed backups
   getRecentBackups,
