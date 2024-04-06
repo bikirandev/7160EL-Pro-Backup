@@ -1,5 +1,5 @@
 const { createDirForce, copyDir, removeDir } = require('../../utils/FileOperation')
-const { generateDirPath } = require('../Configs/ConfigModel')
+const { generateDirPath } = require('../Configs/ConfigGenerateFs')
 const path = require('path')
 const tar = require('tar')
 

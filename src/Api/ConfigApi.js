@@ -1,4 +1,4 @@
-const { configKeys } = require('../Models/Configs/ConfigModel')
+const { configKeys } = require('../Models/Configs/ConfigGenerateFs')
 const {
   getAllDocuments,
   DB_CONFIG,

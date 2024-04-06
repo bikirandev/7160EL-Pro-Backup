@@ -1,6 +1,6 @@
 const mssql = require('mssql')
 const path = require('path')
-const { generateFilePath } = require('../Configs/ConfigModel')
+const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 
 const mssqlWinConnect = async (data) => {
   const database = data.databaseOrPath

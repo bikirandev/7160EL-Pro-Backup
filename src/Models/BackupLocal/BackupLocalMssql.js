@@ -1,4 +1,4 @@
-const { generateFilePath } = require('../Configs/ConfigModel')
+const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 const path = require('path')
 const Execute = require('../../utils/Execute')
 
