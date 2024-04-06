@@ -22,7 +22,7 @@ module.exports = ({ BrowserWindow, shell }) => {
   win.loadURL(startUrl())
 
   // if any task is running, show a warning message before closing the window
-  const isRunning = false
+  const isRunning = true
   if (isRunning) {
     win.on('close', function (event) {
       const choice = dialog.showMessageBoxSync(win, {

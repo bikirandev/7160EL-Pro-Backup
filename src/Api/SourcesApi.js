@@ -6,10 +6,11 @@ const {
   deleteDocument,
   updateDocument,
   generateHash,
+  getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { setEv } = require('../Models/Tasks/Ev')
-const { getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { getTasksStatus, getTaskStatus } = require('../Models/Tasks/TasksModel')
 const {
   validateType,
   validateDirectory,
@@ -111,13 +112,19 @@ const updateSource = async (ev, data) => {
 
 const deleteSource = async (ev, data) => {
   try {
-    // Check if database and _id already exists
-    const exData = await getAllDocuments(DB_SOURCE)
+    const sourceSt = await getDocument(DB_SOURCE, data._id)
+    if (sourceSt.error === 1) {
+      return { error: 1, message: 'Source not found', data: null }
+    }
 
-    // Check if _id not exists
-    const exId = exData.find((x) => x._id === data._id)
-    if (!exId) {
-      return { error: 1, message: 'Source not exists', data: null }
+    // Cont get task status
+    const task = getTaskStatus(data._id)
+    if (task.running) {
+      return {
+        error: 1,
+        message: 'Task is already running. Please stop it then try to delete.',
+        data: null,
+      }
     }
 
     const result = await deleteDocument(DB_SOURCE, data._id)

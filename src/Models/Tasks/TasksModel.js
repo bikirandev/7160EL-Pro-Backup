@@ -69,6 +69,28 @@ const getTasks = () => {
   return tasks
 }
 
+const getTaskStatus = (id) => {
+  const st = tasks.find((task) => task._id === id)
+
+  if (!st) {
+    return {
+      id,
+      running: false,
+      nextRun: 0,
+      timeRemaining: 0,
+      pattern: '',
+    }
+  }
+
+  return {
+    id: st._id,
+    running: true,
+    nextRun: getNextRunTime(st.frequencyPattern).unix(),
+    timeRemaining: getNextRunTime(st.frequencyPattern).diff(new Date(), 'seconds'),
+    pattern: st.frequencyPattern,
+  }
+}
+
 const getTasksStatus = () => {
   return tasks.map((task) => {
     return {
@@ -86,5 +108,6 @@ module.exports = {
   addTask,
   removeTask,
   getTasks,
+  getTaskStatus,
   getTasksStatus,
 }
