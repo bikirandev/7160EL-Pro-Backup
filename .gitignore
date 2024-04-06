@@ -29,3 +29,4 @@ dist
 nedb_sources.db
 test.js
 /Data/db_*
+/Logs*
