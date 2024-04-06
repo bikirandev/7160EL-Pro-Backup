@@ -82,10 +82,9 @@ const deleteDocument = (dbName, id) => {
       return localDB.remove(doc)
     })
     .then((result) => {
-      return result
+      return { error: 0, message: 'Success', data: result }
     })
     .catch((err) => {
-      console.error(err)
       throw err
     })
 }

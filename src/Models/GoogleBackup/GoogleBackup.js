@@ -150,7 +150,7 @@ const downloadFile = async (destConfig, fileId, localPath) => {
   }
 }
 
-const removeFiles = async (destConfig, fileId) => {
+const removeFile = async (destConfig, fileId) => {
   try {
     const storage = new Storage({
       projectId: destConfig.projectId,
@@ -193,6 +193,6 @@ module.exports = {
   backupToBucket2,
   getFiles,
   downloadFile,
-  removeFiles,
+  removeFile,
   removeMultipleFiles,
 }

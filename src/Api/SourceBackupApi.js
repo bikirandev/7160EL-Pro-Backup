@@ -5,12 +5,13 @@ const {
   updateDocument,
   getAllDocuments,
   DB_UPLOADS,
+  deleteDocument,
 } = require('../utils/PouchDbTools')
 const fs = require('fs')
 const path = require('path')
 const cornParser = require('cron-parser')
 const { addTask, removeTask, restartTask } = require('../Models/Tasks/TasksModel')
-const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
+const { downloadFile, removeFile } = require('../Models/GoogleBackup/GoogleBackup')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -131,7 +132,6 @@ const getRecentBackups = async (ev, data) => {
 }
 
 const downloadBackup = async (ev, data) => {
-  // data
   // data.sourceId = ''
   // data.backupId = ''
   // data.downloadPath = ''
@@ -184,36 +184,42 @@ const downloadBackup = async (ev, data) => {
 }
 
 const removeBackup = async (ev, data) => {
-  // data.sourceId = ''
   // data.backupId = ''
 
   console.log(data)
-
-  if (!data.sourceId) {
-    return { error: 1, message: 'Source ID not found', data: null }
-  }
 
   if (!data.backupId) {
     return { error: 1, message: 'Backup ID not found', data: null }
   }
 
   try {
+    // Collect Uploads Info
+    const uploads = await getDocument(DB_UPLOADS, data.backupId)
+    if (uploads.error) {
+      return { error: 1, message: 'Backup not exists', data: null }
+    }
+    const sourceId = uploads.data.sourceId
+    const destinationId = uploads.data.destinationId
+    const backupName = uploads.data.name
+
     // Collect source configuration
-    const sourceSt = await getDocument(DB_SOURCE, data.sourceId)
+    const sourceSt = await getDocument(DB_SOURCE, sourceId)
     if (sourceSt.error) {
       return { error: 1, message: 'Source not exists', data: null }
     }
-    const sourceData = sourceSt.data
 
     // Collect destination configuration
-    const destSt = await getDestination(sourceData.destinationId)
+    const destSt = await getDestination(destinationId)
     if (destSt.error) {
       return { error: 1, message: 'Destination config not found', data: null }
     }
     const destConfig = destSt.data
 
-    // Remove Backup
-    const result = await removeBackup(destConfig, data.backupId)
+    // Remove Backup from remote
+    const result = await removeFile(destConfig, backupName)
+
+    // Remove from Uploads
+    await deleteDocument(DB_UPLOADS, data.backupId)
 
     return { error: 0, message: 'Backup removed successfully', data: result }
   } catch (err) {
