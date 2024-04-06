@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
-const { getDocument, DB_SOURCE } = require('../../utils/PouchDbTools')
+const { getDocument, createDocument, DB_SOURCE, DB_UPLOADS } = require('../../utils/PouchDbTools')
 const { validateAll } = require('../../utils/Validate')
 const { createBackupLog, createErrorLog } = require('../Logs/LogCreate')
 const { getDestination } = require('../Destinations/DestinationModel')
@@ -58,7 +58,20 @@ const forceBackup = async (ev, id) => {
     const basename = path.basename(sourceData.databaseOrPath)
 
     // Step-5: Upload to destination
-    await backupToBucket2(id, backupPath, destConfig, `${sourceData.type}/${basename}`, false)
+    const uploadSt = await backupToBucket2(
+      id,
+      backupPath,
+      destConfig,
+      `${sourceData.type}/${basename}`,
+      false,
+    )
+    if (uploadSt.error) {
+      return backupSt
+    }
+    const uploadData = uploadSt.data
+
+    //--Insert to local DB
+    await createDocument(DB_UPLOADS, { ...uploadData })
 
     // Get file size human readable
     const fileSize = fs.statSync(backupPath).size
@@ -66,10 +79,6 @@ const forceBackup = async (ev, id) => {
 
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
-
-    // Seep-7: Add to Backup Table
-
-    //
 
     // Create Log
     createBackupLog(

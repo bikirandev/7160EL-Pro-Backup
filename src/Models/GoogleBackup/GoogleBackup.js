@@ -4,6 +4,7 @@ var fs = require('fs')
 var progress = require('progress-stream')
 const isoToUnix = require('../../utils/isoToUnix')
 const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
+const moment = require('moment')
 // const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
@@ -70,13 +71,25 @@ const backupToBucket2 = async (
       },
     }
 
-    const status = await storage.bucket(destConfig.bucket).upload(filePath, {
+    const uploadSt = await storage.bucket(destConfig.bucket).upload(filePath, {
       gzip,
       destination,
       metadata,
     })
 
-    return { error: 0, message: 'Backup successful', data: status }
+    return {
+      error: 0,
+      message: 'Backup successful',
+      data: {
+        _id: uploadSt[1].id,
+        name: uploadSt[1].name,
+        timeCreated: moment(uploadSt[1].timeCreated).unix(),
+        timeUpdated: moment(uploadSt[1].updated).unix(),
+        size: uploadSt[1].size,
+        sourceId: uploadSt[1].metadata.sourceId,
+        destinationId: uploadSt[1].metadata.destinationId,
+      },
+    }
   } catch (err) {
     throw new Error(err)
   }

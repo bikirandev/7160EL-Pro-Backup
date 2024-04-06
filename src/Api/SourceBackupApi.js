@@ -1,10 +1,16 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
-const { DB_SOURCE, getDocument, updateDocument } = require('../utils/PouchDbTools')
+const {
+  DB_SOURCE,
+  getDocument,
+  updateDocument,
+  getAllDocuments,
+  DB_UPLOADS,
+} = require('../utils/PouchDbTools')
 const fs = require('fs')
 const path = require('path')
 const cornParser = require('cron-parser')
 const { addTask, removeTask, restartTask } = require('../Models/Tasks/TasksModel')
-const { getFiles, downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
+const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -113,14 +119,12 @@ const updateFrequency = async (ev, data) => {
 // get recent backups
 const getRecentBackups = async (ev, data) => {
   try {
-    const filesSt = await getFiles(data)
-    if (filesSt.error) {
-      return filesSt
-    }
+    const uploads = await getAllDocuments(DB_UPLOADS)
 
-    console.log(filesSt.data)
+    // Filter by sourceId
+    const files = uploads.filter((x) => x.sourceId === data.sourceId)
 
-    return { error: 0, message: 'List of Backups', data: filesSt.data }
+    return { error: 0, message: 'List of Backups', data: files }
   } catch (err) {
     throw new Error(err)
   }
