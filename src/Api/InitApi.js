@@ -12,15 +12,11 @@ const init = async (ev) => {
     //--Apply Autostart
     data.forEach((source) => {
       if (source.autostart) {
-        // console.log('Autostart: ' + source._id)
         addTask(source, false)
       }
     })
 
     restartTask()
-
-    // const tasks = getTasksStatus()
-    // console.log(tasks)
 
     return { error: 0, message: 'Application Init Success', data: data }
   } catch (err) {

@@ -34,11 +34,12 @@ const forceBackup = async (ev, id) => {
     }
 
     // Step-3: Collect destination configuration
-    const destConfig = await getDestination(destinationId)
-    if (destConfig.title === '') {
+    const destSt = await getDestination(destinationId)
+    if (destSt.error) {
       createBackupLog(id, 'Destination config not found')
       return { error: 1, message: 'Destination config not found', data: null }
     }
+    const destConfig = destSt.data
 
     // Execution
     const exe1 = await mssqlWinExecBackup(sourceData)

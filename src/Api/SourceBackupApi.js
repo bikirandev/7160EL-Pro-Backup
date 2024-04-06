@@ -162,10 +162,11 @@ const downloadBackup = async (ev, data) => {
     const sourceData = sourceSt.data
 
     // Collect destination configuration
-    const destConfig = await getDestination(sourceData.destinationId)
-    if (destConfig.title === '') {
+    const destSt = await getDestination(sourceData.destinationId)
+    if (destSt.error) {
       return { error: 1, message: 'Destination config not found', data: null }
     }
+    const destConfig = destSt.data
 
     // Download path
     const backupId = data.backupId.split('%2F').join('/')
@@ -173,9 +174,7 @@ const downloadBackup = async (ev, data) => {
     const localPath = path.join(data.downloadPath, filename)
 
     // Download
-    const dFile = await downloadFile(destConfig, backupId, localPath)
-
-    console.log(dFile)
+    await downloadFile(destConfig, backupId, localPath)
 
     return { error: 0, message: 'File Downloaded Successfully', data: { localPath } }
   } catch (err) {
@@ -185,8 +184,6 @@ const downloadBackup = async (ev, data) => {
 
 const removeBackup = async (ev, data) => {
   // data.backupId = ''
-
-  console.log(data)
 
   if (!data.backupId) {
     return { error: 1, message: 'Backup ID not found', data: null }

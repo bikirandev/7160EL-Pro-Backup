@@ -47,7 +47,7 @@ const verifyGcloudData = (data) => {
 
 const getDestination = async (id) => {
   if (id === 'default' || !id) {
-    // Collect Default Destination defaultValues.destinations[0]
+    // Collect Default Destination
     return { error: 0, message: 'Success', data: defaultValues.destinations[0] }
   }
 
