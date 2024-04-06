@@ -1,4 +1,5 @@
 const { fixAppId, getAppId } = require('../Models/Configs/ConfigAppId')
+const { createErrorLog } = require('../Models/Logs/LogCreate')
 const { setEv } = require('../Models/Tasks/Ev')
 const { addTask, restartTask } = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE } = require('../utils/PouchDbTools')
@@ -33,7 +34,8 @@ const init = async (ev) => {
     }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: null }
+    createErrorLog('Init Error: ' + JSON.stringify(err))
+    return { error: 1, message: 'Init Error', data: null }
   }
 }
 
