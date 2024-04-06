@@ -25,17 +25,23 @@ module.exports = ({ BrowserWindow, shell }) => {
   const isRunning = true
   if (isRunning) {
     win.on('close', function (event) {
-      const choice = dialog.showMessageBoxSync(win, {
+      event.preventDefault() // Prevent window from closing immediately
+
+      const options = {
         type: 'question',
         buttons: ['Yes', 'No'],
         title: '   ',
         message:
-          'Backup in progress. if you close the window, the backup will be stopped. Are you sure you want to close the window?',
-      })
-
-      if (choice === 1) {
-        event.preventDefault() // Prevent window from closing
+          'If you close the window, All background process will be stopped. Are you sure you want to close the window?',
       }
+
+      dialog.showMessageBox(win, options).then((result) => {
+        if (result.response === 1) {
+          // Do nothing, prevent window from closing
+        } else {
+          win.destroy() // Close the window
+        }
+      })
     })
   }
 
