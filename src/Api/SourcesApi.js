@@ -1,4 +1,4 @@
-const { sourceDataPattern } = require('../Models/Sources/SourcesData')
+const { sourceDataPattern, countUploads } = require('../Models/Sources/SourcesData')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -7,9 +7,9 @@ const {
   updateDocument,
   generateHash,
   getDocument,
+  DB_UPLOADS,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
-const { setEv } = require('../Models/Tasks/Ev')
 const { getTasksStatus, getTaskStatus } = require('../Models/Tasks/TasksModel')
 const {
   validateType,
@@ -20,17 +20,20 @@ const {
 } = require('../Models/Sources/SourcesValidate')
 
 // Get Lists of Sources // ev, data
-const getSources = async (ev) => {
+const getSources = async () => {
   try {
-    const data = await getAllDocuments(DB_SOURCE)
-
-    // Set Default EV
-    setEv(ev)
+    const sourcesData = await getAllDocuments(DB_SOURCE)
 
     // Sending test message
     const tasks = getTasksStatus()
 
-    return { error: 0, message: 'List of Sources', data: data, tasks: tasks }
+    // Collect Uploads
+    const uploads = await getAllDocuments(DB_UPLOADS)
+
+    // Count total uploads by sourceId
+    const sources = countUploads(sourcesData, uploads)
+
+    return { error: 0, message: 'List of Sources', data: sources, tasks: tasks }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: null }

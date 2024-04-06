@@ -1,4 +1,5 @@
 const defaultValues = require('../../utils/DefaultValue')
+const { getFileSizeHr } = require('../../utils/FileOperation')
 
 const sourceDataPattern = {
   type: '',
@@ -25,8 +26,35 @@ const sourceTypes = {
   TYPE_DIRECTORY: 'directory',
 }
 
+const countUploads = (sources, uploads) => {
+  const uploadsCount = {}
+  const uploadsFileSize = {}
+
+  uploads.forEach((x) => {
+    if (!uploadsCount[x.sourceId]) {
+      uploadsCount[x.sourceId] = 0
+      uploadsFileSize[x.sourceId] = 0
+    }
+    uploadsCount[x.sourceId]++
+    uploadsFileSize[x.sourceId] += x.size
+  })
+
+  // Map with sources
+  sources.forEach((x) => {
+    x.uploads = uploadsCount[x._id] || 0
+    x.uploadsFileSize = uploadsFileSize[x._id] || 0
+  })
+
+  sources.forEach((x) => {
+    x.uploadsFileSizeHr = getFileSizeHr(x.uploadsFileSize)
+  })
+
+  return sources
+}
+
 // Export
 module.exports = {
   sourceTypes,
   sourceDataPattern,
+  countUploads,
 }
