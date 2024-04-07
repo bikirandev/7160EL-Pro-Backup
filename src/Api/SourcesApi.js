@@ -67,7 +67,6 @@ const addSource = async (ev, data) => {
     }
 
     const result = await createDocument(DB_SOURCE, nData)
-    console.log('Source added', result)
 
     // Collect Recently Added Source
     const sourcesData = await getDocument(DB_SOURCE, hash)

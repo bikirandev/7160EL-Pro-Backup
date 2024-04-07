@@ -17,7 +17,8 @@ class BackupDel {
   dayCount() {
     // backups group by date
     const backupsGroupByDate = this.uploads.reduce((acc, backup) => {
-      const key = backup.date
+      const key = moment(backup.timeCreated * 1000).format('YYYY-MM-DD')
+
       if (!acc[key]) {
         acc[key] = []
       }
@@ -83,7 +84,7 @@ class BackupDel {
 
     // if current quantity is less than the quantity, return null
     if (cQuantity < this.quantity) {
-      return null
+      return []
     }
 
     // Regular days
