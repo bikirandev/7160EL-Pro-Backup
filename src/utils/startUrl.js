@@ -7,7 +7,7 @@ const path = require('path') // Import the 'path' module
 const GetUrl = () => {
   const isDev = process.env.npm_lifecycle_event === 'electron'
 
-  if (isDev || 1) {
+  if (isDev) {
     return 'http://localhost:3000'
   }
 
