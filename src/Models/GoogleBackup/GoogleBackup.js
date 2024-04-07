@@ -152,6 +152,10 @@ const downloadFile = async (destConfig, fileId, localPath) => {
 
     return { error: 0, message: 'Download successful', data: null }
   } catch (err) {
+    if (err.message.includes('No such object')) {
+      return { error: 1, message: 'Backup not found on remote location', data: null }
+    }
+
     throw new Error(err)
   }
 }

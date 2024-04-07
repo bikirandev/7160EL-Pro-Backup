@@ -188,9 +188,12 @@ const downloadBackup = async (ev, data) => {
     const localPath = path.join(data.downloadPath, filename)
 
     // Download
-    await downloadFile(destConfig, backupId, localPath)
+    const downloadSt = await downloadFile(destConfig, backupId, localPath)
+    if (downloadSt.error) {
+      return downloadSt
+    }
 
-    return { error: 0, message: 'File Downloaded Successfully', data: { localPath } }
+    return { error: 0, message: 'File downloaded successfully', data: { localPath } }
   } catch (err) {
     throw new Error(err)
   }
