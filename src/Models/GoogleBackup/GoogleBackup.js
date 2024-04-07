@@ -6,18 +6,8 @@ const isoToUnix = require('../../utils/isoToUnix')
 const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
 const moment = require('moment')
 const { getAppId } = require('../Configs/ConfigAppId')
+const { checkOnline } = require('../../utils/InOnline')
 // const { app } = require('electron')
-
-const CheckOnline = async () => {
-  const gApi = 'https://www.googleapis.com/oauth2/v1/certs'
-  try {
-    const response = await fetch(gApi)
-    console.log(response)
-    return response.status === 200
-  } catch (err) {
-    return false
-  }
-}
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
@@ -25,7 +15,7 @@ const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip =
 
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
@@ -77,7 +67,7 @@ const backupToBucket2 = async (
 
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
@@ -127,7 +117,7 @@ const backupToBucket2 = async (
 const getFiles = async (destConfig, remoteDir = '') => {
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
@@ -171,7 +161,7 @@ const getFiles = async (destConfig, remoteDir = '') => {
 const downloadFile = async (destConfig, fileId, localPath) => {
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
@@ -203,7 +193,7 @@ const downloadFile = async (destConfig, fileId, localPath) => {
 const removeFile = async (destConfig, fileId) => {
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
@@ -230,7 +220,7 @@ const removeFile = async (destConfig, fileId) => {
 const removeMultipleFiles = async (destConfig, fileIds) => {
   try {
     // Check Internet Access
-    const isOnline = await CheckOnline()
+    const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
