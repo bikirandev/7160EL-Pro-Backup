@@ -169,6 +169,10 @@ const removeFile = async (destConfig, fileId) => {
 
     return { error: 0, message: 'Backup deleted', data: null }
   } catch (err) {
+    if (err.message.includes('No such object')) {
+      return { error: 0, message: 'Backup already deleted', data: null }
+    }
+
     throw new Error(err)
   }
 }
