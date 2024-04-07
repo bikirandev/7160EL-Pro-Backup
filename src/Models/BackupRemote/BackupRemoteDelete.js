@@ -1,22 +1,22 @@
 const moment = require('moment')
 
 class BackupDel {
-  constructor(frequency, quantity, retention, backups, timeStampNow) {
+  constructor(frequency, quantity, retention, uploads, timeStampNow) {
     this.frequency = frequency
     this.quantity = quantity
     this.retention = retention
-    this.backups = backups
+    this.uploads = uploads
     this.timeStampNow = timeStampNow
     this.deleteIds = []
   }
 
   isDeleteRequired() {
-    return this.backups.length - this.deleteIds.length - this.quantity
+    return this.uploads.length - this.deleteIds.length - this.quantity
   }
 
   dayCount() {
     // backups group by date
-    const backupsGroupByDate = this.backups.reduce((acc, backup) => {
+    const backupsGroupByDate = this.uploads.reduce((acc, backup) => {
       const key = backup.date
       if (!acc[key]) {
         acc[key] = []
@@ -52,7 +52,7 @@ class BackupDel {
   }
 
   emptyByDate(date) {
-    const dBackups = this.backups.filter((x) => {
+    const dBackups = this.uploads.filter((x) => {
       return x.date === date
     })
 
@@ -64,7 +64,7 @@ class BackupDel {
   }
 
   deleteByDays(date) {
-    const dBackups = this.backups.filter((x) => {
+    const dBackups = this.uploads.filter((x) => {
       return x.date === date
     })
 
@@ -79,7 +79,7 @@ class BackupDel {
   }
 
   deleteSelector() {
-    const cQuantity = this.backups.length
+    const cQuantity = this.uploads.length
 
     // if current quantity is less than the quantity, return null
     if (cQuantity < this.quantity) {
@@ -110,7 +110,7 @@ class BackupDel {
   }
 
   debug() {
-    const delBack = this.backups.filter((x) => {
+    const delBack = this.uploads.filter((x) => {
       return this.deleteIds.includes(x.id)
     })
 
