@@ -177,8 +177,13 @@ const downloadBackup = async (ev, data) => {
     }
     const destConfig = destSt.data
 
+    const idAr = data.backupId.split('/')
+    idAr.shift()
+    idAr.pop()
+    const id = idAr.join('/')
+
     // Download path
-    const backupId = data.backupId.split('%2F').join('/')
+    const backupId = id
     const filename = path.basename(backupId)
     const localPath = path.join(data.downloadPath, filename)
 
