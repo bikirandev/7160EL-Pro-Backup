@@ -47,11 +47,13 @@ const forceBackup = async (ev, id) => {
 
     // Step-4: Execute backup
     const backupSt = validateAll([exe1, exe2])
-    if (backupSt.error !== 0) {
+    if (backupSt.error) {
+      evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup failed: ' + backupSt.message)
       return backupSt
     }
     if (!backupSt?.data?.backupPath) {
+      evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup path not found')
       return { error: 1, message: 'Backup path not found', data: null }
     }

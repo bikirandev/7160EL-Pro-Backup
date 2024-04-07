@@ -1,4 +1,4 @@
-const { createDirForce, copyDir, removeDir } = require('../../utils/FileOperation')
+const { createDirForce, copyDir, removeDir, ifDirExists } = require('../../utils/FileOperation')
 const { generateDirPath } = require('../Configs/ConfigGenerateFs')
 const path = require('path')
 const tar = require('tar')
@@ -11,6 +11,12 @@ const dirBackup = async (sourceData) => {
   }
 
   try {
+    // if directory not exists on file system
+    const existSt = await ifDirExists(sourcePath)
+    if (existSt.error) {
+      return existSt
+    }
+
     // Step-1: Generate Directory Path
     const confBackupPath = await generateDirPath(sourceData)
     if (confBackupPath.error !== 0) {

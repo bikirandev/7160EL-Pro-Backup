@@ -49,9 +49,22 @@ const getFileSizeHr = (size) => {
   return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]
 }
 
+const ifDirExists = (darPath) => {
+  return new Promise((resolve) => {
+    fs.access(darPath, fs.F_OK, (err) => {
+      if (err) {
+        resolve({ error: 1, message: 'Directory not exists', data: null })
+      } else {
+        resolve({ error: 0, message: 'Directory exists', data: null })
+      }
+    })
+  })
+}
+
 module.exports = {
   removeDir,
   copyDir,
   createDirForce,
   getFileSizeHr,
+  ifDirExists,
 }
