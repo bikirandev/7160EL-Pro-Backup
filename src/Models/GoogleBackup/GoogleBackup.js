@@ -5,6 +5,7 @@ var progress = require('progress-stream')
 const isoToUnix = require('../../utils/isoToUnix')
 const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
 const moment = require('moment')
+const { getAppId } = require('../Configs/ConfigAppId')
 // const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
@@ -58,6 +59,10 @@ const backupToBucket2 = async (
   const destination = `${remoteDir}/${fileName}`
 
   try {
+    // Collect app id
+    const appIdSt = await getAppId()
+    const appId = appIdSt.data
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
@@ -66,6 +71,7 @@ const backupToBucket2 = async (
     // Add metadata to the file.
     const metadata = {
       metadata: {
+        appId,
         sourceId,
         destinationId: destConfig._id,
       },
