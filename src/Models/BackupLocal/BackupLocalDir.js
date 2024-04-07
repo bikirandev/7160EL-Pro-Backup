@@ -14,7 +14,7 @@ const dirBackup = async (sourceData) => {
     // if directory not exists on file system
     const existSt = await ifDirExists(sourcePath)
     if (existSt.error) {
-      return existSt
+      return { error: 1, message: 'Source directory not exists', data: null }
     }
 
     // Step-1: Generate Directory Path
