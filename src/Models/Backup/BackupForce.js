@@ -1,7 +1,13 @@
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
-const { getDocument, createDocument, DB_SOURCE, DB_UPLOADS } = require('../../utils/PouchDbTools')
+const {
+  getDocument,
+  createDocument,
+  DB_SOURCE,
+  DB_UPLOADS,
+  updateDocument,
+} = require('../../utils/PouchDbTools')
 const { validateAll } = require('../../utils/Validate')
 const { createBackupLog, createErrorLog } = require('../Logs/LogCreate')
 const { getDestination } = require('../Destinations/DestinationModel')
@@ -50,6 +56,13 @@ const forceBackup = async (ev, id) => {
     if (backupSt.error) {
       evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup failed: ' + backupSt.message)
+
+      // Update Source Error
+      await updateDocument(DB_SOURCE, id, {
+        ...sourceData,
+        errorStatue: true,
+        errorMessage: backupSt.message,
+      })
       return backupSt
     }
     if (!backupSt?.data?.backupPath) {

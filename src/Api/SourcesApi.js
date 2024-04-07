@@ -33,6 +33,8 @@ const getSources = async () => {
     // Sending test message
     const tasks = getTasksStatus()
 
+    console.log({ error: 0, message: 'List of Sources', data: sources, tasks: tasks })
+
     return { error: 0, message: 'List of Sources', data: sources, tasks: tasks }
   } catch (err) {
     console.log(err)
