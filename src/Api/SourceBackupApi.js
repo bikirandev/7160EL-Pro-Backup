@@ -190,6 +190,10 @@ const downloadBackup = async (ev, data) => {
     // Download
     const downloadSt = await downloadFile(destConfig, backupId, localPath)
     if (downloadSt.error) {
+      // Remove local records
+      if (downloadSt.action == 'remove-record') {
+        await removeBackup(ev, { backupId: data.backupId })
+      }
       return downloadSt
     }
 

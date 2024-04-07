@@ -8,11 +8,28 @@ const moment = require('moment')
 const { getAppId } = require('../Configs/ConfigAppId')
 // const { app } = require('electron')
 
+const CheckOnline = async () => {
+  const gApi = 'https://www.googleapis.com/oauth2/v1/certs'
+  try {
+    const response = await fetch(gApi)
+    console.log(response)
+    return response.status === 200
+  } catch (err) {
+    return false
+  }
+}
+
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
   const destination = `${remoteDir}/${fileName}`
 
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
@@ -59,6 +76,12 @@ const backupToBucket2 = async (
   const destination = `${remoteDir}/${fileName}`
 
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     // Collect app id
     const appIdSt = await getAppId()
     const appId = appIdSt.data
@@ -103,6 +126,12 @@ const backupToBucket2 = async (
 
 const getFiles = async (destConfig, remoteDir = '') => {
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
@@ -141,6 +170,12 @@ const getFiles = async (destConfig, remoteDir = '') => {
 
 const downloadFile = async (destConfig, fileId, localPath) => {
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
@@ -153,7 +188,12 @@ const downloadFile = async (destConfig, fileId, localPath) => {
     return { error: 0, message: 'Download successful', data: null }
   } catch (err) {
     if (err.message.includes('No such object')) {
-      return { error: 1, message: 'Backup not found on remote location', data: null }
+      return {
+        error: 1,
+        message: 'Backup not found on remote location',
+        data: null,
+        action: 'remove-record',
+      }
     }
 
     throw new Error(err)
@@ -162,6 +202,12 @@ const downloadFile = async (destConfig, fileId, localPath) => {
 
 const removeFile = async (destConfig, fileId) => {
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
@@ -183,6 +229,12 @@ const removeFile = async (destConfig, fileId) => {
 
 const removeMultipleFiles = async (destConfig, fileIds) => {
   try {
+    // Check Internet Access
+    const isOnline = await CheckOnline()
+    if (!isOnline) {
+      return { error: 1, message: 'No internet access', data: null }
+    }
+
     const storage = new Storage({
       projectId: destConfig.projectId,
       credentials: destConfig.credentials,
