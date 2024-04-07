@@ -24,14 +24,14 @@ const getSources = async () => {
   try {
     const sourcesData = await getAllDocuments(DB_SOURCE)
 
-    // Sending test message
-    const tasks = getTasksStatus()
-
     // Collect Uploads
     const uploads = await getAllDocuments(DB_UPLOADS)
 
     // Count total uploads by sourceId
     const sources = countUploads(sourcesData, uploads)
+
+    // Sending test message
+    const tasks = getTasksStatus()
 
     return { error: 0, message: 'List of Sources', data: sources, tasks: tasks }
   } catch (err) {
