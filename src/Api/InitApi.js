@@ -4,38 +4,49 @@ const { setEv } = require('../Models/Tasks/Ev')
 const { addTask, restartTask } = require('../Models/Tasks/TasksModel')
 const { getAllDocuments, DB_SOURCE } = require('../utils/PouchDbTools')
 
+let isInit = false
+
+const fetchInt = () => {
+  const oVal = isInit
+  isInit = true
+
+  return oVal
+}
+
 const init = async (ev) => {
-  // EV
-  setEv(ev)
+  if (!fetchInt()) {
+    // EV
+    setEv(ev)
 
-  try {
-    // AppID
-    await fixAppId()
-    const appId = await getAppId()
+    try {
+      // AppID
+      await fixAppId()
+      const appId = await getAppId()
 
-    // Sources
-    const sources = await getAllDocuments(DB_SOURCE)
+      // Sources
+      const sources = await getAllDocuments(DB_SOURCE)
 
-    //--Apply Autostart
-    sources.forEach((source) => {
-      if (source.autostart) {
-        addTask(source, false)
+      //--Apply Autostart
+      sources.forEach((source) => {
+        if (source.autostart) {
+          addTask(source, false)
+        }
+      })
+
+      restartTask()
+
+      return {
+        error: 0,
+        message: 'Application Init Success',
+        data: {
+          appId: appId.data,
+        },
       }
-    })
-
-    restartTask()
-
-    return {
-      error: 0,
-      message: 'Application Init Success',
-      data: {
-        appId: appId.data,
-      },
+    } catch (err) {
+      console.log(err)
+      createErrorLog('Init Error: ' + JSON.stringify(err))
+      return { error: 1, message: 'Init Error', data: null }
     }
-  } catch (err) {
-    console.log(err)
-    createErrorLog('Init Error: ' + JSON.stringify(err))
-    return { error: 1, message: 'Init Error', data: null }
   }
 }
 

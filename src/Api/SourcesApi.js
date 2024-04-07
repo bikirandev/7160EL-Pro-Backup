@@ -10,7 +10,7 @@ const {
   DB_UPLOADS,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
-const { getTasksStatus, getTaskStatus } = require('../Models/Tasks/TasksModel')
+const { getTasksStatus, getTaskStatus, addTask } = require('../Models/Tasks/TasksModel')
 const {
   validateType,
   validateDirectory,
@@ -67,6 +67,16 @@ const addSource = async (ev, data) => {
     }
 
     const result = await createDocument(DB_SOURCE, nData)
+    console.log('Source added', result)
+
+    // Collect Recently Added Source
+    const sourcesData = await getDocument(DB_SOURCE, hash)
+
+    if (sourcesData.error === 0) {
+      // Start Task
+      addTask(sourcesData.data, false)
+    }
+
     return { error: 0, message: 'Source added', data: result }
   } catch (err) {
     console.log(err)
