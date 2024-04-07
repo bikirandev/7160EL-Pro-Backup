@@ -250,6 +250,8 @@ const removeBackup = async (ev, data) => {
 const cleanupBackups = async (ev, data) => {
   // data.sourceId = ''
 
+  console.log(data)
+
   if (!data.sourceId) {
     return { error: 1, message: 'Source ID not found', data: null }
   }
