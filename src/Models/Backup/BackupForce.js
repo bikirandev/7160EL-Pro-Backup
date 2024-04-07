@@ -96,7 +96,9 @@ const forceBackup = async (ev, id) => {
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
 
+    // Send Message to Frontend
     // Create Log
+    evSendTaskStatus(id, 'done')
     createBackupLog(
       id,
       'Backup completed after ' +
@@ -106,8 +108,12 @@ const forceBackup = async (ev, id) => {
         '\n',
     )
 
-    // Send Message to Frontend
-    evSendTaskStatus(id, 'done')
+    // Update Source
+    await updateDocument(DB_SOURCE, id, {
+      ...sourceData,
+      errorStatue: false,
+      errorMessage: '',
+    })
 
     // Return
     return { error: 0, message: 'Backup successful', data: null }
