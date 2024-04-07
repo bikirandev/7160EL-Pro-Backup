@@ -6,7 +6,7 @@ const isoToUnix = require('../../utils/isoToUnix')
 const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
 const moment = require('moment')
 const { getAppId } = require('../Configs/ConfigAppId')
-const { checkOnline } = require('../../utils/InOnline')
+const { checkOnline } = require('../../utils/IsOnline')
 // const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
