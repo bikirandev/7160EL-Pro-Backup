@@ -122,8 +122,17 @@ const getRecentBackups = async (ev, data) => {
   try {
     const uploads = await getAllDocuments(DB_UPLOADS)
 
+    // Collect sources
+    const sources = await getAllDocuments(DB_SOURCE)
+
     // Filter by sourceId
-    const files = uploads.filter((x) => x.sourceId === data.sourceId)
+    const files = uploads.filter((x) => {
+      if (!data.sourceId) {
+        return sources.find((y) => y._id === x.sourceId)
+      }
+
+      return x.sourceId === data.sourceId
+    })
 
     return { error: 0, message: 'List of Backups', data: files }
   } catch (err) {

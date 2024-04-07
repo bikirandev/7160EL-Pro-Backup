@@ -32,7 +32,7 @@ module.exports = ({ BrowserWindow, shell }) => {
         buttons: ['Yes', 'No'],
         title: '   ',
         message:
-          'If you close the window, All background process will be stopped. Are you sure you want to close the window?',
+          'When you close the window, All background process will be stopped.\nAre you sure you want to close the window?',
       }
 
       dialog.showMessageBox(win, options).then((result) => {
