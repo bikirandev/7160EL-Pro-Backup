@@ -1,17 +1,16 @@
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const {
   DB_SOURCE,
+  DB_UPLOADS,
   getDocument,
   updateDocument,
   getAllDocuments,
-  DB_UPLOADS,
-  deleteDocument,
 } = require('../utils/PouchDbTools')
 const fs = require('fs')
 const path = require('path')
 const cornParser = require('cron-parser')
 const { addTask, removeTask, restartTask } = require('../Models/Tasks/TasksModel')
-const { downloadFile, removeFile } = require('../Models/GoogleBackup/GoogleBackup')
+const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { BackupDel } = require('../Models/BackupRemote/BackupRemoteDelete')
 const moment = require('moment')
 const { deleteUpload } = require('../Models/Uploads/UploadsOperation')
@@ -225,33 +224,13 @@ const removeBackup = async (ev, data) => {
     if (uploadFile.error) {
       return { error: 1, message: 'Backup not exists', data: null }
     }
-    const sourceId = uploadFile.data.sourceId
-    const destinationId = uploadFile.data.destinationId
-    const backupName = uploadFile.data.name
 
-    // Collect source configuration
-    const sourceSt = await getDocument(DB_SOURCE, sourceId)
-    if (sourceSt.error) {
-      return { error: 1, message: 'Source not exists', data: null }
+    const deleteSt = await deleteUpload(uploadFile.data)
+    if (deleteSt.error) {
+      return { error: 1, message: 'Error on deleting backup', data: null }
     }
 
-    // Collect destination configuration
-    const destSt = await getDestination(destinationId)
-    if (destSt.error) {
-      return { error: 1, message: 'Destination config not found', data: null }
-    }
-    const destConfig = destSt.data
-
-    // Remove Backup from remote
-    const result = await removeFile(destConfig, backupName)
-
-    // Remove from Uploads
-    const delSt = await deleteDocument(DB_UPLOADS, data.backupId)
-    if (delSt.error) {
-      return { error: 1, message: 'Error on removing backup', data: null }
-    }
-
-    return { error: 0, message: 'Backup removed successfully', data: result }
+    return { error: 0, message: 'Backup removed successfully', data: deleteSt }
   } catch (err) {
     throw new Error(err)
   }
@@ -290,14 +269,14 @@ const cleanupBackups = async (ev, data) => {
     console.log('uploadIds', files.length)
     console.log('uploadIds', uploadDelIds.length)
 
-    for (const uploadId of uploadDelIds) {
-      const uploadInfo = files.find((x) => x._id === uploadId)
-      const deleteSt = await deleteUpload(uploadInfo)
-      if (deleteSt.error) {
-        console.log('Error on deleting: ', uploadId)
-      }
-      console.log('Uploads Deleted: ', uploadId)
-    }
+    // for (const uploadId of uploadDelIds) {
+    //   const uploadInfo = files.find((x) => x._id === uploadId)
+    //   const deleteSt = await deleteUpload(uploadInfo)
+    //   if (deleteSt.error) {
+    //     console.log('Error on deleting: ', uploadId)
+    //   }
+    //   console.log('Uploads Deleted: ', uploadId)
+    // }
 
     return { error: 0, message: 'Backups removed successfully', data: null }
   } catch (err) {

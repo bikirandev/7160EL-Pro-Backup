@@ -1,13 +1,13 @@
 const { sourceDataPattern, countUploads } = require('../Models/Sources/SourcesData')
 const {
-  getAllDocuments,
+  DB_UPLOADS,
   DB_SOURCE,
+  getAllDocuments,
   createDocument,
   deleteDocument,
   updateDocument,
   generateHash,
   getDocument,
-  DB_UPLOADS,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
 const { getTasksStatus, getTaskStatus, addTask } = require('../Models/Tasks/TasksModel')
