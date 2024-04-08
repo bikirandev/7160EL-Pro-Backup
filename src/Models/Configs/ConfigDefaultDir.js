@@ -36,9 +36,13 @@ const setDefDirectory = async (defaultDirectory) => {
         value: defaultDirectory,
       })
     } else {
-      await updateDocument(DB_CONFIG, confDir.data._id, {
+      const updateSt = await updateDocument(DB_CONFIG, confDir.data._id, {
         value: defaultDirectory,
       })
+
+      if (updateSt.error) {
+        return { error: 1, message: 'Error on updating Default Directory', data: null }
+      }
     }
 
     return { error: 0, message: 'Default directory set successfully', data: null }

@@ -37,12 +37,15 @@ const updateAutoStart = async (ev, data) => {
     }
     const exData = dataSt.data
 
-    const result = await updateDocument(DB_SOURCE, data._id, {
+    const updateSt = await updateDocument(DB_SOURCE, data._id, {
       ...exData,
       autostart: !!data.autostart,
     })
+    if (updateSt.error) {
+      return { error: 1, message: 'Error on updating Auto Start', data: null }
+    }
 
-    return { error: 0, message: 'Auto start status updated', data: result }
+    return { error: 0, message: 'Auto start status updated', data: null }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on updating Auto start', data: null }
@@ -96,11 +99,14 @@ const updateFrequency = async (ev, data) => {
       backupQuantity: data.backupQuantity,
       backupRetention: data.backupRetention,
     })
+    if (result.error) {
+      return { error: 1, message: 'Error on updating frequency', data: null }
+    }
 
     // Remove Source from Task
     removeTask(exData)
 
-    // Collect and add the backup source
+    // Collect new source and update it
     const sourceSt = await getDocument(DB_SOURCE, data._id)
     if (sourceSt.error) {
       return { error: 1, message: 'Source not found', data: null }

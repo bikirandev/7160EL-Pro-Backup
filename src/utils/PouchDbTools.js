@@ -54,22 +54,27 @@ const createDocument = (dbName, data) => {
     })
 }
 
-const updateDocument = (dbName, id, data) => {
-  const dbPath = path.join('./Data', dbName)
-  const localDB = new PouchDb(dbPath)
+const updateDocument = async (dbName, id, data) => {
+  try {
+    const dbPath = path.join('./Data', dbName)
+    const localDB = new PouchDb(dbPath)
 
-  return localDB
-    .get(id)
-    .then((doc) => {
-      return localDB.put({ _id: id, _rev: doc._rev, ...data })
-    })
-    .then((result) => {
-      return result
-    })
-    .catch((err) => {
-      console.error(err)
-      throw err
-    })
+    const dataSt = await getDocument(dbName, id)
+    if (dataSt.error) {
+      return dataSt
+    }
+
+    // Updating the document
+    const updateSt = await localDB.put({ _id: id, _rev: dataSt.data._rev, ...data })
+    if (updateSt.ok !== true) {
+      return { error: 1, message: 'Error updating document', data: null }
+    }
+
+    return { error: 0, message: 'Updated successfully', data: updateSt }
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
+  }
 }
 
 const deleteDocument = async (dbName, id) => {

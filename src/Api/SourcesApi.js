@@ -113,9 +113,12 @@ const updateSource = async (ev, data) => {
       return validate
     }
 
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
+    const updateSt = await updateDocument(DB_SOURCE, data._id, nData)
+    if (updateSt.error) {
+      return { error: 1, message: 'Error updating Source', data: null }
+    }
 
-    return { error: 0, message: 'Source updated', data: result }
+    return { error: 0, message: 'Source updated', data: null }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on updating Source', data: null }
@@ -176,9 +179,12 @@ const linkDestination = async (ev, data) => {
       destination: data.destination,
     }
 
-    const result = await updateDocument(DB_SOURCE, data._id, nData)
+    const updateSt = await updateDocument(DB_SOURCE, data._id, nData)
+    if (updateSt.error) {
+      return { error: 1, message: 'Error linking destination', data: null }
+    }
 
-    return { error: 0, message: 'Destination linked', data: result }
+    return { error: 0, message: 'Destination linked', data: null }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on linking destination', data: null }
