@@ -254,7 +254,11 @@ const cleanupBackups = async (ev, data) => {
     // Collect all uploads by sourceId
     // Filter by sourceId
     const uploads = await getAllDocuments(DB_UPLOADS)
-    const files = uploads.filter((x) => x.sourceId === data.sourceId)
+    const files = uploads
+      .filter((x) => x.sourceId === data.sourceId)
+      .map((x) => {
+        return { ...x, date: moment.unix(x.timeCreated).format('YYYY-MM-DD') }
+      })
 
     // Cleaning Up Calculations
     const backupDel = new BackupDel(
@@ -265,18 +269,18 @@ const cleanupBackups = async (ev, data) => {
       moment().unix(),
     )
 
+    // Find the uploads to delete
     const uploadDelIds = backupDel.deleteSelector()
-    console.log('uploadIds', files.length)
-    console.log('uploadIds', uploadDelIds.length)
 
-    // for (const uploadId of uploadDelIds) {
-    //   const uploadInfo = files.find((x) => x._id === uploadId)
-    //   const deleteSt = await deleteUpload(uploadInfo)
-    //   if (deleteSt.error) {
-    //     console.log('Error on deleting: ', uploadId)
-    //   }
-    //   console.log('Uploads Deleted: ', uploadId)
-    // }
+    // Delete Uploads
+    for (const uploadId of uploadDelIds) {
+      const uploadInfo = files.find((x) => x._id === uploadId)
+      const deleteSt = await deleteUpload(uploadInfo)
+      if (deleteSt.error) {
+        console.log('Error on deleting: ', uploadId)
+      }
+      console.log('Uploads Deleted: ', uploadId)
+    }
 
     return { error: 0, message: 'Backups removed successfully', data: null }
   } catch (err) {

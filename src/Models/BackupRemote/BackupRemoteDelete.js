@@ -94,7 +94,9 @@ class BackupDel {
     const regularDays = this.lastNumberOfDays()
 
     // Count by date
-    let countByDate = this.dayCount()
+    let countByDate = this.dayCount().sort((a, b) => {
+      return b.age - a.age
+    })
 
     // Filter non regular days
     countByDate = countByDate.filter((x) => {
