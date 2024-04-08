@@ -72,21 +72,27 @@ const updateDocument = (dbName, id, data) => {
     })
 }
 
-const deleteDocument = (dbName, id) => {
-  const dbPath = path.join('./Data', dbName)
-  const localDB = new PouchDb(dbPath)
+const deleteDocument = async (dbName, id) => {
+  try {
+    const dbPath = path.join('./Data', dbName)
+    const localDB = new PouchDb(dbPath)
 
-  return localDB
-    .get(id)
-    .then((doc) => {
-      return localDB.remove(doc)
-    })
-    .then((result) => {
-      return { error: 0, message: 'Success', data: result }
-    })
-    .catch((err) => {
-      throw err
-    })
+    const dataSt = await getDocument(dbName, id)
+    if (dataSt.error) {
+      return dataSt
+    }
+
+    // Deleting the document
+    const delSt = await localDB.remove(dataSt.data)
+    if (delSt.ok !== true) {
+      return { error: 1, message: 'Error deleting document', data: null }
+    }
+
+    return { error: 0, message: 'Deleted successfully', data: delSt }
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
 }
 
 const generateHash = () => {

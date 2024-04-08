@@ -240,7 +240,10 @@ const removeBackup = async (ev, data) => {
     const result = await removeFile(destConfig, backupName)
 
     // Remove from Uploads
-    await deleteDocument(DB_UPLOADS, data.backupId)
+    const delSt = await deleteDocument(DB_UPLOADS, data.backupId)
+    if (delSt.error) {
+      return { error: 1, message: 'Error on removing backup', data: null }
+    }
 
     return { error: 0, message: 'Backup removed successfully', data: result }
   } catch (err) {

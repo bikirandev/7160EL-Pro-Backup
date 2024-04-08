@@ -22,9 +22,12 @@ const deleteUpload = async (uploadInfo) => {
     }
 
     // Remove from Uploads
-    await deleteDocument(DB_UPLOADS, uploadInfo._id)
+    const delSt = await deleteDocument(DB_UPLOADS, uploadInfo._id)
+    if (delSt.error) {
+      return { error: 1, message: 'Error on removing backup', data: null }
+    }
 
-    return { error: 0, message: 'Backup removed successfully', data: removeSt }
+    return { error: 0, message: 'Backup removed successfully', data: null }
   } catch (err) {
     throw new Error(err)
   }

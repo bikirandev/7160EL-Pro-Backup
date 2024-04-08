@@ -139,9 +139,12 @@ const deleteSource = async (ev, data) => {
       }
     }
 
-    const result = await deleteDocument(DB_SOURCE, data._id)
+    const delSt = await deleteDocument(DB_SOURCE, data._id)
+    if (delSt.error) {
+      return { error: 1, message: 'Error deleting Source', data: null }
+    }
 
-    return { error: 0, message: 'Source deleted', data: result }
+    return { error: 0, message: 'Source deleted', data: null }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on deleting Source', data: null }
