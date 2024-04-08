@@ -31,17 +31,21 @@ const setDefDirectory = async (defaultDirectory) => {
     // Create of Update new Line
     const confDir = await getDocument(DB_CONFIG, CONF_DEFAULT_DIRECTORY)
     if (confDir.error) {
-      await createDocument(DB_CONFIG, {
+      const createSt = await createDocument(DB_CONFIG, {
         _id: CONF_DEFAULT_DIRECTORY,
         value: defaultDirectory,
       })
+
+      if (createSt.error) {
+        return { error: 1, message: 'Error on setup Default Directory', data: null }
+      }
     } else {
       const updateSt = await updateDocument(DB_CONFIG, confDir.data._id, {
         value: defaultDirectory,
       })
 
       if (updateSt.error) {
-        return { error: 1, message: 'Error on updating Default Directory', data: null }
+        return { error: 1, message: 'Error on setup Default Directory', data: null }
       }
     }
 

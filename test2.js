@@ -26,6 +26,8 @@ const abc = async () => {
       if (localRec.find((x) => x._id === file._id)) {
         continue
       }
+
+      // Silent create
       await createDocument(DB_UPLOADS, { ...dataPattern, ...file })
     }
 

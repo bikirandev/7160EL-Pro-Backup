@@ -10,7 +10,7 @@ const fixAppId = async () => {
     // find if appId exists
     const configSt = await getDocument(DB_CONFIG, CONF_APP_KEY)
     if (configSt.error) {
-      // create new appId
+      // create new appId, silent create
       const appId = generateAppId()
       await createDocument(DB_CONFIG, { _id: CONF_APP_KEY, value: appId })
     }

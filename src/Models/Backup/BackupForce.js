@@ -86,15 +86,20 @@ const forceBackup = async (ev, id) => {
     }
     const uploadData = uploadSt.data
 
-    //--Insert to local DB
-    await createDocument(DB_UPLOADS, { ...uploadData })
-
     // Get file size human readable
     const fileSize = fs.statSync(backupPath).size
     const fileSizeHr = getFileSizeHr(fileSize)
 
     // Step-6: Remove local file
     fs.unlinkSync(backupPath)
+
+    //--Insert to local DB
+    const createSt = await createDocument(DB_UPLOADS, { ...uploadData })
+    if (createSt.error) {
+      evSendTaskStatus(id, 'error')
+      createBackupLog(id, 'Error on inserting to local DB')
+      return { error: 1, message: 'Error on inserting to local DB', data: null }
+    }
 
     // Send Message to Frontend
     // Create Log
@@ -108,7 +113,7 @@ const forceBackup = async (ev, id) => {
         '\n',
     )
 
-    // Update Source
+    // Update Source, Silent update
     await updateDocument(DB_SOURCE, id, {
       ...sourceData,
       errorStatue: false,

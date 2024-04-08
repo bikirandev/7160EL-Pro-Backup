@@ -66,17 +66,19 @@ const addSource = async (ev, data) => {
       return validate
     }
 
-    const result = await createDocument(DB_SOURCE, nData)
+    const createSt = await createDocument(DB_SOURCE, nData)
+    if (createSt.error) {
+      return { error: 1, message: 'Error creating Source', data: null }
+    }
 
     // Collect Recently Added Source
     const sourcesData = await getDocument(DB_SOURCE, hash)
-
     if (sourcesData.error === 0) {
       // Start Task
       addTask(sourcesData.data, false)
     }
 
-    return { error: 0, message: 'Source added', data: result }
+    return { error: 0, message: 'Source added', data: createSt.data }
   } catch (err) {
     console.log(err)
     return { error: 1, message: err, data: null }

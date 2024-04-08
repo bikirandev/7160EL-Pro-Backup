@@ -39,19 +39,22 @@ const getDocument = (dbName, id) => {
 }
 
 // Add new Document
-const createDocument = (dbName, data) => {
-  const dbPath = path.join('./Data', dbName)
-  const localDB = new PouchDb(dbPath)
+const createDocument = async (dbName, data) => {
+  try {
+    const dbPath = path.join('./Data', dbName)
+    const localDB = new PouchDb(dbPath)
 
-  return localDB
-    .put(data)
-    .then((result) => {
-      return result
-    })
-    .catch((err) => {
-      console.error(err)
-      throw err
-    })
+    // Creating new document
+    const createSt = await localDB.put(data)
+    if (createSt.ok !== true) {
+      return { error: 1, message: 'Error creating document', data: null }
+    }
+
+    return { error: 0, message: 'Document Created successfully', data: createSt }
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
+  }
 }
 
 const updateDocument = async (dbName, id, data) => {
@@ -70,7 +73,7 @@ const updateDocument = async (dbName, id, data) => {
       return { error: 1, message: 'Error updating document', data: null }
     }
 
-    return { error: 0, message: 'Updated successfully', data: updateSt }
+    return { error: 0, message: 'Document Updated successfully', data: updateSt }
   } catch (err) {
     console.error(err)
     throw new Error(err)
@@ -93,7 +96,7 @@ const deleteDocument = async (dbName, id) => {
       return { error: 1, message: 'Error deleting document', data: null }
     }
 
-    return { error: 0, message: 'Deleted successfully', data: delSt }
+    return { error: 0, message: 'Document Deleted successfully', data: delSt }
   } catch (err) {
     console.error(err)
     throw err
