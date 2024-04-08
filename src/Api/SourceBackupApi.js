@@ -14,6 +14,7 @@ const { addTask, removeTask, restartTask } = require('../Models/Tasks/TasksModel
 const { downloadFile, removeFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { BackupDel } = require('../Models/BackupRemote/BackupRemoteDelete')
 const moment = require('moment')
+const { deleteUpload } = require('../Models/Uploads/UploadsOperation')
 
 // frequency = hourly, daily
 const allowedFrequency = ['hourly', 'daily']
@@ -281,30 +282,12 @@ const cleanupBackups = async (ev, data) => {
     console.log('uploadIds', uploadDelIds.length)
 
     for (const uploadId of uploadDelIds) {
-      // Remove Backup from remote
-      const destSt = await getDestination(uploadId.destinationId)
-      if (destSt.error) {
-        // return { error: 1, message: 'Destination config not found', data: null }
-        continue
+      const uploadInfo = files.find((x) => x._id === uploadId)
+      const deleteSt = await deleteUpload(uploadInfo)
+      if (deleteSt.error) {
+        console.log('Error on deleting: ', uploadId)
       }
-      const destConfig = destSt.data
-
-      // Remove Backup from remote
-      const upNameAr = uploadId.split('/')
-      upNameAr.shift()
-      upNameAr.pop()
-      const upId = upNameAr.join('/')
-
-      console.log('Backup Removing: ', upId)
-      const removeSt = await removeFile(destConfig, upId)
-      if (removeSt.error) {
-        // return removeSt
-        continue
-      }
-
-      // Remove from Uploads
-      await deleteDocument(DB_UPLOADS, uploadId)
-      console.log('Backup Removed: ' + upId)
+      console.log('Uploads Deleted: ', uploadId)
     }
 
     return { error: 0, message: 'Backups removed successfully', data: null }
