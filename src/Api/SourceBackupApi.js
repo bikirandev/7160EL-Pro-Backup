@@ -250,8 +250,6 @@ const removeBackup = async (ev, data) => {
 const cleanupBackups = async (ev, data) => {
   // data.sourceId = ''
 
-  console.log(data)
-
   if (!data.sourceId) {
     return { error: 1, message: 'Source ID not found', data: null }
   }
@@ -269,8 +267,6 @@ const cleanupBackups = async (ev, data) => {
     const uploads = await getAllDocuments(DB_UPLOADS)
     const files = uploads.filter((x) => x.sourceId === data.sourceId)
 
-    // console.log('Files:', files.length)
-
     // Cleaning Up Calculations
     const backupDel = new BackupDel(
       sourceData.frequency,
@@ -280,9 +276,11 @@ const cleanupBackups = async (ev, data) => {
       moment().unix(),
     )
 
-    const uploadIds = backupDel.deleteSelector()
+    const uploadDelIds = backupDel.deleteSelector()
+    console.log('uploadIds', files.length)
+    console.log('uploadIds', uploadDelIds.length)
 
-    for (const uploadId of uploadIds) {
+    for (const uploadId of uploadDelIds) {
       // Remove Backup from remote
       const destSt = await getDestination(uploadId.destinationId)
       if (destSt.error) {
@@ -292,14 +290,21 @@ const cleanupBackups = async (ev, data) => {
       const destConfig = destSt.data
 
       // Remove Backup from remote
-      const removeSt = await removeFile(destConfig, uploadId.name)
+      const upNameAr = uploadId.split('/')
+      upNameAr.shift()
+      upNameAr.pop()
+      const upId = upNameAr.join('/')
+
+      console.log('Backup Removing: ', upId)
+      const removeSt = await removeFile(destConfig, upId)
       if (removeSt.error) {
         // return removeSt
         continue
       }
 
       // Remove from Uploads
-      await deleteDocument(DB_UPLOADS, uploadId._id)
+      await deleteDocument(DB_UPLOADS, uploadId)
+      console.log('Backup Removed: ' + upId)
     }
 
     return { error: 0, message: 'Backups removed successfully', data: null }

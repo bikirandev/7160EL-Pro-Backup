@@ -8,6 +8,9 @@ class BackupDel {
     this.uploads = uploads
     this.timeStampNow = timeStampNow
     this.deleteIds = []
+
+    // Daily Quantity
+    this.dailyQuantity = Math.floor(24 / this.frequency)
   }
 
   isDeleteRequired() {
@@ -28,7 +31,7 @@ class BackupDel {
 
     // count by date
     const countByDate = Object.keys(backupsGroupByDate).map((key) => {
-      const age = moment(this.timeStampNow).diff(moment(key), 'day')
+      const age = moment(this.timeStampNow * 1000).diff(moment(key), 'day')
 
       return {
         date: key,
@@ -48,7 +51,6 @@ class BackupDel {
       const t = moment.unix(this.timeStampNow / 1000).subtract(i, 'day')
       days.push(t.format('YYYY-MM-DD'))
     }
-
     return days
   }
 
@@ -66,7 +68,8 @@ class BackupDel {
 
   deleteByDays(date) {
     const dBackups = this.uploads.filter((x) => {
-      return x.date === date
+      const upDate = moment.unix(x.timeCreated).format('YYYY-MM-DD')
+      return upDate === date
     })
 
     // Remove the first element
@@ -74,7 +77,7 @@ class BackupDel {
 
     for (const backup of dBackups) {
       if (this.isDeleteRequired()) {
-        this.deleteIds.push(backup.id)
+        this.deleteIds.push(backup._id)
       }
     }
   }
