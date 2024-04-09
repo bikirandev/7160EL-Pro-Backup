@@ -260,7 +260,7 @@ const cleanupBackups = async (ev, data) => {
         return { ...x, date: moment.unix(x.timeCreated).format('YYYY-MM-DD') }
       })
 
-    // Cleaning Up Calculations
+    // Cleaning Up
     const backupDel = new BackupDel(
       sourceData.frequency,
       sourceData.backupQuantity,
