@@ -2,19 +2,29 @@ const moment = require('moment')
 
 class BackupDel {
   constructor(frequency, quantity, retention, uploads, timeStampNow) {
-    this.frequency = frequency
+    this.frequency = frequency // hourly, daily
     this.quantity = quantity
     this.retention = retention
     this.uploads = uploads
     this.timeStampNow = timeStampNow
     this.deleteIds = []
+  }
 
-    // Daily Quantity
-    this.dailyQuantity = Math.floor(24 / this.frequency)
+  calcDailyQuantity() {
+    if (this.frequency === 'daily') {
+      return 1
+    }
+
+    if (this.frequency === 'hourly') {
+      return 24
+    }
+
+    return 24
   }
 
   isDeleteRequired() {
-    return this.uploads.length - this.deleteIds.length - this.quantity
+    // - this.deleteIds.length
+    return this.uploads.length >= this.quantity
   }
 
   dayCount() {
@@ -64,6 +74,11 @@ class BackupDel {
         this.deleteIds.push(backup.id)
       }
     }
+
+    // Remove from the uploads
+    this.uploads = this.uploads.filter((x) => {
+      return !this.deleteIds.includes(x._id)
+    })
   }
 
   deleteByDays(date) {
@@ -80,27 +95,46 @@ class BackupDel {
         this.deleteIds.push(backup._id)
       }
     }
+
+    // Remove from the uploads
+    this.uploads = this.uploads.filter((x) => {
+      return !this.deleteIds.includes(x._id)
+    })
+  }
+
+  deleteByQuantity({ date }) {
+    // count, age
+    const dBackups = this.uploads
+      .filter((x) => {
+        const upDate = moment.unix(x.timeCreated).format('YYYY-MM-DD')
+        return upDate === date
+      })
+      .sort((a, b) => {
+        return b.timeCreated - a.timeCreated
+      })
+
+    // Remove first 24 elements
+    dBackups.splice(0, this.calcDailyQuantity())
+
+    for (const backup of dBackups) {
+      this.deleteIds.push(backup._id)
+    }
+
+    // Remove from the uploads
+    this.uploads = this.uploads.filter((x) => {
+      return !this.deleteIds.includes(x._id)
+    })
   }
 
   deleteSelector() {
-    const cQuantity = this.uploads.length
-
-    // if current quantity is less than the quantity, return null
-    if (cQuantity < this.quantity) {
-      return []
-    }
-
-    // Regular days
-    const regularDays = this.lastNumberOfDays()
-
     // Count by date
-    let countByDate = this.dayCount().sort((a, b) => {
+    const countByDate = this.dayCount().sort((a, b) => {
       return b.age - a.age
     })
 
-    // Filter non regular days
-    countByDate = countByDate.filter((x) => {
-      return !regularDays.includes(x.date)
+    // Delete by quantity
+    countByDate.map((x) => {
+      this.deleteByQuantity(x)
     })
 
     // Delete by days
