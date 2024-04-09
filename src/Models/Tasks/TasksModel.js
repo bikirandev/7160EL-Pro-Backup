@@ -3,6 +3,7 @@ const { evSendTaskStatus } = require('./Ev')
 const { getNextRunTime } = require('../../utils/Cron')
 const moment = require('moment')
 const { forceBackup } = require('../Backup/BackupForce')
+const { cleanupBackups } = require('../../Api/SourceBackupApi')
 
 const tasks = []
 let isTaskRunning = null
@@ -17,6 +18,7 @@ const backActionByTask = async (task) => {
 
   try {
     await forceBackup(null, id)
+    await cleanupBackups(null, { sourceId: id })
   } catch (err) {
     createErrorLog(`Task ${id} error: ${err.message}`)
     createErrorLog(JSON.stringify(err))
