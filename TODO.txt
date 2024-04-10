@@ -1,0 +1,11 @@
+// 1. All log page operation on frontend
+// 2. Log upload as zip
+// 3. Destinations Add/Update/Operations
+// 4. Pin Code Service.
+
+
+
+
+// 1. Elite Backup/Ultra Backup Application Should be created
+// 2. Login Service
+// 3. Management Portal
