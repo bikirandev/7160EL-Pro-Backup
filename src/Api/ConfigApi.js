@@ -155,7 +155,6 @@ const restoreFromRemote = async (ev, data) => {
     const localPath = path.join(defDir, '.config', path.basename(fileName))
 
     // create directory if not exists
-    console.log(path.dirname(localPath))
     await createDirForce(path.dirname(localPath))
 
     // Download file from remote
