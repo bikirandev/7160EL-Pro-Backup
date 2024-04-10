@@ -3,6 +3,8 @@
 // 3. Destinations Add/Update/Operations
 // 4. Pin Code Service.
 // 5. Data Encryption (Optional)
+// 6. PgSQL & MySQL feature should be added.
+// 7. FTP Cloud Destination Should be added.
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
