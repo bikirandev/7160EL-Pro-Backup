@@ -1,9 +1,19 @@
-const { cleanupBackups } = require('./src/Api/SourceBackupApi')
+const { exportConfig } = require('./src/Api/ConfigApi')
 
-cleanupBackups(null, { sourceId: '5235797dcd6aa45a76b0256a5d31b098' })
+exportConfig(null, { savedPath: 'C:\\Backups' })
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
     console.log(err)
   })
+
+// const { cleanupBackups } = require('./src/Api/SourceBackupApi')
+
+// cleanupBackups(null, { sourceId: '5235797dcd6aa45a76b0256a5d31b098' })
+//   .then((res) => {
+//     console.log(res)
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })

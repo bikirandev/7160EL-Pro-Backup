@@ -1,29 +1,29 @@
 const { dialog } = require('electron') // BrowserWindow,
 const {
-  getDestinations,
-  addDestination,
-  updateDestination,
-  deleteDestination,
-} = require('./Api/DestinationsApi')
-const {
   getSources,
   addSource,
   updateSource,
   deleteSource,
   linkDestination,
 } = require('./Api/SourcesApi')
-const openLink = require('./utils/openLink')
-const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
+const {
+  getDestinations,
+  addDestination,
+  updateDestination,
+  deleteDestination,
+} = require('./Api/DestinationsApi')
 const {
   getRecentBackups,
   downloadBackup,
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
+const openLink = require('./utils/openLink')
 const exploreDirectory = require('./utils/exploreDirectory')
+const { init } = require('./Api/InitApi')
+const { getConfigs, setDefaultDirectory, exportConfig } = require('./Api/ConfigApi')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
-const { init } = require('./Api/InitApi')
 const { forceBackup } = require('./Models/Backup/BackupForce')
 const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 
@@ -79,6 +79,7 @@ module.exports = {
 
   getConfigs,
   setDefaultDirectory,
+  exportConfig,
 
   //open directory in file explorer
   exploreDirectory,
