@@ -27,6 +27,7 @@ const {
   exportConfig,
   resetConfig,
   importConfig,
+  defaultDirCleanup,
 } = require('./Api/ConfigApi')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
@@ -88,6 +89,7 @@ module.exports = {
   resetConfig,
   exportConfig,
   importConfig,
+  defaultDirCleanup,
 
   //open directory in file explorer
   exploreDirectory,
