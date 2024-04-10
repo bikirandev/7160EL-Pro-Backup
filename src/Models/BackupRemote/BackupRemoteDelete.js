@@ -5,7 +5,7 @@ class BackupDel {
     this.frequency = frequency // hourly, daily
     this.quantity = quantity
     this.retention = retention
-    this.uploads = uploads
+    this.uploads = [...uploads]
     this.timeStampNow = timeStampNow
     this.deleteIds = []
   }

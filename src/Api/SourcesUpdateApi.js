@@ -7,9 +7,8 @@ const allowedFrequency = ['hourly', 'daily']
 
 // update source autoStart property only
 const updateAutoStart = async (ev, data) => {
-  // Data
-  // _id: '------------------------',
-  // autostart: true,
+  // data._id: '',
+  // data.autostart: true,
 
   if (!data._id) {
     return { error: 1, message: 'Source ID not found', data: null }
@@ -40,12 +39,11 @@ const updateAutoStart = async (ev, data) => {
 
 // update frequency
 const updateFrequency = async (ev, data) => {
-  // Data
-  // _id: '------------------------',
-  // frequency: 'hourly',
-  // frequencyPattern: '0 49 * * * *',
-  // backupQuantity: 100,
-  // backupRetention: 30,
+  // data._id: '',
+  // data.frequency: 'hourly',
+  // data.frequencyPattern: '0 49 * * * *',
+  // data.backupQuantity: 100,
+  // data.backupRetention: 30,
 
   if (!data._id) {
     return { error: 1, message: 'Source ID not found', data: null }
