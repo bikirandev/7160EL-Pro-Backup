@@ -15,18 +15,17 @@ const {
 const openLink = require('./utils/openLink')
 const { getConfigs, setDefaultDirectory } = require('./Api/ConfigApi')
 const {
-  updateAutoStart,
-  updateFrequency,
   getRecentBackups,
   downloadBackup,
   removeBackup,
   cleanupBackups,
-} = require('./Api/SourceBackupApi')
+} = require('./Api/SourcesBackupApi')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { init } = require('./Api/InitApi')
 const { forceBackup } = require('./Models/Backup/BackupForce')
+const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {

@@ -3,7 +3,7 @@ const { evSendTaskStatus } = require('./Ev')
 const { getNextRunTime } = require('../../utils/Cron')
 const moment = require('moment')
 const { forceBackup } = require('../Backup/BackupForce')
-const { cleanupBackups } = require('../../Api/SourceBackupApi')
+const { cleanupBackups } = require('../../Api/SourcesBackupApi')
 
 const tasks = []
 let isTaskRunning = null
