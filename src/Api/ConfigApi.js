@@ -168,6 +168,40 @@ const importConfig = async (ev, data) => {
   }
 }
 
+const defaultDirCleanup = async (ev, data) => {
+  console.log('Default Directory Cleanup', data)
+  try {
+    // Collect Default Directory
+    const defDirConf = await getDocument(DB_CONFIG, ConfigKeys.CONF_DEFAULT_DIRECTORY)
+    if (defDirConf.error) {
+      return { error: 1, message: 'Default Directory not found', data: null }
+    }
+
+    // Check if directory exists
+    const dirExist = await isDirExists(defDirConf.data.value)
+    if (dirExist.error) {
+      return { error: 1, message: 'Default Directory not exists', data: null }
+    }
+
+    const excludeFiles = ['.config']
+
+    // Cleanup Default Directory
+    const files = await fsp.readdir(defDirConf.data.value)
+    for (const file of files) {
+      if (excludeFiles.includes(file)) {
+        continue
+      }
+      const filePath = path.join(defDirConf.data.value, file)
+      await fsp.rm(filePath, { recursive: true, force: true })
+    }
+
+    return { error: 0, message: 'Default Directory Cleaned Successfully', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on cleanup default directory', data: null }
+  }
+}
+
 const maintenance = async (ev, data) => {
   // data = {}
   console.log('Maintenance', data)
@@ -185,5 +219,6 @@ module.exports = {
   resetConfig,
   exportConfig,
   importConfig,
+  defaultDirCleanup,
   maintenance,
 }
