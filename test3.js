@@ -1,12 +1,22 @@
-const { restoreFromRemote } = require('./src/Api/ConfigApi')
+const { getLogFiles } = require('./src/Api/LogsApi')
 
-restoreFromRemote(null, {})
+getLogFiles()
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
     console.log(err)
   })
+
+// const { restoreFromRemote } = require('./src/Api/ConfigApi')
+
+// restoreFromRemote(null, {})
+//   .then((res) => {
+//     console.log(res)
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
 // const { cleanupBackups } = require('./src/Api/SourceBackupApi')
 

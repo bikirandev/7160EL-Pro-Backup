@@ -1,5 +1,8 @@
 const fs = require('fs')
+const fsp = require('fs').promises
+const moment = require('moment')
 const { ncp } = require('ncp')
+const path = require('path')
 
 const removeDir = (path) => {
   return new Promise((resolve, reject) => {
@@ -65,13 +68,34 @@ const isFileExists = (filePath) => {
   return new Promise((resolve) => {
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
-        console.log(err)
         resolve({ error: 1, message: 'File not exists', data: null })
       } else {
         resolve({ error: 0, message: 'File exists', data: null })
       }
     })
   })
+}
+
+const filesInfo = async (files = []) => {
+  const fInfo = []
+
+  try {
+    for (const file of files) {
+      const stats = await fsp.stat(file)
+      fInfo.push({
+        file,
+        name: path.basename(file),
+        created: moment(stats.birthtime).unix(),
+        updated: moment(stats.mtime).unix(),
+        size: stats.size,
+        sizeHr: getFileSizeHr(stats.size),
+      })
+    }
+
+    return fInfo
+  } catch (err) {
+    throw new Error(err)
+  }
 }
 
 module.exports = {
@@ -81,4 +105,5 @@ module.exports = {
   getFileSizeHr,
   isDirExists,
   isFileExists,
+  filesInfo,
 }
