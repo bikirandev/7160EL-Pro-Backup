@@ -1,6 +1,6 @@
 const { exportConfig } = require('./src/Api/ConfigApi')
 
-exportConfig(null, { savedPath: 'C:\\Backups' })
+exportConfig(null, {})
   .then((res) => {
     console.log(res)
   })

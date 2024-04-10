@@ -17,8 +17,8 @@ const backActionByTask = async (task) => {
   }
 
   try {
-    await forceBackup(null, id)
-    await cleanupBackups(null, { sourceId: id })
+    await forceBackup(null, id) // Backup Process
+    await cleanupBackups(null, { sourceId: id }) // Cleanup Process
   } catch (err) {
     createErrorLog(`Task ${id} error: ${err.message}`)
     createErrorLog(JSON.stringify(err))

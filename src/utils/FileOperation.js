@@ -61,10 +61,23 @@ const isDirExists = (darPath) => {
   })
 }
 
+const isFileExists = (filePath) => {
+  return new Promise((resolve) => {
+    fs.access(filePath, fs.F_OK, (err) => {
+      if (err) {
+        resolve({ error: 1, message: 'File not exists', data: null })
+      } else {
+        resolve({ error: 0, message: 'File exists', data: null })
+      }
+    })
+  })
+}
+
 module.exports = {
   removeDir,
   copyDir,
   createDirForce,
   getFileSizeHr,
   isDirExists,
+  isFileExists,
 }

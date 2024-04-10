@@ -103,6 +103,23 @@ const deleteDocument = async (dbName, id) => {
   }
 }
 
+const emptyDocument = async (dbName) => {
+  try {
+    const dbPath = path.join('./Data', dbName)
+    const localDB = new PouchDb(dbPath)
+
+    const allDocs = await getAllDocuments(dbName)
+    for (const doc of allDocs) {
+      await localDB.remove(doc)
+    }
+
+    return { error: 0, message: 'Document Emptied successfully', data: null }
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
 const generateHash = () => {
   const randString =
     Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
@@ -119,5 +136,6 @@ module.exports = {
   createDocument,
   updateDocument,
   deleteDocument,
+  emptyDocument,
   generateHash,
 }

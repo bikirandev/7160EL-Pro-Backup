@@ -7,8 +7,13 @@ const {
   DB_SOURCE,
   DB_UPLOADS,
   getAllDocuments,
+  getDocument,
+  emptyDocument,
+  createDocument,
 } = require('../utils/PouchDbTools')
-const { isDirExists } = require('../utils/FileOperation')
+const { isDirExists, createDirForce, isFileExists } = require('../utils/FileOperation')
+const ConfigKeys = require('../Models/Configs/ConfigKeys')
+const { getTasksStatus } = require('../ApiRegistry')
 
 const getConfigs = async () => {
   try {
@@ -35,20 +40,42 @@ const setDefaultDirectory = async (ev, data) => {
   }
 }
 
+const resetConfig = async (ev, data) => {
+  console.log('Reset Config', data)
+
+  try {
+    await emptyDocument(DB_SOURCE)
+    await emptyDocument(DB_DESTINATION)
+    await emptyDocument(DB_UPLOADS)
+    await emptyDocument(DB_CONFIG)
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on finding Sources', data: null }
+  }
+}
+
 const exportConfig = async (ev, data) => {
   console.log('Export Config', data)
   // data.savedPath = ''
 
-  if (!data.savedPath) {
-    return { error: 1, message: 'Saved directory path not found', data: null }
-  }
-
-  if (!isDirExists(data.savedPath)) {
-    return { error: 1, message: 'Saved Directory not exists', data: null }
-  }
-
   // Collect Sources
   try {
+    if (!data.savedPath) {
+      const defDirConf = await getDocument(DB_CONFIG, ConfigKeys.CONF_DEFAULT_DIRECTORY)
+      if (defDirConf.error) {
+        return { error: 1, message: 'Default Directory not found', data: null }
+      }
+
+      // create directory if not exists
+      data.savedPath = path.join(defDirConf.data.value, '.config')
+      await createDirForce(data.savedPath)
+    }
+
+    const dirExist = await isDirExists(data.savedPath)
+    if (dirExist.error) {
+      return { error: 1, message: 'Saved Directory not exists', data: null }
+    }
+
     const sources = await getAllDocuments(DB_SOURCE)
     const destinations = await getAllDocuments(DB_DESTINATION)
     const uploads = await getAllDocuments(DB_UPLOADS)
@@ -70,8 +97,93 @@ const exportConfig = async (ev, data) => {
   }
 }
 
+const importConfig = async (ev, data) => {
+  // data.configPath = ''
+
+  if (!data.configPath) {
+    return { error: 1, message: 'Config Path not found', data: null }
+  }
+
+  try {
+    // Check if task is running
+    const tasks = getTasksStatus()
+    if (tasks.length > 0) {
+      return {
+        error: 1,
+        message: 'Tasks are running. Please stop them before importing the config.',
+        data: null,
+      }
+    }
+
+    const fileExist = await isFileExists(data.configPath)
+    if (!fileExist.error) {
+      return { error: 1, message: 'Selected Directory not exists', data: null }
+    }
+
+    // Read File
+    const fileData = await fsp.readFile(data.configPath)
+    const jsonData = JSON.parse(fileData)
+    if (!jsonData) {
+      return { error: 1, message: 'Invalid Config File', data: null }
+    }
+
+    // Reset Config
+    const resetSt = await resetConfig()
+    if (resetSt.error) {
+      return resetSt
+    }
+
+    // Import Sources
+    for (const source of jsonData.sources || []) {
+      // remove _rev
+      delete source._rev
+      await createDocument(DB_SOURCE, source)
+    }
+
+    // Import Destinations
+    for (const destination of jsonData.destinations || []) {
+      // remove _rev
+      delete destination._rev
+      await createDocument(DB_DESTINATION, destination)
+    }
+
+    // Import Uploads
+    for (const upload of jsonData.uploads || []) {
+      // remove _rev
+      delete upload._rev
+      await createDocument(DB_UPLOADS, upload)
+    }
+
+    // Import Configs
+    for (const config of jsonData.configs || []) {
+      // remove _rev
+      delete config._rev
+      await createDocument(DB_CONFIG, config)
+    }
+
+    return { error: 0, message: 'Config Imported Successfully', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on finding Sources', data: null }
+  }
+}
+
+const maintenance = async (ev, data) => {
+  // data = {}
+  console.log('Maintenance', data)
+
+  // 1. Cleanup Default Directory
+
+  // 2. Backup Configurations to local
+
+  // 3. Backup Configurations to remote
+}
+
 module.exports = {
   getConfigs,
   setDefaultDirectory,
+  resetConfig,
   exportConfig,
+  importConfig,
+  maintenance,
 }

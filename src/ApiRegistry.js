@@ -21,7 +21,13 @@ const {
 const openLink = require('./utils/openLink')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { init } = require('./Api/InitApi')
-const { getConfigs, setDefaultDirectory, exportConfig } = require('./Api/ConfigApi')
+const {
+  getConfigs,
+  setDefaultDirectory,
+  exportConfig,
+  resetConfig,
+  importConfig,
+} = require('./Api/ConfigApi')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { forceBackup } = require('./Models/Backup/BackupForce')
@@ -79,7 +85,9 @@ module.exports = {
 
   getConfigs,
   setDefaultDirectory,
+  resetConfig,
   exportConfig,
+  importConfig,
 
   //open directory in file explorer
   exploreDirectory,
