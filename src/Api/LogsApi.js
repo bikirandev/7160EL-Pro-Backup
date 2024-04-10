@@ -47,7 +47,50 @@ const downloadLogFile = async (ev, data) => {
   }
 }
 
+const deleteLogFile = async (ev, data) => {
+  console.log('deleteLogFile', data)
+  try {
+    // check is file exists
+    const isFileExist = await isFileExists(data.file)
+    if (isFileExist.error) {
+      return { error: 1, message: 'File not exists', data: null }
+    }
+
+    // delete file
+    await fsp.unlink(data.file)
+
+    return { error: 0, message: 'File deleted successfully', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on deleting Log File', data: null }
+  }
+}
+
+const emptyLogFiles = async (ev, data) => {
+  console.log('emptyLogFiles', data)
+  try {
+    const logDir = './Logs'
+
+    // Read files with  time created
+    const files = await fsp.readdir(logDir)
+    const filesFullPath = files.map((file) => path.join(logDir, file))
+    const fInfo = await filesInfo(filesFullPath)
+
+    // Delete files
+    for (const file of fInfo) {
+      await fsp.unlink(file.file)
+    }
+
+    return { error: 0, message: 'Log Files deleted successfully', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on deleting Log Files', data: null }
+  }
+}
+
 module.exports = {
   getLogFiles,
   downloadLogFile,
+  deleteLogFile,
+  emptyLogFiles,
 }
