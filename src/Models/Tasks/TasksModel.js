@@ -4,11 +4,12 @@ const { getNextRunTime } = require('../../utils/Cron')
 const moment = require('moment')
 const { forceBackup } = require('../Backup/BackupForce')
 const { cleanupBackups } = require('../../Api/SourcesBackupApi')
+const { exportingData } = require('../Maintenance/Maintenance')
 
 const tasks = []
 let isTaskRunning = null
 
-const backActionByTask = async (task) => {
+const backupActionByTask = async (task) => {
   const id = task._id
   const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
   const now = moment().unix()
@@ -19,6 +20,7 @@ const backActionByTask = async (task) => {
   try {
     await forceBackup(null, id) // Backup Process
     await cleanupBackups(null, { sourceId: id }) // Cleanup Process
+    await exportingData('') // Exporting Data
   } catch (err) {
     createErrorLog(`Task ${id} error: ${err.message}`)
     createErrorLog(JSON.stringify(err))
@@ -29,7 +31,7 @@ const backActionByTask = async (task) => {
 const executeTask = () => {
   // Backup Task
   for (const task of tasks) {
-    backActionByTask(task)
+    backupActionByTask(task)
   }
 }
 

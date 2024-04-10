@@ -1,6 +1,6 @@
-const { importConfig } = require('./src/Api/ConfigApi')
+const { exportingData } = require('./src/Models/Maintenance/Maintenance')
 
-importConfig(null, {})
+exportingData(null, {})
   .then((res) => {
     console.log(res)
   })
