@@ -13,7 +13,6 @@ const {
 } = require('../utils/PouchDbTools')
 const { isDirExists, createDirForce, isFileExists } = require('../utils/FileOperation')
 const ConfigKeys = require('../Models/Configs/ConfigKeys')
-const { getTasksStatus } = require('../ApiRegistry')
 
 const getConfigs = async () => {
   try {
@@ -106,14 +105,14 @@ const importConfig = async (ev, data) => {
 
   try {
     // Check if task is running
-    const tasks = getTasksStatus()
-    if (tasks.length > 0) {
-      return {
-        error: 1,
-        message: 'Tasks are running. Please stop them before importing the config.',
-        data: null,
-      }
-    }
+    // const tasks = getTasksStatus()
+    // if (tasks.length > 0) {
+    //   return {
+    //     error: 1,
+    //     message: 'Tasks are running. Please stop them before importing the config.',
+    //     data: null,
+    //   }
+    // }
 
     const fileExist = await isFileExists(data.configPath)
     if (!fileExist.error) {
@@ -206,11 +205,17 @@ const maintenance = async (ev, data) => {
   // data = {}
   console.log('Maintenance', data)
 
-  // 1. Cleanup Default Directory
+  try {
+    // 1. Cleanup Default Directory
 
-  // 2. Backup Configurations to local
+    // 2. Export Configurations to local
+    await exportConfig()
 
-  // 3. Backup Configurations to remote
+    // 3. Export Configurations to remote
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on cleanup default directory', data: null }
+  }
 }
 
 module.exports = {

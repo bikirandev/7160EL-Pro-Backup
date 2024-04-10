@@ -1,6 +1,6 @@
-const { exportConfig } = require('./src/Api/ConfigApi')
+const { importConfig } = require('./src/Api/ConfigApi')
 
-exportConfig(null, {})
+importConfig(null, {})
   .then((res) => {
     console.log(res)
   })
