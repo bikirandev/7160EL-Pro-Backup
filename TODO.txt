@@ -2,10 +2,14 @@
 // 2. Log upload as zip
 // 3. Destinations Add/Update/Operations
 // 4. Pin Code Service.
-
-
+// 5. Data Encryption (Optional)
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
 // 2. Login Service
-// 3. Management Portal
+// 3. Firebase Setup
+
+
+// 1. Website Development
+// 2. Portal Development
+// 3. Remote Controls
