@@ -1,6 +1,6 @@
-const { exportingData } = require('./src/Models/Maintenance/Maintenance')
+const { restoreFromRemote } = require('./src/Api/ConfigApi')
 
-exportingData(null, {})
+restoreFromRemote(null, {})
   .then((res) => {
     console.log(res)
   })

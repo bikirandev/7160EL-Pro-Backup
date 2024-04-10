@@ -86,11 +86,11 @@ const exportingData = async (dirPath) => {
   }
 }
 
-const importingData = async (filePath) => {
+const importingData = async (filePath, defDir) => {
   try {
     const fileExist = await isFileExists(filePath)
-    if (!fileExist.error) {
-      return { error: 1, message: 'Selected Directory not exists', data: null }
+    if (fileExist.error) {
+      return { error: 1, message: 'Selected file (' + filePath + ') not exists', data: null }
     }
 
     // Read File
@@ -131,6 +131,13 @@ const importingData = async (filePath) => {
     for (const config of jsonData.configs || []) {
       // remove _rev
       delete config._rev
+
+      if (config._id === 'default_directory') {
+        if (defDir) {
+          config.value = defDir
+        }
+      }
+
       await createDocument(DB_CONFIG, config)
     }
 

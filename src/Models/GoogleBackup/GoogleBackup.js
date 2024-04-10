@@ -3,7 +3,7 @@ var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
 const isoToUnix = require('../../utils/isoToUnix')
-const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
+//const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
 const moment = require('moment')
 const { getAppId } = require('../Configs/ConfigAppId')
 const { checkOnline } = require('../../utils/IsOnline')
@@ -133,24 +133,23 @@ const getFiles = async (destConfig, remoteDir = '') => {
     })
 
     // Get all sources from the database
-    const databaseSources = await getAllDocuments(DB_SOURCE)
-    const nFiles = files
-      .map((file) => {
-        return {
-          _id: file.id,
-          name: file.name,
-          timeCreated: isoToUnix(file.metadata.timeCreated),
-          timeUpdated: isoToUnix(file.metadata.updated),
-          size: file.metadata.size,
-          sourceId: file.metadata.metadata.sourceId,
-          destinationId: file.metadata.metadata.destinationId,
-        }
-      })
-      .filter((file) => {
-        // Filter files based on available sources in the database
-        //database sources is an array of all sources in the database
-        return databaseSources.find((source) => source._id === file.sourceId)
-      })
+    //const databaseSources = await getAllDocuments(DB_SOURCE)
+    const nFiles = files.map((file) => {
+      return {
+        _id: file.id,
+        name: file.name,
+        timeCreated: isoToUnix(file.metadata.timeCreated),
+        timeUpdated: isoToUnix(file.metadata.updated),
+        size: file.metadata.size,
+        sourceId: file.metadata.metadata.sourceId,
+        destinationId: file.metadata.metadata.destinationId,
+      }
+    })
+    // .filter((file) => {
+    //   // Filter files based on available sources in the database
+    //   //database sources is an array of all sources in the database
+    //   return databaseSources.find((source) => source._id === file.sourceId)
+    // })
 
     return { error: 0, message: 'List of Backups', data: nFiles }
   } catch (err) {

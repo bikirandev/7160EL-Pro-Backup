@@ -1,11 +1,13 @@
 const fsp = require('fs').promises
 const path = require('path')
-const { setDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
+const { setDefDirectory, getDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
 const { DB_CONFIG, getAllDocuments, getDocument } = require('../utils/PouchDbTools')
-const { isDirExists } = require('../utils/FileOperation')
+const { isDirExists, createDirForce } = require('../utils/FileOperation')
 const ConfigKeys = require('../Models/Configs/ConfigKeys')
 const { exportingData, resetData, importingData } = require('../Models/Maintenance/Maintenance')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
+const { getDestination } = require('../Models/Destinations/DestinationModel')
 
 const getConfigs = async () => {
   try {
@@ -131,17 +133,47 @@ const defaultDirCleanup = async (ev, data) => {
   }
 }
 
-const maintenance = async (ev, data) => {
-  // data = {}
-  console.log('Maintenance', data)
+const restoreFromRemote = async (ev, data) => {
+  console.log('Restore from Remote', data)
+
+  const fileName = 'config/config-exported.json'
 
   try {
-    // 1. Cleanup Default Directory
-    // 2. Export Configurations to local
-    // 3. Export Configurations to remote
+    const defDestinationConf = await getDestination('default')
+    if (defDestinationConf.error) {
+      return { error: 1, message: 'Default Destination not found', data: null }
+    }
+
+    // Collect Default Directory
+    const defDirConf = await getDefDirectory()
+    if (defDirConf.error) {
+      return { error: 1, message: 'Default Directory not found', data: null }
+    }
+    const defDir = defDirConf.data
+
+    // Local Path
+    const localPath = path.join(defDir, '.config', path.basename(fileName))
+
+    // create directory if not exists
+    console.log(path.dirname(localPath))
+    await createDirForce(path.dirname(localPath))
+
+    // Download file from remote
+    const downloadSt = await downloadFile(defDestinationConf.data, fileName, localPath)
+    if (downloadSt.error) {
+      return downloadSt
+    }
+
+    // importing Data
+    const importSt = await importingData(localPath, defDir)
+    if (importSt.error) {
+      return importSt
+    }
+
+    return { error: 0, message: 'Config Imported Successfully', data: null }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on cleanup default directory', data: null }
+    return { error: 1, message: 'Error on finding Sources', data: null }
   }
 }
 
@@ -152,5 +184,5 @@ module.exports = {
   exportConfig,
   importConfig,
   defaultDirCleanup,
-  maintenance,
+  restoreFromRemote,
 }
