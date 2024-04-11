@@ -28,11 +28,28 @@ const backupActionByTask = async (task) => {
   }
 }
 
+const logActionByTask = async () => {
+  const nextRun = getNextRunTime('0 22 * * * *').unix()
+  const now = moment().unix() + 1
+  if (nextRun !== now) {
+    return
+  }
+
+  try {
+    console.log('Log Task')
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const executeTask = () => {
   // Backup Task
   for (const task of tasks) {
     backupActionByTask(task)
   }
+
+  // Log Task
+  logActionByTask()
 }
 
 const startTask = () => {
