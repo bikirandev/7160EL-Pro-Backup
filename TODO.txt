@@ -5,6 +5,7 @@
 // 5. Data Encryption (Optional)
 // 6. PgSQL & MySQL feature should be added.
 // 7. FTP Cloud Destination Should be added.
+// 8. Email Notification Setup
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
@@ -15,3 +16,10 @@
 // 1. Website Development
 // 2. Portal Development
 // 3. Remote Controls
+// 4. Facebook Pixel & Google Analytics Setup
+
+
+// 1. Marketing Materials for Facebook and LinkedIn
+// 2. Facebook Page Product Setup
+// 3. LinkedIn Page Product Setup
+// 4. Google Adwords Setup
