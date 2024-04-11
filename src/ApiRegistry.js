@@ -28,6 +28,7 @@ const {
   resetConfig,
   importConfig,
   defaultDirCleanup,
+  restoreFromRemote,
 } = require('./Api/ConfigApi')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
@@ -84,12 +85,14 @@ module.exports = {
   openLink,
   openDirectoryDialog,
 
+  // Configs API
   getConfigs,
   setDefaultDirectory,
   resetApp: resetConfig,
   exportConfig,
   importConfig,
   defaultDirCleanup,
+  restoreFromRemote,
 
   //open directory in file explorer
   exploreDirectory,

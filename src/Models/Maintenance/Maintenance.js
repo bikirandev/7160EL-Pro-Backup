@@ -13,6 +13,25 @@ const { isFileExists, createDirForce, isDirExists } = require('../../utils/FileO
 const { getDefDirectory } = require('../Configs/ConfigDefaultDir')
 const { getDestination } = require('../Destinations/DestinationModel')
 const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
+const { getAppId } = require('../Configs/ConfigAppId')
+
+const fileName = `config-exported.json`
+
+// config-exported.json
+const getExpFileName = async () => {
+  try {
+    //--Collect app id
+    const appIdSt = await getAppId()
+    if (appIdSt.error) {
+      return { error: 1, message: 'App Id not found', data: null }
+    }
+
+    return { error: 0, message: 'Success', data: `${appIdSt.data}-${fileName}` }
+  } catch (err) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
 
 const resetData = async () => {
   try {
@@ -48,7 +67,12 @@ const exportingData = async (dirPath) => {
     }
 
     // Generate Path
-    const filename = `config-exported.json`
+    const expFileSt = await getExpFileName()
+    if (expFileSt.error) {
+      return expFileSt
+    }
+
+    const filename = expFileSt.data
     const filePath = path.join(dirPath, filename)
 
     const dir = path.dirname(filePath)
@@ -149,6 +173,7 @@ const importingData = async (filePath, defDir) => {
 }
 
 module.exports = {
+  getExpFileName,
   exportingData,
   importingData,
   resetData,

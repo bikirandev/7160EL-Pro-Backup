@@ -4,7 +4,12 @@ const { setDefDirectory, getDefDirectory } = require('../Models/Configs/ConfigDe
 const { DB_CONFIG, getAllDocuments, getDocument } = require('../utils/PouchDbTools')
 const { isDirExists, createDirForce } = require('../utils/FileOperation')
 const ConfigKeys = require('../Models/Configs/ConfigKeys')
-const { exportingData, resetData, importingData } = require('../Models/Maintenance/Maintenance')
+const {
+  exportingData,
+  resetData,
+  importingData,
+  getExpFileName,
+} = require('../Models/Maintenance/Maintenance')
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
 const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
@@ -145,9 +150,13 @@ const defaultDirCleanup = async (ev, data) => {
 const restoreFromRemote = async (ev, data) => {
   console.log('Restore from Remote', data)
 
-  const fileName = 'config/config-exported.json'
-
   try {
+    const expFileSt = await getExpFileName()
+    if (expFileSt.error) {
+      return expFileSt
+    }
+    const fileName = path.join('config', expFileSt.data)
+
     const defDestinationConf = await getDestination('default')
     if (defDestinationConf.error) {
       return { error: 1, message: 'Default Destination not found', data: null }

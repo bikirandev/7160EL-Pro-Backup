@@ -5,7 +5,7 @@
 // 5. Data Encryption (Optional)
 // 6. PgSQL & MySQL feature should be added.
 // 7. FTP Cloud Destination Should be added.
-// 8. Email Notification Setup
+// 8. Email Notification Setup Page
 // 9. Contact Us & About Us Page to be completed.
 //10. User Manual to be created.
 //11. Config Page Operation/waring/confirmation/functional
