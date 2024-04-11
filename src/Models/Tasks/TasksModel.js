@@ -29,7 +29,7 @@ const backupActionByTask = async (task) => {
 }
 
 const logActionByTask = async () => {
-  const nextRun = getNextRunTime('0 22 * * * *').unix()
+  const nextRun = getNextRunTime('0 10 * * * *').unix()
   const now = moment().unix() + 1
   if (nextRun !== now) {
     return
