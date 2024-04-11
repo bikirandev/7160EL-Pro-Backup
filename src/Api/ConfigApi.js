@@ -8,6 +8,7 @@ const { exportingData, resetData, importingData } = require('../Models/Maintenan
 const { getTasksStatus } = require('../Models/Tasks/TasksModel')
 const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
+const { getAppId, fixAppId } = require('../Models/Configs/ConfigAppId')
 
 const getConfigs = async () => {
   try {
@@ -36,7 +37,15 @@ const setDefaultDirectory = async (ev, data) => {
 
 const resetConfig = async () => {
   try {
+    // Get AppId
+    const appIdSt = await getAppId()
+    const appId = appIdSt.data
+
+    // Reset Data
     await resetData()
+
+    // Fix AppId
+    await fixAppId(appId)
 
     return { error: 0, message: 'Config Reset Successfully', data: null }
   } catch (err) {

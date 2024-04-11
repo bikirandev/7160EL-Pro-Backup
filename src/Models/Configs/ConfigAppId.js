@@ -5,14 +5,14 @@ const generateAppId = () => {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
-const fixAppId = async () => {
+const fixAppId = async (appId = null) => {
   try {
     // find if appId exists
     const configSt = await getDocument(DB_CONFIG, CONF_APP_KEY)
     if (configSt.error) {
       // create new appId, silent create
-      const appId = generateAppId()
-      await createDocument(DB_CONFIG, { _id: CONF_APP_KEY, value: appId })
+      const gAppId = generateAppId()
+      await createDocument(DB_CONFIG, { _id: CONF_APP_KEY, value: appId || gAppId })
     }
   } catch (err) {
     throw new Error(err)

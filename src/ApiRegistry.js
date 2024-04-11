@@ -86,7 +86,7 @@ module.exports = {
 
   getConfigs,
   setDefaultDirectory,
-  resetConfig,
+  resetApp: resetConfig,
   exportConfig,
   importConfig,
   defaultDirCleanup,
