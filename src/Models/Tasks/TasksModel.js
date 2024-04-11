@@ -11,8 +11,8 @@ let isTaskRunning = null
 
 const backupActionByTask = async (task) => {
   const id = task._id
-  const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
-  const now = moment().unix()
+  const nextRun = getNextRunTime(task.frequencyPattern).unix()
+  const now = moment().unix() + 1
   if (nextRun !== now) {
     return
   }
