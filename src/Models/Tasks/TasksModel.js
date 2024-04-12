@@ -5,6 +5,7 @@ const moment = require('moment')
 const { forceBackup } = require('../Backup/BackupForce')
 const { cleanupBackups } = require('../../Api/SourcesBackupApi')
 const { exportingData } = require('../Maintenance/Maintenance')
+const { logFilesFixing } = require('../Logs/LogOperation')
 
 const tasks = []
 let isTaskRunning = null
@@ -36,9 +37,10 @@ const logActionByTask = async () => {
   }
 
   try {
-    console.log('Log Task')
+    logFilesFixing(now)
   } catch (err) {
-    console.log(err)
+    createErrorLog(`Task Log Upload Error: ${err.message}`)
+    createErrorLog(JSON.stringify(err))
   }
 }
 

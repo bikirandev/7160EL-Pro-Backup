@@ -1,15 +1,14 @@
 const fsp = require('fs').promises
 const path = require('path')
 const { filesInfo, isDirExists, isFileExists } = require('../utils/FileOperation')
+const { LOG_DIR_LOCAL } = require('../Models/Logs/LogCreate')
 
 const getLogFiles = async (ev, data) => {
   console.log('getLogFiles', data)
   try {
-    const logDir = './Logs'
-
     // Read files with  time created
-    const files = await fsp.readdir(logDir)
-    const filesFullPath = files.map((file) => path.join(logDir, file))
+    const files = await fsp.readdir(LOG_DIR_LOCAL)
+    const filesFullPath = files.map((file) => path.join(LOG_DIR_LOCAL, file))
     const fInfo = await filesInfo(filesFullPath)
 
     return { error: 0, message: 'List of Log Files', data: fInfo }
@@ -69,11 +68,9 @@ const deleteLogFile = async (ev, data) => {
 const emptyLogFiles = async (ev, data) => {
   console.log('emptyLogFiles', data)
   try {
-    const logDir = './Logs'
-
     // Read files with  time created
-    const files = await fsp.readdir(logDir)
-    const filesFullPath = files.map((file) => path.join(logDir, file))
+    const files = await fsp.readdir(LOG_DIR_LOCAL)
+    const filesFullPath = files.map((file) => path.join(LOG_DIR_LOCAL, file))
     const fInfo = await filesInfo(filesFullPath)
 
     // Delete files

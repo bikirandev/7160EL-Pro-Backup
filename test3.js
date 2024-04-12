@@ -1,12 +1,23 @@
-const { getLogFiles } = require('./src/Api/LogsApi')
+const moment = require('moment')
+const { logFilesFixing } = require('./src/Models/Logs/LogOperation')
 
-getLogFiles()
+logFilesFixing(moment().unix())
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
     console.log(err)
   })
+
+// const { getLogFiles } = require('./src/Api/LogsApi')
+
+// getLogFiles()
+//   .then((res) => {
+//     console.log(res)
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
 // const { restoreFromRemote } = require('./src/Api/ConfigApi')
 

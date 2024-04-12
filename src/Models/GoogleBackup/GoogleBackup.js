@@ -135,14 +135,16 @@ const getFiles = async (destConfig, remoteDir = '') => {
     // Get all sources from the database
     //const databaseSources = await getAllDocuments(DB_SOURCE)
     const nFiles = files.map((file) => {
+      const fileMetadata = file.metadata?.metadata || {}
+
       return {
         _id: file.id,
         name: file.name,
         timeCreated: isoToUnix(file.metadata.timeCreated),
         timeUpdated: isoToUnix(file.metadata.updated),
         size: file.metadata.size,
-        sourceId: file.metadata.metadata.sourceId,
-        destinationId: file.metadata.metadata.destinationId,
+        sourceId: fileMetadata.sourceId || '',
+        destinationId: fileMetadata.destinationId || '',
       }
     })
     // .filter((file) => {
@@ -151,7 +153,7 @@ const getFiles = async (destConfig, remoteDir = '') => {
     //   return databaseSources.find((source) => source._id === file.sourceId)
     // })
 
-    return { error: 0, message: 'List of Backups', data: nFiles }
+    return { error: 0, message: 'List of Bucket Files', data: nFiles }
   } catch (err) {
     throw new Error(err)
   }
