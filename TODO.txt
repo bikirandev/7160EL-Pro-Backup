@@ -12,6 +12,7 @@
 //12. Re-check messages and add button on message, like explore folder.
 //13. Re-check all success/error log create point
 //14. Show Last Backup time with source & destination
+//15. Directory Explore not works on MACOS
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
