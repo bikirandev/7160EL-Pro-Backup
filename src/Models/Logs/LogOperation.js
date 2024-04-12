@@ -2,7 +2,7 @@ const fsp = require('fs').promises
 const path = require('path')
 const moment = require('moment')
 const { filesInfo } = require('../../utils/FileOperation')
-const { LOG_DIR_LOCAL, LOG_DIR_REMOTE, createErrorLog } = require('./LogCreate')
+const { LOG_DIR_LOCAL, LOG_DIR_REMOTE, createErrorLog, createSuccessLog } = require('./LogCreate')
 const { getFiles, backupToBucket2, removeFile } = require('../GoogleBackup/GoogleBackup')
 const { getDestination } = require('../Destinations/DestinationModel')
 const { logLocalRetainDays, logRemoteRetainDays } = require('../../utils/DefaultValue')
@@ -63,11 +63,13 @@ const logFilesFixing = async (timeNow) => {
       if (uploadSt.error) {
         createErrorLog(`Error on uploading file ${file.name} to remote`)
       }
+      createSuccessLog('Log file uploaded successfully. File: ' + file.name)
     }
 
     // Remove Local Files && Local Delete Operation
     for (const file of oldFiles) {
       await fsp.unlink(file.file)
+      createSuccessLog('Local Log file deleted successfully. File: ' + file.file)
     }
 
     // Remove Remote Files && Remote Delete Operation
@@ -76,6 +78,7 @@ const logFilesFixing = async (timeNow) => {
       if (deleteSt.error) {
         createErrorLog(`Error on deleting file ${file.name} from remote`)
       }
+      createSuccessLog('Remote Log file deleted successfully. File: ' + file.name)
     }
 
     return { error: 0, message: 'Log files fixed successfully', data: null }
