@@ -19,9 +19,7 @@ const logFilesFixing = async (timeNow) => {
 
     // Filter files except create the running hour
     fInfo = fInfo.filter((file) => {
-      console.log('file', file)
       const createdHour = moment.unix(file.created).format('YYYY_MM_DD_HH')
-
       return createdHour !== thisHour
     })
 
