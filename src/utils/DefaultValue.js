@@ -27,6 +27,8 @@ const values = {
   frequency: 'hourly',
   backupQuantity: 100,
   backupRetention: 30, // days
+  logLocalRetainDays: 10,
+  logRemoteRetainDays: 30,
 }
 
 module.exports = values
