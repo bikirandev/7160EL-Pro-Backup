@@ -10,6 +10,7 @@
 //10. User Manual to be created.
 //11. Config Page Operation/waring/confirmation/functional
 //12. Re-check messages and add button on message, like explore folder.
+//13. Re-check all success/error log create point
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
