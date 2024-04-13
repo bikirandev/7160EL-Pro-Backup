@@ -1,22 +1,23 @@
 Done List:
-// 2. Log upload to remote - Done
+- Log upload to remote - Done
 
 
-// 1. All log page operation on frontend
-// 3. Destinations Add/Update/Operations
-// 4. Pin-Code Service.
-// 5. Data Encryption (Optional)
-// 6. PgSQL & MySQL feature should be added.
-// 7. FTP Cloud Destination Should be added.
-// 8. Email Notification Setup Page
-// 9. Contact Us & About Us Page to be completed.
-//10. User Manual to be created.
-//11. Config Page Operation/waring/confirmation/functional
-//12. Re-check messages and add button on message, like explore folder.
-//13. Re-check all success/error log create point
-//14. Option - Show Last Backup time with source & destination
-//15. Option - Show Number of Backups & Size on Backup List Page
-//16. Error - Directory Explore not works on MACOS
+Pending List:
+- Config Page Operation/waring/confirmation/functional
+- All log page operation on frontend
+- Option - Show Number of Backups & Size on Backup List Page
+- Option - Show Last Backup time with source & destination
+- Re-check messages and add button on message, like explore folder.
+- Error - Directory Explore not works on MACOS
+- Contact Us & About Us Page to be completed.
+- User Manual to be created.
+- PgSQL & MySQL feature should be added.
+- Email Notification Setup Page
+- Destinations Add/Update/Operations
+- FTP Cloud Destination Should be added.
+- Pin-Code Service.
+- Data Encryption (Optional)
+- Re-check all success/error log create point
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
