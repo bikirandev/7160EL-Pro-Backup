@@ -6,6 +6,7 @@ const { forceBackup } = require('../Backup/BackupForce')
 const { cleanupBackups } = require('../../Api/SourcesBackupApi')
 const { exportingData } = require('../Maintenance/Maintenance')
 const { logFilesFixing } = require('../Logs/LogOperation')
+const { logCronPattern } = require('../../utils/DefaultValue')
 
 const tasks = []
 let isTaskRunning = null
@@ -30,7 +31,8 @@ const backupActionByTask = async (task) => {
 }
 
 const logActionByTask = async () => {
-  const nextRun = getNextRunTime('0 10 * * * *').unix()
+  // logCronPattern is from default value
+  const nextRun = getNextRunTime(logCronPattern).unix()
   const now = moment().unix() + 1
   if (nextRun !== now) {
     return

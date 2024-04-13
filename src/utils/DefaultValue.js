@@ -27,6 +27,7 @@ const values = {
   frequency: 'hourly',
   backupQuantity: 100,
   backupRetention: 30, // days
+  logCronPattern: '0 10 * * * *',
   logLocalRetainDays: 1,
   logRemoteRetainDays: 2,
 }
