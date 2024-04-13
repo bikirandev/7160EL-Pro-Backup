@@ -14,9 +14,9 @@ Done List:
 //11. Config Page Operation/waring/confirmation/functional
 //12. Re-check messages and add button on message, like explore folder.
 //13. Re-check all success/error log create point
-//14. Show Last Backup time with source & destination
-//15. Show Number of Backups & Size on Backup List Page
-//16. Directory Explore not works on MACOS
+//14. Option - Show Last Backup time with source & destination
+//15. Option - Show Number of Backups & Size on Backup List Page
+//16. Error - Directory Explore not works on MACOS
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
