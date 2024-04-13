@@ -12,6 +12,7 @@
   "publisher": "Bikiran",
   "license": "CC0-1.0",
   "scripts": {
+    "start": "electron  --trace-warnings .",
     "electron": "electron  --trace-warnings .",
     "electron:start": "electron-forge start",
     "electron:package": "electron-forge package",
