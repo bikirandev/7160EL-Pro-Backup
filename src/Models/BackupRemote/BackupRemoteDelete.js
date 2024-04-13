@@ -23,7 +23,6 @@ class BackupDel {
   }
 
   isDeleteRequired() {
-    // - this.deleteIds.length
     return this.uploads.length >= this.quantity
   }
 
@@ -64,21 +63,29 @@ class BackupDel {
     return days
   }
 
+  removeFromTheUploads(id, rules = '') {
+    if (this.isDeleteRequired()) {
+      // push to deleteIds if not exists
+      if (!this.deleteIds.find((x) => x.id === id)) {
+        this.deleteIds.push({ id, rules })
+      }
+
+      // Remove from the uploads
+      const index = this.uploads.findIndex((x) => {
+        return x.id === id
+      })
+      this.uploads.splice(index, 1)
+    }
+  }
+
   emptyByDate(date) {
     const dBackups = this.uploads.filter((x) => {
       return x.date === date
     })
 
     for (const backup of dBackups) {
-      if (this.isDeleteRequired()) {
-        this.deleteIds.push(backup.id)
-      }
+      this.removeFromTheUploads(backup._id, 'emptyByDate')
     }
-
-    // Remove from the uploads
-    this.uploads = this.uploads.filter((x) => {
-      return !this.deleteIds.includes(x._id)
-    })
   }
 
   deleteByDays(date) {
@@ -91,15 +98,8 @@ class BackupDel {
     dBackups.shift()
 
     for (const backup of dBackups) {
-      if (this.isDeleteRequired()) {
-        this.deleteIds.push(backup._id)
-      }
+      this.removeFromTheUploads(backup._id, 'deleteByDays')
     }
-
-    // Remove from the uploads
-    this.uploads = this.uploads.filter((x) => {
-      return !this.deleteIds.includes(x._id)
-    })
   }
 
   deleteByQuantity({ date }) {
@@ -117,13 +117,8 @@ class BackupDel {
     dBackups.splice(0, this.calcDailyQuantity())
 
     for (const backup of dBackups) {
-      this.deleteIds.push(backup._id)
+      this.removeFromTheUploads(backup._id, 'deleteByQuantity')
     }
-
-    // Remove from the uploads
-    this.uploads = this.uploads.filter((x) => {
-      return !this.deleteIds.includes(x._id)
-    })
   }
 
   deleteSelector() {
@@ -147,32 +142,6 @@ class BackupDel {
     })
 
     return this.deleteIds
-  }
-
-  debug() {
-    const delBack = this.uploads.filter((x) => {
-      return this.deleteIds.includes(x.id)
-    })
-
-    // Group by date count
-    const delGroup = delBack.reduce((acc, backup) => {
-      const key = backup.date
-      if (!acc[key]) {
-        acc[key] = []
-      }
-      acc[key].push(backup)
-      return acc
-    }, {})
-
-    // count by date
-    const delCountByDate = Object.keys(delGroup).map((key) => {
-      return {
-        date: key,
-        count: delGroup[key].length,
-      }
-    })
-
-    return delCountByDate
   }
 }
 

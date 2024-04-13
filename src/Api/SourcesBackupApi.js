@@ -6,6 +6,7 @@ const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { BackupDel } = require('../Models/BackupRemote/BackupRemoteDelete')
 const moment = require('moment')
 const { deleteUpload } = require('../Models/Uploads/UploadsOperation')
+const { createErrorLog, createSuccessLog } = require('../Models/Logs/LogCreate')
 
 // get recent backups
 const getRecentBackups = async (ev, data) => {
@@ -155,13 +156,19 @@ const cleanupBackups = async (ev, data) => {
     const uploadDelIds = backupDel.deleteSelector()
 
     // Delete Uploads
-    for (const uploadId of uploadDelIds) {
+    for (const delInfo of uploadDelIds) {
+      const uploadId = delInfo.id
+      const rules = delInfo.rules
+
       const uploadInfo = files.find((x) => x._id === uploadId)
       const deleteSt = await deleteUpload(uploadInfo)
       if (deleteSt.error) {
-        console.log('Error on deleting: ', uploadId)
+        createErrorLog(
+          `Error on deleting backup: ${uploadId}. Rules: ${rules}. Error: ${deleteSt.message}`,
+        )
+      } else {
+        createSuccessLog(`Backup removed successfully: ${uploadId}. Rules: ${rules}`)
       }
-      console.log('Uploads Deleted: ', uploadId)
     }
 
     return { error: 0, message: 'Backups removed successfully', data: null }
