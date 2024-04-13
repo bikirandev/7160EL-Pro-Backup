@@ -1,7 +1,10 @@
+Done List:
+// 2. Log upload to remote - Done
+
+
 // 1. All log page operation on frontend
-// 2. Log upload as zip
 // 3. Destinations Add/Update/Operations
-// 4. Pin Code Service.
+// 4. Pin-Code Service.
 // 5. Data Encryption (Optional)
 // 6. PgSQL & MySQL feature should be added.
 // 7. FTP Cloud Destination Should be added.
@@ -12,7 +15,8 @@
 //12. Re-check messages and add button on message, like explore folder.
 //13. Re-check all success/error log create point
 //14. Show Last Backup time with source & destination
-//15. Directory Explore not works on MACOS
+//15. Show Number of Backups & Size on Backup List Page
+//16. Directory Explore not works on MACOS
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
