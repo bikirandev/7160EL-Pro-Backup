@@ -13,8 +13,8 @@ let isTaskRunning = null
 
 const backupActionByTask = async (task) => {
   const id = task._id
-  const nextRun = getNextRunTime(task.frequencyPattern).unix()
-  const now = moment().unix() + 1
+  const nextRun = getNextRunTime(task.frequencyPattern).unix() - 1
+  const now = moment().unix()
   if (nextRun !== now) {
     return
   }
@@ -32,8 +32,8 @@ const backupActionByTask = async (task) => {
 
 const logActionByTask = async () => {
   // logCronPattern is from default value
-  const nextRun = getNextRunTime(logCronPattern).unix()
-  const now = moment().unix() + 1
+  const nextRun = getNextRunTime(logCronPattern).unix() - 1
+  const now = moment().unix()
   if (nextRun !== now) {
     return
   }
