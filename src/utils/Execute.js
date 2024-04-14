@@ -95,7 +95,21 @@ const ExecutePgsql = (command) => {
   })
 }
 
+const ExecuteMysql = (command) => {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.log('error', error)
+        reject(stderr || stdout)
+      } else {
+        resolve({ error: 0, message: 'output of [exec]', data: { error, stdout, stderr } })
+      }
+    })
+  })
+}
+
 module.exports = {
   ExecuteMssql,
   ExecutePgsql,
+  ExecuteMysql,
 }
