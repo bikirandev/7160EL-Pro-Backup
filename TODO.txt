@@ -1,26 +1,28 @@
 Done List:
-- Log upload to remote - Done
+- Log upload to remote - Done.
 
 
 Pending List (Fahim):
-- Config Page Operation/waring/confirmation/functional
-- All log page operation on frontend
-- Option - Show Number of Backups & Size on Backup List Page
-- Option - Show Last Backup time with source & destination
+- Config Page Operation/waring/confirmation/functional.
+- All log page operation on frontend.
+- Option - Show Number of Backups & Size on Backup List Page.
+- Option - Show Last Backup time with source & destination.
 - Re-check messages and add button on message, like explore folder.
-- Error - Directory Explore not works on MACOS
+- Error - Directory Explore not works on MACOS.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
-- Show error message with each source
+- Show error message with each source.
 
-Pending List (Bishojit)
+Pending List (Bishojit):
 - PgSQL & MySQL feature should be added.
-- Email Notification Setup Page
-- Destinations Add/Update/Operations
+- Email Notification Setup Page.
+- Destinations Add/Update/Operations.
 - FTP Cloud Destination Should be added.
 - Pin-Code Service.
-- Data Encryption (Optional)
-- Re-check all success/error log create point
+- Data Encryption (Optional).
+- Re-check all success/error log create point.
+- To Fix - File Copy Issue.
+- Show Progresses on Backup.
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
