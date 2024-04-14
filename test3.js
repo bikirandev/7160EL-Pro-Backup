@@ -1,13 +1,31 @@
-const moment = require('moment')
-const { logFilesFixing } = require('./src/Models/Logs/LogOperation')
+const { addSource } = require('./src/Api/SourcesApi')
 
-logFilesFixing(moment().unix())
+addSource(null, {
+  type: 'pgsql',
+  title: 'PostgreSQL - miracleapi',
+  host: 'localhost',
+  port: 5432,
+  databaseOrPath: 'miracleapi',
+  user: 'postgres',
+  password: 'a!23456789',
+})
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
     console.log(err)
   })
+
+// const moment = require('moment')
+// const { logFilesFixing } = require('./src/Models/Logs/LogOperation')
+
+// logFilesFixing(moment().unix())
+//   .then((res) => {
+//     console.log(res)
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
 // const { getLogFiles } = require('./src/Api/LogsApi')
 

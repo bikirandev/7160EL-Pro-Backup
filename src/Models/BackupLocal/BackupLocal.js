@@ -1,7 +1,7 @@
 //const exec = require('child_process').exec
 //const fs = require('fs')
 const path = require('path')
-const Execute = require('../../utils/Execute')
+const { ExecuteMssql } = require('../../utils/Execute')
 const mssql = require('mssql')
 
 function getDateString() {
@@ -23,7 +23,7 @@ const backupMssql = async ({ database, localDir }) => {
     const command = `sqlcmd -S localhost -E -Q "${sql}"`
 
     // Execute
-    const result = await Execute(command)
+    const result = await ExecuteMssql(command)
 
     return { error: 0, message: 'Backup Success', data: { filename, backupPath, result } }
   } catch (err) {

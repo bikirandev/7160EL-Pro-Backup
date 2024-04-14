@@ -1,6 +1,6 @@
 const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 const path = require('path')
-const Execute = require('../../utils/Execute')
+const { ExecuteMssql } = require('../../utils/Execute')
 
 const mssqlWinExecBackup = async (sourceData) => {
   const database = sourceData.databaseOrPath
@@ -27,14 +27,14 @@ const mssqlWinExecBackup = async (sourceData) => {
       return { error: 1, message: 'Error on Default Backup Path', data: null }
     }
 
-    // SQL
+    // SQL for MSSQL
     const sql = `BACKUP DATABASE ${database} TO DISK='${backupPath}'`
 
     // Command
     const command = `sqlcmd -S localhost -E -Q "${sql}"`
 
     // Step-2: Execute Backup
-    const result = await Execute(command)
+    const result = await ExecuteMssql(command)
     const stdout = result?.data?.stdout || ''
 
     // Check if error

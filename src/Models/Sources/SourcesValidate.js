@@ -88,6 +88,10 @@ const validatePgsqlData = (data) => {
     return { error: 1, message: 'Host is required', data: null }
   }
 
+  if (!data.port) {
+    return { error: 1, message: 'Port is required', data: null }
+  }
+
   if (!data.databaseOrPath) {
     return { error: 1, message: 'Database is required', data: null }
   }
@@ -100,8 +104,8 @@ const validatePgsqlData = (data) => {
     return { error: 1, message: 'Password is required', data: null }
   }
 
-  if (!data.operation) {
-    return { error: 1, message: 'Operation is required', data: null }
+  if (!data.dumpPath) {
+    return { error: 1, message: 'Dump path is required', data: null }
   }
 
   return { error: 0, message: 'Data is valid', data: null }

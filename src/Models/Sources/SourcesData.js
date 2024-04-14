@@ -10,9 +10,10 @@ const sourceDataPattern = {
   user: '',
   password: '',
   operation: '',
+  dumpPath: '',
   destinationId: 'default', // default or destinationId
   frequency: defaultValues.frequency,
-  frequencyPattern: '0 * * * * *', // Hourly
+  frequencyPattern: '0 0 * * * *', // Hourly
   backupQuantity: defaultValues.backupQuantity,
   backupRetention: defaultValues.backupRetention,
   autostart: true,
@@ -25,6 +26,7 @@ const sourceTypes = {
   TYPE_MSSQL_WIN: 'mssql-win',
   TYPE_MSSQL_HOST: 'mssql-host',
   TYPE_PGSQL: 'pgsql',
+  TYPE_MYSQL: 'mysql',
   TYPE_DIRECTORY: 'directory',
 }
 
