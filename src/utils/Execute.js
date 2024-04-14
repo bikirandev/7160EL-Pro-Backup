@@ -17,7 +17,7 @@ const ExecutePgsql = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        const message = error.message.split('\n')[1] // pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "postgresww"
+        const message = error.message.split('\n')[1] // pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "postgres"
         if (message.includes('password authentication failed for user')) {
           const user = command.split('-U')[1].split(' ')[0]
           resolve({
@@ -37,7 +37,7 @@ const ExecutePgsql = (command) => {
           })
         }
 
-        // message = pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "miracleapi" does not exist
+        // message = pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "db_name" does not exist
         if (message.includes('database does not exist')) {
           const database = command.split('-d')[1].split(' ')[0]
           resolve({
