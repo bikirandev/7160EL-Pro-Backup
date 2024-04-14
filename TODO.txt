@@ -23,6 +23,7 @@ Pending List (Bishojit):
 - Re-check all success/error log create point.
 - To Fix - File Copy Issue.
 - Show Progresses on Backup.
+- Organize Execute Options.
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
