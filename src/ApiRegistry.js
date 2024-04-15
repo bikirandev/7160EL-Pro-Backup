@@ -97,8 +97,8 @@ module.exports = {
   resetApp: resetConfig,
   exportConfig,
   importConfig,
-  defaultDirCleanup,
   restoreFromRemote,
+  defaultDirCleanup,
 
   //open directory in file explorer
   exploreDirectory,
