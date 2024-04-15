@@ -12,7 +12,7 @@ const {
   exportingData,
   resetData,
   importingData,
-  getExpFileName,
+  getExportFileName,
 } = require('../Models/Maintenance/Maintenance')
 
 const getConfigs = async () => {
@@ -56,7 +56,6 @@ const resetConfig = async () => {
     const tasks = getTasksStatus()
     if (tasks.length > 0) {
       for (const task of tasks) {
-        console.log('Task Running', task)
         removeTask(task)
       }
     }
@@ -110,7 +109,6 @@ const importConfig = async (ev, data) => {
     const tasks = getTasksStatus()
     if (tasks.length > 0) {
       for (const task of tasks) {
-        console.log('Task Running', task)
         removeTask(task)
       }
     }
@@ -134,10 +132,9 @@ const importConfig = async (ev, data) => {
 
 const restoreFromRemote = async (ev, data) => {
   // data.appId = ''
-  console.log('Restore from Remote', data)
 
   try {
-    const expFileSt = await getExpFileName()
+    const expFileSt = await getExportFileName(data.appId)
     if (expFileSt.error) {
       return expFileSt
     }
@@ -162,7 +159,11 @@ const restoreFromRemote = async (ev, data) => {
     await createDirForce(path.dirname(localPath))
 
     // Download file from remote
-    const downloadSt = await downloadFile(defDestinationConf.data, fileName, localPath)
+    const downloadSt = await downloadFile(
+      defDestinationConf.data,
+      fileName.split('\\').join('/'),
+      localPath,
+    )
     if (downloadSt.error) {
       return downloadSt
     }
@@ -172,6 +173,24 @@ const restoreFromRemote = async (ev, data) => {
     if (importSt.error) {
       return importSt
     }
+
+    // Check if task is running
+    const tasks = getTasksStatus()
+    if (tasks.length > 0) {
+      for (const task of tasks) {
+        removeTask(task)
+      }
+    }
+
+    // Sources
+    const sources = await getAllDocuments(DB_SOURCE)
+    //--Apply Autostart
+    sources.forEach((source) => {
+      if (source.autostart) {
+        addTask(source, false)
+      }
+    })
+    restartTask()
 
     return { error: 0, message: 'Config Imported Successfully', data: null }
   } catch (err) {

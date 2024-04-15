@@ -1,5 +1,13 @@
 const fsp = require('fs').promises
 const path = require('path')
+const { isFileExists, createDirForce, isDirExists } = require('../../utils/FileOperation')
+const { getDefDirectory } = require('../Configs/ConfigDefaultDir')
+const { getDestination, destinationDataPattern } = require('../Destinations/DestinationModel')
+const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
+const { getAppId } = require('../Configs/ConfigAppId')
+const { sourceDataPattern } = require('../Sources/SourcesData')
+const { configDataPattern } = require('../Configs/ConfigKeys')
+const { uploadDataPattern } = require('../Uploads/UploadData')
 const {
   getAllDocuments,
   DB_SOURCE,
@@ -9,19 +17,15 @@ const {
   emptyDocument,
   createDocument,
 } = require('../../utils/PouchDbTools')
-const { isFileExists, createDirForce, isDirExists } = require('../../utils/FileOperation')
-const { getDefDirectory } = require('../Configs/ConfigDefaultDir')
-const { getDestination, destinationDataPattern } = require('../Destinations/DestinationModel')
-const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
-const { getAppId } = require('../Configs/ConfigAppId')
-const { sourceDataPattern } = require('../Sources/SourcesData')
-const { configDataPattern } = require('../Configs/ConfigKeys')
-const { uploadDataPattern } = require('../Uploads/UploadData')
 
 const fileName = `config-exported.json`
 
 // config-exported.json
-const getExpFileName = async () => {
+const getExportFileName = async (appId = null) => {
+  if (appId) {
+    return { error: 0, message: 'Success', data: `${appId}-${fileName}` }
+  }
+
   try {
     //--Collect app id
     const appIdSt = await getAppId()
@@ -70,7 +74,7 @@ const exportingData = async (dirPath) => {
     }
 
     // Generate Path
-    const expFileSt = await getExpFileName()
+    const expFileSt = await getExportFileName()
     if (expFileSt.error) {
       return expFileSt
     }
@@ -176,7 +180,7 @@ const importingData = async (filePath, defDir) => {
 }
 
 module.exports = {
-  getExpFileName,
+  getExportFileName,
   exportingData,
   importingData,
   resetData,
