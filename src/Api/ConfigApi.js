@@ -1,19 +1,19 @@
 const fsp = require('fs').promises
 const path = require('path')
-const { setDefDirectory, getDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
-const { DB_CONFIG, getAllDocuments, getDocument } = require('../utils/PouchDbTools')
-const { isDirExists, createDirForce } = require('../utils/FileOperation')
 const ConfigKeys = require('../Models/Configs/ConfigKeys')
+const { setDefDirectory, getDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
+const { DB_CONFIG, getAllDocuments, getDocument, DB_SOURCE } = require('../utils/PouchDbTools')
+const { isDirExists, createDirForce } = require('../utils/FileOperation')
+const { getTasksStatus, removeTask, restartTask, addTask } = require('../Models/Tasks/TasksModel')
+const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
+const { getDestination } = require('../Models/Destinations/DestinationModel')
+const { getAppId, fixAppId } = require('../Models/Configs/ConfigAppId')
 const {
   exportingData,
   resetData,
   importingData,
   getExpFileName,
 } = require('../Models/Maintenance/Maintenance')
-const { getTasksStatus, removeTask } = require('../Models/Tasks/TasksModel')
-const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
-const { getDestination } = require('../Models/Destinations/DestinationModel')
-const { getAppId, fixAppId } = require('../Models/Configs/ConfigAppId')
 
 const getConfigs = async () => {
   try {
@@ -60,6 +60,7 @@ const resetConfig = async () => {
         removeTask(task)
       }
     }
+    restartTask()
 
     return { error: 0, message: 'Config Reset Successfully', data: null }
   } catch (err) {
