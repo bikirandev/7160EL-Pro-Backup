@@ -13,6 +13,7 @@ Pending List (Fahim):
 - Error - Directory Explore not works on MACOS.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
+- Browse Cloud Files
 
 
 Pending List (Bishojit):
@@ -26,6 +27,7 @@ Pending List (Bishojit):
 - To Fix - File Copy Issue.
 - Show Progresses on Backup.
 - Organize Execute Options.
+- Browse Cloud Files
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
