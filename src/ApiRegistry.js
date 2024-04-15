@@ -53,6 +53,11 @@ const openDirectoryDialog = async () => {
   return result.filePaths[0]
 }
 
+const openFileDialog = async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openFile'] })
+  return result.filePaths[0]
+}
+
 module.exports = {
   init,
 
@@ -84,6 +89,7 @@ module.exports = {
   //open link in external browser
   openLink,
   openDirectoryDialog,
+  openFileDialog,
 
   // Configs API
   getConfigs,
