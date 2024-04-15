@@ -10,7 +10,7 @@ const {
   importingData,
   getExpFileName,
 } = require('../Models/Maintenance/Maintenance')
-const { getTasksStatus } = require('../Models/Tasks/TasksModel')
+const { getTasksStatus, removeTask } = require('../Models/Tasks/TasksModel')
 const { downloadFile } = require('../Models/GoogleBackup/GoogleBackup')
 const { getDestination } = require('../Models/Destinations/DestinationModel')
 const { getAppId, fixAppId } = require('../Models/Configs/ConfigAppId')
@@ -52,6 +52,15 @@ const resetConfig = async () => {
     // Fix AppId
     await fixAppId(appId)
 
+    // Check if task is running
+    const tasks = getTasksStatus()
+    if (tasks.length > 0) {
+      for (const task of tasks) {
+        console.log('Task Running', task)
+        removeTask(task)
+      }
+    }
+
     return { error: 0, message: 'Config Reset Successfully', data: null }
   } catch (err) {
     console.log(err)
@@ -90,21 +99,30 @@ const importConfig = async (ev, data) => {
   }
 
   try {
-    // Check if task is running
-    const tasks = getTasksStatus()
-    if (tasks.length > 0) {
-      return {
-        error: 1,
-        message: 'Tasks are running. Please stop them before importing the config.',
-        data: null,
-      }
-    }
-
     // importing Data
     const importSt = await importingData(data.configPath)
     if (importSt.error) {
       return importSt
     }
+
+    // Check if task is running
+    const tasks = getTasksStatus()
+    if (tasks.length > 0) {
+      for (const task of tasks) {
+        console.log('Task Running', task)
+        removeTask(task)
+      }
+    }
+
+    // Sources
+    const sources = await getAllDocuments(DB_SOURCE)
+    //--Apply Autostart
+    sources.forEach((source) => {
+      if (source.autostart) {
+        addTask(source, false)
+      }
+    })
+    restartTask()
 
     return { error: 0, message: 'Config Imported Successfully', data: null }
   } catch (err) {
@@ -113,41 +131,8 @@ const importConfig = async (ev, data) => {
   }
 }
 
-const defaultDirCleanup = async (ev, data) => {
-  console.log('Default Directory Cleanup', data)
-  try {
-    // Collect Default Directory
-    const defDirConf = await getDocument(DB_CONFIG, ConfigKeys.CONF_DEFAULT_DIRECTORY)
-    if (defDirConf.error) {
-      return { error: 1, message: 'Default Directory not found', data: null }
-    }
-
-    // Check if directory exists
-    const dirExist = await isDirExists(defDirConf.data.value)
-    if (dirExist.error) {
-      return { error: 1, message: 'Default Directory not exists', data: null }
-    }
-
-    const excludeFiles = ['.config']
-
-    // Cleanup Default Directory
-    const files = await fsp.readdir(defDirConf.data.value)
-    for (const file of files) {
-      if (excludeFiles.includes(file)) {
-        continue
-      }
-      const filePath = path.join(defDirConf.data.value, file)
-      await fsp.rm(filePath, { recursive: true, force: true })
-    }
-
-    return { error: 0, message: 'Default Directory Cleaned Successfully', data: null }
-  } catch (err) {
-    console.log(err)
-    return { error: 1, message: 'Error on cleanup default directory', data: null }
-  }
-}
-
 const restoreFromRemote = async (ev, data) => {
+  // data.appId = ''
   console.log('Restore from Remote', data)
 
   try {
@@ -191,6 +176,40 @@ const restoreFromRemote = async (ev, data) => {
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: null }
+  }
+}
+
+const defaultDirCleanup = async (ev, data) => {
+  console.log('Default Directory Cleanup', data)
+  try {
+    // Collect Default Directory
+    const defDirConf = await getDocument(DB_CONFIG, ConfigKeys.CONF_DEFAULT_DIRECTORY)
+    if (defDirConf.error) {
+      return { error: 1, message: 'Default Directory not found', data: null }
+    }
+
+    // Check if directory exists
+    const dirExist = await isDirExists(defDirConf.data.value)
+    if (dirExist.error) {
+      return { error: 1, message: 'Default Directory not exists', data: null }
+    }
+
+    const excludeFiles = ['.config']
+
+    // Cleanup Default Directory
+    const files = await fsp.readdir(defDirConf.data.value)
+    for (const file of files) {
+      if (excludeFiles.includes(file)) {
+        continue
+      }
+      const filePath = path.join(defDirConf.data.value, file)
+      await fsp.rm(filePath, { recursive: true, force: true })
+    }
+
+    return { error: 0, message: 'Default Directory Cleaned Successfully', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on cleanup default directory', data: null }
   }
 }
 
