@@ -11,9 +11,12 @@ const {
 } = require('../../utils/PouchDbTools')
 const { isFileExists, createDirForce, isDirExists } = require('../../utils/FileOperation')
 const { getDefDirectory } = require('../Configs/ConfigDefaultDir')
-const { getDestination } = require('../Destinations/DestinationModel')
+const { getDestination, destinationDataPattern } = require('../Destinations/DestinationModel')
 const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
 const { getAppId } = require('../Configs/ConfigAppId')
+const { sourceDataPattern } = require('../Sources/SourcesData')
+const { configDataPattern } = require('../Configs/ConfigKeys')
+const { uploadDataPattern } = require('../Uploads/UploadData')
 
 const fileName = `config-exported.json`
 
@@ -134,21 +137,21 @@ const importingData = async (filePath, defDir) => {
     for (const source of jsonData.sources || []) {
       // remove _rev
       delete source._rev
-      await createDocument(DB_SOURCE, source)
+      await createDocument(DB_SOURCE, { ...sourceDataPattern, ...source })
     }
 
     // Import Destinations
     for (const destination of jsonData.destinations || []) {
       // remove _rev
       delete destination._rev
-      await createDocument(DB_DESTINATION, destination)
+      await createDocument(DB_DESTINATION, { ...destinationDataPattern, ...destination })
     }
 
     // Import Uploads
     for (const upload of jsonData.uploads || []) {
       // remove _rev
       delete upload._rev
-      await createDocument(DB_UPLOADS, upload)
+      await createDocument(DB_UPLOADS, { ...uploadDataPattern, ...upload })
     }
 
     // Import Configs
@@ -162,7 +165,7 @@ const importingData = async (filePath, defDir) => {
         }
       }
 
-      await createDocument(DB_CONFIG, config)
+      await createDocument(DB_CONFIG, { ...configDataPattern, ...config })
     }
 
     return { error: 0, message: 'Data imported successfully', data: null }

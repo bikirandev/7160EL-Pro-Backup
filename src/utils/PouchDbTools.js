@@ -120,12 +120,6 @@ const emptyDocument = async (dbName) => {
   }
 }
 
-const generateHash = () => {
-  const randString =
-    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-  return crypto.createHash('md5').update(randString).digest('hex')
-}
-
 module.exports = {
   DB_SOURCE: 'db_sources',
   DB_DESTINATION: 'db_destinations',
@@ -137,5 +131,4 @@ module.exports = {
   updateDocument,
   deleteDocument,
   emptyDocument,
-  generateHash,
 }

@@ -7,11 +7,11 @@ Pending List (Fahim):
 - All log page operation on frontend.
 - Option - Show Number of Backups & Size on Backup List Page.
 - Option - Show Last Backup time with source & destination.
+- Show error message with each source.
 - Re-check messages and add button on message, like explore folder.
 - Error - Directory Explore not works on MACOS.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
-- Show error message with each source.
 
 
 Pending List (Bishojit):

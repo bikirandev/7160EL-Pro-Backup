@@ -1,4 +1,4 @@
-const confPattern = {
+const configDataPattern = {
   _id: '',
   title: '',
   value: '',
@@ -8,5 +8,5 @@ const confPattern = {
 module.exports = {
   CONF_APP_KEY: 'app_key',
   CONF_DEFAULT_DIRECTORY: 'default_directory',
-  confPattern,
+  configDataPattern,
 }

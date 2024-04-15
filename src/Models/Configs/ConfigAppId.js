@@ -1,9 +1,6 @@
+const { generateAppId } = require('../../utils/MyCrypto')
 const { DB_CONFIG, getDocument, createDocument } = require('../../utils/PouchDbTools')
 const { CONF_APP_KEY } = require('./ConfigKeys')
-
-const generateAppId = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-}
 
 const fixAppId = async (appId = null) => {
   try {

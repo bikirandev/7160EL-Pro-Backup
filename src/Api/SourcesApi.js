@@ -6,7 +6,6 @@ const {
   createDocument,
   deleteDocument,
   updateDocument,
-  generateHash,
   getDocument,
 } = require('../utils/PouchDbTools')
 const { validateAll } = require('../utils/Validate')
@@ -18,6 +17,7 @@ const {
   validateMssqlHostData,
   validatePgsqlData,
 } = require('../Models/Sources/SourcesValidate')
+const { generateHash } = require('../utils/MyCrypto')
 
 // Get Lists of Sources // ev, data
 const getSources = async () => {

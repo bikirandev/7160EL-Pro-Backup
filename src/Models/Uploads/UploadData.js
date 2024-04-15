@@ -1,4 +1,4 @@
-const backupPattern = {
+const uploadDataPattern = {
   _id: '', //  mssql-win/bishojit/mssql-win_bishojit_20240406_154559.bak
   name: '', // mssql-win/bishojit/mssql-win_bishojit_20240406_154559.bak
   timeCreated: 0, // 1712396762
@@ -9,5 +9,5 @@ const backupPattern = {
 }
 
 module.exports = {
-  backupPattern,
+  uploadDataPattern,
 }

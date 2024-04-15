@@ -1,7 +1,7 @@
 const defaultValues = require('../../utils/DefaultValue')
 const { getDocument, DB_DESTINATION } = require('../../utils/PouchDbTools')
 
-const destinationPattern = {
+const destinationDataPattern = {
   type: '',
   title: '',
   location: '',
@@ -66,7 +66,7 @@ const getDestination = async (id) => {
 }
 
 module.exports = {
-  destinationPattern,
+  destinationDataPattern,
   destinationTypes,
   verifyGcloudData,
   getDestination,
