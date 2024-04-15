@@ -1,4 +1,9 @@
 const { dialog } = require('electron') // BrowserWindow,
+const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
+const { getTasksStatus } = require('./Models/Tasks/TasksModel')
+const { forceBackup } = require('./Models/Backup/BackupForce')
+const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
+const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('./Api/LogsApi')
 const {
   getSources,
   addSource,
@@ -30,10 +35,6 @@ const {
   defaultDirCleanup,
   restoreFromRemote,
 } = require('./Api/ConfigApi')
-const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
-const { getTasksStatus } = require('./Models/Tasks/TasksModel')
-const { forceBackup } = require('./Models/Backup/BackupForce')
-const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -61,6 +62,7 @@ const openFileDialog = async () => {
 module.exports = {
   init,
 
+  // Sources API
   getSources,
   addSource,
   updateSource,
@@ -70,26 +72,22 @@ module.exports = {
   forceBackup,
   deleteSource,
 
+  // Schedule/Task API
   scheduleStart,
   scheduleStop,
+  getTasksStatus,
 
   //link destination to source
   linkDestination,
   removeBackup,
   cleanupBackups,
 
-  //all completed backups
+  // Uploads API
   getRecentBackups,
-
   getDestinations,
   addDestination,
   updateDestination,
   deleteDestination,
-
-  //open link in external browser
-  openLink,
-  openDirectoryDialog,
-  openFileDialog,
 
   // Configs API
   getConfigs,
@@ -100,9 +98,15 @@ module.exports = {
   restoreFromRemote,
   defaultDirCleanup,
 
-  //open directory in file explorer
-  exploreDirectory,
+  // Logs API
+  getLogFiles,
+  downloadLogFile,
+  deleteLogFile,
+  emptyLogFiles,
 
-  //get tasks status
-  getTasksStatus,
+  //open link in external browser
+  openLink,
+  exploreDirectory,
+  openDirectoryDialog,
+  openFileDialog,
 }

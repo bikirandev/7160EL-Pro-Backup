@@ -1,9 +1,9 @@
 Done List:
 - Log upload to remote - Done.
+- Config Page Operation/waring/confirmation to be functional.
 
 
 Pending List (Fahim):
-- Config Page Operation/waring/confirmation to be functional.
 - All log page operation on frontend.
 - Option - Show Number of Backups & Size on Backup List Page.
 - Option - Show Last Backup time with source & destination.
