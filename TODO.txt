@@ -3,7 +3,7 @@ Done List:
 
 
 Pending List (Fahim):
-- Config Page Operation/waring/confirmation/functional.
+- Config Page Operation/waring/confirmation to be functional.
 - All log page operation on frontend.
 - Option - Show Number of Backups & Size on Backup List Page.
 - Option - Show Last Backup time with source & destination.
@@ -12,6 +12,7 @@ Pending List (Fahim):
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Show error message with each source.
+
 
 Pending List (Bishojit):
 - PgSQL & MySQL feature should be added.
@@ -41,8 +42,6 @@ Pending List (Bishojit):
 // 2. Facebook Page Product Setup
 // 3. LinkedIn Page Product Setup
 // 4. Google Adwords Setup
-
-
 
 
 "C:\Program Files\PostgreSQL\15\bin\pg_dump.exe" -U postgres -h localhost -d miracleapi -p 5432 > C:\Backups\pgsql_miracleapi_20240414_155300.bak
