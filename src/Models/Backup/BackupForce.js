@@ -62,7 +62,7 @@ const forceBackup = async (ev, id) => {
       // Update Source Error
       await updateDocument(DB_SOURCE, id, {
         ...sourceData,
-        errorStatue: true,
+        errorStatus: true,
         errorMessage: backupSt.message,
       })
       return backupSt
@@ -118,7 +118,7 @@ const forceBackup = async (ev, id) => {
     // Update Source, Silent update
     await updateDocument(DB_SOURCE, id, {
       ...sourceData,
-      errorStatue: false,
+      errorStatus: false,
       errorMessage: '',
     })
 
