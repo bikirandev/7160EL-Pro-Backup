@@ -3,14 +3,15 @@ Done List:
 - All log page operation on frontend.
 - Config Page Operation/waring/confirmation to be functional.
 - Error - Directory Explore not works on MACOS.
+- Show Number of Backups & Size on Backup List Page.
+- Show Last Backup time with source & destination.
+- explore on template message.
+- Show error message with each source.
 
 
 Pending List (Fahim):
 - Source Add Operation Modify
 - PgSQL & MySQL feature should be added.
-- Show Number of Backups & Size on Backup List Page.
-- Show Last Backup time with source & destination.
-- Show error message with each source.
 - Re-check messages and add button on message, like explore folder.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
