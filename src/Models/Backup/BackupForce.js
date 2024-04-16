@@ -120,6 +120,7 @@ const forceBackup = async (ev, id) => {
       ...sourceData,
       errorStatus: false,
       errorMessage: '',
+      lastBackupTime: moment().unix(),
     })
 
     // Return
