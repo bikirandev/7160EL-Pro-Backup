@@ -1,8 +1,25 @@
 const { exec } = require('child_process')
+const os = require('os')
 
 // Open file explorer function
 const exploreDirectory = (ev, directoryPath) => {
-  exec(`start "" "${directoryPath}"`, (err) => {
+  let command
+
+  if (os.platform() === 'linux') {
+    command = `xdg-open "${directoryPath}"`
+  } else if (os.platform() === 'darwin') {
+    command = `open "${directoryPath}"`
+  } else if (os.platform() === 'win32') {
+    command = `start "" "${directoryPath}"`
+  } else {
+    return {
+      error: 1,
+      message: 'Unsupported operating system',
+      data: null,
+    }
+  }
+
+  exec(command, (err) => {
     if (err) {
       return {
         error: 1,
