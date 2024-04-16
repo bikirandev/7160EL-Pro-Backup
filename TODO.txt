@@ -7,12 +7,12 @@ Done List:
 - Show Last Backup time with source & destination.
 - explore on template message.
 - Show error message with each source.
+- Re-check messages and add button on message, like explore folder.
 
 
 Pending List (Fahim):
 - Source Add Operation Modify
 - PgSQL & MySQL feature should be added.
-- Re-check messages and add button on message, like explore folder.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Browse Upload Files
