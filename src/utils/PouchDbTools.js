@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const PouchDb = require('pouchdb')
 const path = require('path')
 

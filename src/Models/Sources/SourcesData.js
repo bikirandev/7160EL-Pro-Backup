@@ -17,7 +17,7 @@ const sourceDataPattern = {
   backupRetention: defaultValues.backupRetention,
   autostart: true,
   manualStop: false,
-  errorStatue: false,
+  errorStatus: false,
   errorMessage: '',
 }
 
