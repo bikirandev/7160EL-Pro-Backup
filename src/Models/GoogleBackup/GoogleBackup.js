@@ -3,11 +3,9 @@ var path = require('path')
 var fs = require('fs')
 var progress = require('progress-stream')
 const isoToUnix = require('../../utils/isoToUnix')
-//const { getAllDocuments, DB_SOURCE } = require('../../utils/PouchDbTools')
 const moment = require('moment')
 const { getAppId } = require('../Configs/ConfigAppId')
 const { checkOnline } = require('../../utils/IsOnline')
-// const { app } = require('electron')
 
 const backupToBucket = async (filePath, destConfig, remoteDir = 'backup', gzip = false) => {
   const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
@@ -62,19 +60,20 @@ const backupToBucket2 = async (
   remoteDir = 'backup',
   gzip = false,
 ) => {
-  const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
-  const destination = `${remoteDir}/${fileName}`
-
   try {
+    // Collect app id
+    const appIdSt = await getAppId()
+    const appId = appIdSt.data
+
+    // File name & destination
+    const fileName = path.basename(filePath) + (gzip ? '.gz' : '')
+    const destination = `${appId}/${remoteDir}/${fileName}`
+
     // Check Internet Access
     const isOnline = await checkOnline()
     if (!isOnline) {
       return { error: 1, message: 'No internet access', data: null }
     }
-
-    // Collect app id
-    const appIdSt = await getAppId()
-    const appId = appIdSt.data
 
     const storage = new Storage({
       projectId: destConfig.projectId,
@@ -116,6 +115,13 @@ const backupToBucket2 = async (
 
 const getFiles = async (destConfig, remoteDir = '') => {
   try {
+    // Collect app id
+    const appIdSt = await getAppId()
+    const appId = appIdSt.data
+
+    // Prefix
+    const prefix = `${appId}/${remoteDir}`
+
     // Check Internet Access
     const isOnline = await checkOnline()
     if (!isOnline) {
@@ -129,7 +135,7 @@ const getFiles = async (destConfig, remoteDir = '') => {
 
     // Find by metadata sourceId
     const [files] = await storage.bucket(destConfig.bucket).getFiles({
-      prefix: remoteDir,
+      prefix: prefix,
     })
 
     // Get all sources from the database

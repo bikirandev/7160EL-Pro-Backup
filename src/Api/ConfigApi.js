@@ -133,12 +133,16 @@ const importConfig = async (ev, data) => {
 const restoreFromRemote = async (ev, data) => {
   // data.appId = ''
 
+  if (!data.appId) {
+    return { error: 1, message: 'Please Enter App Id', data: null }
+  }
+
   try {
     const expFileSt = await getExportFileName(data.appId)
     if (expFileSt.error) {
       return expFileSt
     }
-    const fileName = path.join('config', expFileSt.data)
+    const fileName = path.join(data.appId, 'config', expFileSt.data)
 
     const defDestinationConf = await getDestination('default')
     if (defDestinationConf.error) {
