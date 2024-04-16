@@ -1,5 +1,6 @@
 Done List:
 - Log upload to remote - Done.
+- All log page operation on frontend.
 - Config Page Operation/waring/confirmation to be functional.
 
 
