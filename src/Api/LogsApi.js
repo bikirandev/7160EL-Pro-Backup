@@ -4,7 +4,6 @@ const { filesInfo, isDirExists, isFileExists } = require('../utils/FileOperation
 const { LOG_DIR_LOCAL } = require('../Models/Logs/LogCreate')
 
 const getLogFiles = async (ev, data) => {
-  console.log('getLogFiles', data)
   try {
     // Read files with  time created
     const files = await fsp.readdir(LOG_DIR_LOCAL)
@@ -19,7 +18,6 @@ const getLogFiles = async (ev, data) => {
 }
 
 const downloadLogFile = async (ev, data) => {
-  console.log('downloadLogFile', data)
   // data.dirPath = '';
   // data.file = '';
   try {
@@ -47,7 +45,6 @@ const downloadLogFile = async (ev, data) => {
 }
 
 const deleteLogFile = async (ev, data) => {
-  console.log('deleteLogFile', data)
   try {
     // check is file exists
     const isFileExist = await isFileExists(data.file)
@@ -66,7 +63,6 @@ const deleteLogFile = async (ev, data) => {
 }
 
 const emptyLogFiles = async (ev, data) => {
-  console.log('emptyLogFiles', data)
   try {
     // Read files with  time created
     const files = await fsp.readdir(LOG_DIR_LOCAL)
