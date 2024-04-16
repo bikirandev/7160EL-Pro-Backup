@@ -39,6 +39,7 @@ New Options:
 - License Validation
 - Online License Purchase Option
 - Online Storage Purchase Option
+- Dashboard - Show Usage
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
