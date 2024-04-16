@@ -2,6 +2,7 @@ Done List:
 - Log upload to remote - Done.
 - All log page operation on frontend.
 - Config Page Operation/waring/confirmation to be functional.
+- Error - Directory Explore not works on MACOS.
 
 
 Pending List (Fahim):
@@ -11,7 +12,6 @@ Pending List (Fahim):
 - Show Last Backup time with source & destination.
 - Show error message with each source.
 - Re-check messages and add button on message, like explore folder.
-- Error - Directory Explore not works on MACOS.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Browse Upload Files
