@@ -7,15 +7,14 @@ Done List:
 Pending List (Fahim):
 - Source Add Operation Modify
 - PgSQL & MySQL feature should be added.
-- All log page operation on frontend.
-- Option - Show Number of Backups & Size on Backup List Page.
-- Option - Show Last Backup time with source & destination.
+- Show Number of Backups & Size on Backup List Page.
+- Show Last Backup time with source & destination.
 - Show error message with each source.
 - Re-check messages and add button on message, like explore folder.
 - Error - Directory Explore not works on MACOS.
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
-- Browse Cloud Files
+- Browse Upload Files
 
 
 Pending List (Bishojit):

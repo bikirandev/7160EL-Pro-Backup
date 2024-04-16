@@ -81,6 +81,11 @@ const filesInfo = async (files = []) => {
 
   try {
     for (const file of files) {
+      const isFileExist = await isFileExists(file)
+      if (isFileExist.error) {
+        continue
+      }
+
       const stats = await fsp.stat(file)
       fInfo.push({
         file,

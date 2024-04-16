@@ -10,7 +10,6 @@ const sourceDataPattern = {
   user: '',
   password: '',
   operation: '',
-  dumpPath: '',
   destinationId: 'default', // default or destinationId
   frequency: defaultValues.frequency,
   frequencyPattern: '0 0 * * * *', // Hourly
