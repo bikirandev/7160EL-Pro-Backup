@@ -37,7 +37,8 @@ Pending List (Bishojit):
 
 New Options:
 - License Validation
-- Online Purchase Option
+- Online License Purchase Option
+- Online Storage Purchase Option
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
