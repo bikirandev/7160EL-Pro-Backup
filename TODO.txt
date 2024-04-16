@@ -16,6 +16,7 @@ Pending List (Fahim):
 - Backup List - Sync Backup Not Completed
 - Dump File Configuration
 - Email Notification Configuration
+- Destination Manage Page
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Browse Upload Files
@@ -33,6 +34,10 @@ Pending List (Bishojit):
 - Show Progresses on Backup.
 - Organize Execute Options.
 - Browse Cloud Files
+
+New Options:
+- License Validation
+- Online Purchase Option
 
 
 // 1. Elite Backup/Ultra Backup Application Should be created
