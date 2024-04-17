@@ -6,8 +6,8 @@ const configDataPattern = {
 }
 
 module.exports = {
-  CONF_APP_KEY: 'app_key',
-  CONF_DEFAULT_DIRECTORY: 'default_directory',
+  CONF_APP_KEY: 'appKey',
+  CONF_DEFAULT_DIRECTORY: 'defaultDirectory',
   CONF_SMTP: 'smtp',
   configDataPattern,
 }

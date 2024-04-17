@@ -9,7 +9,12 @@ const getConfigs = async () => {
   try {
     const data = await getAllDocuments(DB_CONFIG)
 
-    return { error: 0, message: 'List of Sources', data }
+    const confData = {}
+    for (const conf of data) {
+      confData[conf._id] = conf.value
+    }
+
+    return { error: 0, message: 'List of Sources', confData }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: null }
