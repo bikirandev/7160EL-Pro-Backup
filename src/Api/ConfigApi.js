@@ -14,7 +14,7 @@ const getConfigs = async () => {
       confData[conf._id] = conf.value
     }
 
-    return { error: 0, message: 'List of Sources', confData }
+    return { error: 0, message: 'List of Sources', data: confData }
   } catch (err) {
     console.log(err)
     return { error: 1, message: 'Error on finding Sources', data: null }
