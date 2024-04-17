@@ -1,7 +1,7 @@
 const { destinations } = require('../utils/DefaultValue')
 
 const getDestinations = async () => {
-  return destinations
+  return { error: 0, message: 'Success', data: destinations }
 }
 
 const addDestination = () => {}
