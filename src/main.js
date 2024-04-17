@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
 const { app, BrowserWindow, ipcMain, shell } = require('electron')
+const process = require('process')
 const createWindow = require('./utils/createWindow')
 const apiRegistry = require('./ApiRegistry')
 

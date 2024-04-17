@@ -26,17 +26,15 @@ const {
 const openLink = require('./utils/openLink')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { init } = require('./Api/InitApi')
-const {
-  getConfigs,
-  setDefaultDirectory,
-  exportConfig,
-  resetConfig,
-  importConfig,
-  defaultDirCleanup,
-  restoreFromRemote,
-} = require('./Api/ConfigApi')
+const { getConfigs, setDefaultDirectory, defaultDirCleanup } = require('./Api/ConfigApi')
 const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
+const {
+  resetConfig,
+  exportConfig,
+  importConfig,
+  restoreFromRemote,
+} = require('./Api/ConfigOperationApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
