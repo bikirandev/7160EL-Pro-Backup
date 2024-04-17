@@ -85,7 +85,7 @@ const testSMTPConfig = async (ev, data) => {
 
     // Send Test Email
     const mailOptions = {
-      from: `Pro Backup<${data.username}>`,
+      from: `Pro Backup <${data.username}>`,
       to: data.TestEmail,
       subject: 'Test Email',
       text: 'This is a test email from Backup Manager',
