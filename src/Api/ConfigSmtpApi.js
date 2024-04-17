@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer')
 const { getSmtpData, setSmtpData } = require('../Models/Configs/ConfigSmtp')
 
 const setSMTPConfig = async (ev, data) => {
+  console.log(ev, data)
   // data.hostname = ''
   // data.port = ''
   // data.username = ''

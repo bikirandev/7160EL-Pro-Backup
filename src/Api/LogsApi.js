@@ -3,7 +3,7 @@ const path = require('path')
 const { filesInfo, isDirExists, isFileExists } = require('../utils/FileOperation')
 const { LOG_DIR_LOCAL } = require('../Models/Logs/LogCreate')
 
-const getLogFiles = async (ev, data) => {
+const getLogFiles = async () => {
   try {
     // Read files with  time created
     const files = await fsp.readdir(LOG_DIR_LOCAL)
@@ -62,7 +62,7 @@ const deleteLogFile = async (ev, data) => {
   }
 }
 
-const emptyLogFiles = async (ev, data) => {
+const emptyLogFiles = async () => {
   try {
     // Read files with  time created
     const files = await fsp.readdir(LOG_DIR_LOCAL)

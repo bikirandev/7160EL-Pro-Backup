@@ -40,12 +40,16 @@ const setSmtpData = async (hostname, port, username, password) => {
     if (createSt.error) {
       return { error: 1, message: 'Error setting SMTP Config', data: null }
     }
+
+    return { error: 0, message: 'SMTP Config set successfully', data: null }
   } else {
     // Update
     const updateSt = await updateDocument(DB_CONFIG, key, config)
     if (updateSt.error) {
       return { error: 1, message: 'Error setting SMTP Config', data: null }
     }
+
+    return { error: 0, message: 'SMTP Config set successfully', data: null }
   }
 }
 
