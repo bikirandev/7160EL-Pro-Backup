@@ -35,6 +35,7 @@ const {
   defaultDirCleanup,
   restoreFromRemote,
 } = require('./Api/ConfigApi')
+const { syncBackup } = require('./Models/Backup/BackupSync')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -70,6 +71,7 @@ module.exports = {
   updateFrequency,
   downloadBackup,
   forceBackup,
+  syncBackup,
   deleteSource,
 
   // Schedule/Task API
