@@ -109,4 +109,8 @@ module.exports = {
   exploreDirectory,
   openDirectoryDialog,
   openFileDialog,
+
+  // SMTP Config API
+  // addSMTPConfig,
+  // updateSMTPConfig,
 }
