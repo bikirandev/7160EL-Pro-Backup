@@ -19,7 +19,7 @@ const setDumpPath = async (ev, data) => {
   }
 
   // Validate db type
-  if (!dumpTypes.includes(data.dbType)) {
+  if (!dumpTypes.includes(data.dumpType)) {
     return { error: 1, message: 'Invalid db type', data: null }
   }
 
