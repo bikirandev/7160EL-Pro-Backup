@@ -111,6 +111,6 @@ module.exports = {
   openFileDialog,
 
   // SMTP Config API
-  // addSMTPConfig,
-  // updateSMTPConfig,
+  // setSMTPConfig,
+  // testSMTPConfig,
 }
