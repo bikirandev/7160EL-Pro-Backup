@@ -8,12 +8,11 @@ Done List:
 - explore on template message.
 - Show error message with each source.
 - Re-check messages and add button on message, like explore folder.
-
+- PgSQL & MySQL feature should be added.
+- Source Add Operation Modify
+- Backup List - Sync Backup Not Completed
 
 Pending List (Fahim):
-- Source Add Operation Modify
-- PgSQL & MySQL feature should be added.
-- Backup List - Sync Backup Not Completed
 - Dump File Configuration
 - Email Notification Configuration
 - Destination Manage Page
