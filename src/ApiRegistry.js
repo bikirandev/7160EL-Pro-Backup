@@ -4,6 +4,18 @@ const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { forceBackup } = require('./Models/Backup/BackupForce')
 const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('./Api/LogsApi')
+const openLink = require('./utils/openLink')
+const exploreDirectory = require('./utils/exploreDirectory')
+const { init } = require('./Api/InitApi')
+const { getConfigs, setDefaultDirectory, defaultDirCleanup } = require('./Api/ConfigApi')
+const { syncBackup } = require('./Models/Backup/BackupSync')
+const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
+const {
+  resetConfig,
+  exportConfig,
+  importConfig,
+  restoreFromRemote,
+} = require('./Api/ConfigOperationApi')
 const {
   getSources,
   addSource,
@@ -23,18 +35,7 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
-const openLink = require('./utils/openLink')
-const exploreDirectory = require('./utils/exploreDirectory')
-const { init } = require('./Api/InitApi')
-const { getConfigs, setDefaultDirectory, defaultDirCleanup } = require('./Api/ConfigApi')
-const { syncBackup } = require('./Models/Backup/BackupSync')
-const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
-const {
-  resetConfig,
-  exportConfig,
-  importConfig,
-  restoreFromRemote,
-} = require('./Api/ConfigOperationApi')
+const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -102,6 +103,10 @@ module.exports = {
   // SMTP Config API
   setSMTPConfig,
   testSMTPConfig,
+
+  // Dump Config API
+  setDumpPath,
+  testDumpPath,
 
   // Logs API
   getLogFiles,
