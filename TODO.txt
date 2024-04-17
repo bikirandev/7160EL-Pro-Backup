@@ -11,10 +11,10 @@ Done List:
 - PgSQL & MySQL feature should be added.
 - Source Add Operation Modify
 - Backup List - Sync Backup Not Completed
+- Email Notification Configuration
 
 Pending List (Fahim):
 - Dump File Configuration
-- Email Notification Configuration
 - Destination Manage Page
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
