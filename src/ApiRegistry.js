@@ -36,6 +36,7 @@ const {
   restoreFromRemote,
 } = require('./Api/ConfigApi')
 const { syncBackup } = require('./Models/Backup/BackupSync')
+const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -100,6 +101,10 @@ module.exports = {
   restoreFromRemote,
   defaultDirCleanup,
 
+  // SMTP Config API
+  setSMTPConfig,
+  testSMTPConfig,
+
   // Logs API
   getLogFiles,
   downloadLogFile,
@@ -111,8 +116,4 @@ module.exports = {
   exploreDirectory,
   openDirectoryDialog,
   openFileDialog,
-
-  // SMTP Config API
-  // setSMTPConfig,
-  // testSMTPConfig,
 }
