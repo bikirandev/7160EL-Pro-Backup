@@ -88,11 +88,17 @@ const exportingData = async (dirPath) => {
     }
 
     // Exporting Configurations
-    const sources = await getAllDocuments(DB_SOURCE)
+    const sourcesData = await getAllDocuments(DB_SOURCE)
     const destinations = await getAllDocuments(DB_DESTINATION)
     const uploads = await getAllDocuments(DB_UPLOADS)
     const configs = await getAllDocuments(DB_CONFIG)
 
+    // Make secure || remove passwords form sources
+    const sources = sourcesData.map((source) => {
+      return { ...source, password: '' }
+    })
+
+    // Convert to JSON
     const dataConf = JSON.stringify({ sources, destinations, uploads, configs }, null, 2)
 
     // Write to file

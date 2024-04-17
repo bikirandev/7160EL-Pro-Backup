@@ -12,6 +12,7 @@ Done List:
 - Source Add Operation Modify
 - Backup List - Sync Backup Not Completed
 - Email Notification Configuration
+- Do not keep password on exporting file
 
 Pending List (Fahim):
 - Dump File Configuration
