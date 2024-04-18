@@ -1,5 +1,17 @@
 const exec = require('child_process').exec
 
+const execute = async (command) => {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(stderr || stdout)
+      } else {
+        resolve({ error: 0, message: 'output of [exec]', data: { error, stdout, stderr } })
+      }
+    })
+  })
+}
+
 const ExecuteMssql = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
@@ -109,6 +121,7 @@ const ExecuteMysql = (command) => {
 }
 
 module.exports = {
+  execute,
   ExecuteMssql,
   ExecutePgsql,
   ExecuteMysql,

@@ -1,20 +1,30 @@
-const { addSource } = require('./src/Api/SourcesApi')
+const { testMysqlDumpPath } = require('./src/utils/Databases/Mysql')
 
-addSource(null, {
-  type: 'pgsql',
-  title: 'PostgreSQL - miracleapi',
-  host: 'localhost',
-  port: 5432,
-  databaseOrPath: 'miracleapi',
-  user: 'postgres',
-  password: 'a!23456789',
-})
+testMysqlDumpPath('/usr/bin/mysqldump')
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
-    console.log(err)
+    console.log('ErrorTT', err)
   })
+
+// const { addSource } = require('./src/Api/SourcesApi')
+
+// addSource(null, {
+//   type: 'pgsql',
+//   title: 'PostgreSQL - miracleapi',
+//   host: 'localhost',
+//   port: 5432,
+//   databaseOrPath: 'miracleapi',
+//   user: 'postgres',
+//   password: 'a!23456789',
+// })
+//   .then((res) => {
+//     console.log(res)
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
 // const moment = require('moment')
 // const { logFilesFixing } = require('./src/Models/Logs/LogOperation')
