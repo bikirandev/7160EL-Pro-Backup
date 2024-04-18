@@ -13,10 +13,10 @@ Done List:
 - Backup List - Sync Backup Not Completed
 - Email Notification Configuration
 - Do not keep password on exporting file
+- Destination Manage Page
 
 Pending List (Fahim):
 - Dump File Configuration
-- Destination Manage Page
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Browse Upload Files
