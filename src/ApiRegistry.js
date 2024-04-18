@@ -55,11 +55,11 @@ const openDirectoryDialog = async () => {
   return result.filePaths[0]
 }
 
-const openFileDialog = async (defaultPath = '', filters = []) => {
+const openFileDialog = async () => {
   const result = await dialog.showOpenDialog({
     properties: ['openFile'],
-    defaultPath: defaultPath,
-    filters: filters,
+    // defaultPath: defaultPath,
+    // filters: filters,
   })
   return result.filePaths[0]
 }
