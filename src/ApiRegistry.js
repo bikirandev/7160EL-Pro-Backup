@@ -1,15 +1,16 @@
+const openLink = require('./utils/openLink')
+const exploreDirectory = require('./utils/exploreDirectory')
 const { dialog } = require('electron') // BrowserWindow,
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { forceBackup } = require('./Models/Backup/BackupForce')
 const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('./Api/LogsApi')
-const openLink = require('./utils/openLink')
-const exploreDirectory = require('./utils/exploreDirectory')
 const { init } = require('./Api/InitApi')
 const { getConfigs, setDefaultDirectory, defaultDirCleanup } = require('./Api/ConfigApi')
 const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
+const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
 const {
   resetConfig,
   exportConfig,
@@ -35,7 +36,6 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
-const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
