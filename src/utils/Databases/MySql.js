@@ -7,7 +7,7 @@ const findMysqlDumpPath = async () => {
   console.log('Find Dump Path')
 
   try {
-    const ex = await execute(`${dumpCommend} --version`)
+    const ex = await execute(`where ${dumpCommend}`)
     console.log('Ex', ex)
   } catch (err) {
     console.log('Ex', err)
@@ -16,13 +16,11 @@ const findMysqlDumpPath = async () => {
 }
 
 const testMysqlDumpPath = async (path) => {
-  console.log('Test Dump Path', path)
-
   try {
     const ex = await execute(`${path} --version`)
-    console.log('Ex', ex)
+
+    return { error: 0, message: 'Path is correct', data: ex.data.stdout }
   } catch (err) {
-    console.log(err)
     throw new Error(err)
   }
 }

@@ -1,11 +1,11 @@
 const { testMysqlDumpPath } = require('./src/utils/Databases/Mysql')
 
-testMysqlDumpPath('C:\\xampp\\mysql\\bin\\mysqldump.exe')
+testMysqlDumpPath('C:\\xampp\\mysql\\bin\\my2sqldump.exe')
   .then((res) => {
     console.log(res)
   })
   .catch((err) => {
-    console.log('Error', err)
+    console.log('Error22', err)
   })
 
 // const { addSource } = require('./src/Api/SourcesApi')
