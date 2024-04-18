@@ -7,10 +7,10 @@ const findMysqlDumpPath = async () => {
   console.log('Find Dump Path')
 
   try {
-    const ex = await execute(`which ${dumpCommend}`)
+    const ex = await execute(`${dumpCommend} --version`)
     console.log('Ex', ex)
   } catch (err) {
-    console.log(err)
+    console.log('Ex', err)
     throw new Error(err)
   }
 }
