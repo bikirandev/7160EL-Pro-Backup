@@ -57,7 +57,7 @@ const init = async (ev) => {
             mssql: 'sqlcmd',
             oracle: 'exp',
             mongo: 'mongodump',
-            couch: 'couchdump',
+            couch: 'couchdb',
             redis: 'redis-cli',
           },
         },

@@ -13,6 +13,8 @@
     "gcloud",
     "GDRIVE",
     "miracleapi",
+    "mongodump",
+    "mysqldump",
     "nsis",
     "Pgsql",
     "sqlcmd",
