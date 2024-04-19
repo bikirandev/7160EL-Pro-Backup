@@ -4,11 +4,23 @@ const getDestinations = async () => {
   return { error: 0, message: 'Success', data: destinations }
 }
 
-const addDestination = () => {}
+const addDestination = (ev, data) => {
+  console.log('addDestination data-', data)
 
-const updateDestination = () => {}
+  return { error: 0, message: 'Success', data: null }
+}
 
-const deleteDestination = () => {}
+const updateDestination = (ev, data) => {
+  console.log('updateDestination data-', data)
+
+  return { error: 0, message: 'Success', data: null }
+}
+
+const deleteDestination = (ev, data) => {
+  console.log('deleteDestination data-', data)
+
+  return { error: 0, message: 'Success', data: null }
+}
 
 module.exports = {
   getDestinations,
