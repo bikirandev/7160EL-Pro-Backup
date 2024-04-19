@@ -14,9 +14,9 @@ Done List:
 - Email Notification Configuration
 - Do not keep password on exporting file
 - Destination Manage Page
+- Dump File Configuration
 
 Pending List (Fahim):
-- Dump File Configuration
 - Contact Us & About Us Page to be completed.
 - User Manual to be created.
 - Browse Upload Files
