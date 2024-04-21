@@ -10,13 +10,17 @@
     "Bikiran",
     "Bishojit",
     "Fahim",
+    "flink",
     "gcloud",
     "GDRIVE",
+    "minio",
     "miracleapi",
     "mongodump",
     "mysqldump",
     "nsis",
     "Pgsql",
+    "rabbitmq",
+    "sonarqube",
     "sqlcmd",
     "zklib"
   ]
