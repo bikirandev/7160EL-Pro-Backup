@@ -4,6 +4,7 @@ const ConfigKeys = require('../Models/Configs/ConfigKeys')
 const { setDefDirectory } = require('../Models/Configs/ConfigDefaultDir')
 const { DB_CONFIG, getAllDocuments, getDocument } = require('../utils/PouchDbTools')
 const { isDirExists } = require('../utils/FileOperation')
+const { setNotfEmail } = require('../Models/Configs/ConfigNotification')
 
 const getConfigs = async () => {
   try {
@@ -33,7 +34,21 @@ const setDefaultDirectory = async (ev, data) => {
     return { error: 0, message: 'Default Directory Set', data: null }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on finding Sources', data: null }
+    return { error: 1, message: 'Error on setting default directory', data: null }
+  }
+}
+
+const setNotificationEmail = async (ev, data) => {
+  const { notificationEmail } = data
+
+  // Create of Update new Line
+  try {
+    await setNotfEmail(notificationEmail)
+
+    return { error: 0, message: 'Notification email Set', data: null }
+  } catch (err) {
+    console.log(err)
+    return { error: 1, message: 'Error on setting notification email', data: null }
   }
 }
 
@@ -74,5 +89,6 @@ const defaultDirCleanup = async (ev, data) => {
 module.exports = {
   getConfigs,
   setDefaultDirectory,
+  setNotificationEmail,
   defaultDirCleanup,
 }

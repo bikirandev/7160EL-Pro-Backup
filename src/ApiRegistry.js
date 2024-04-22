@@ -7,7 +7,12 @@ const { forceBackup } = require('./Models/Backup/BackupForce')
 const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('./Api/LogsApi')
 const { init } = require('./Api/InitApi')
-const { getConfigs, setDefaultDirectory, defaultDirCleanup } = require('./Api/ConfigApi')
+const {
+  getConfigs,
+  setDefaultDirectory,
+  defaultDirCleanup,
+  setNotificationEmail,
+} = require('./Api/ConfigApi')
 const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
 const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
@@ -98,6 +103,7 @@ module.exports = {
   // Configs API
   getConfigs,
   setDefaultDirectory,
+  setNotificationEmail,
   resetApp: resetConfig,
   exportConfig,
   importConfig,
