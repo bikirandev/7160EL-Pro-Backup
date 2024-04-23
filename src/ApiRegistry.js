@@ -60,12 +60,19 @@ const openDirectoryDialog = async () => {
   return result.filePaths[0]
 }
 
-const openFileDialog = async () => {
+const openFileDialog = async (ev, fileType = null) => {
+  let filters = null
+
+  if (fileType) {
+    // Define filters based on the provided file type
+    filters = [{ name: 'Custom File Type', extensions: [fileType] }]
+  }
+
   const result = await dialog.showOpenDialog({
     properties: ['openFile'],
-    // defaultPath: defaultPath,
-    // filters: filters,
+    filters: filters,
   })
+
   return result.filePaths[0]
 }
 
