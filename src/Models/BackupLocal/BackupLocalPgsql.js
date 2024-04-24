@@ -2,16 +2,16 @@ const path = require('path')
 const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 const { ExecutePgsql } = require('../../utils/Execute')
 
-const pgsqlQuery = (client, query) => {
-  return new Promise((resolve, reject) => {
-    client.query(query, (err, res) => {
-      if (err) {
-        reject(err)
-      }
-      resolve(res)
-    })
-  })
-}
+// const pgsqlQuery = (client, query) => {
+//   return new Promise((resolve, reject) => {
+//     client.query(query, (err, res) => {
+//       if (err) {
+//         reject(err)
+//       }
+//       resolve(res)
+//     })
+//   })
+// }
 
 const pgsqlHostBackup = async (sourceData) => {
   const database = sourceData.databaseOrPath

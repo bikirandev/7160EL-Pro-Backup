@@ -92,10 +92,10 @@ const updateSource = async (ev, data) => {
   try {
     // Check if database already exists
     const exData = await getAllDocuments(DB_SOURCE)
-    const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
-    if (exDbName) {
-      return { error: 1, message: 'Source already exists', data: null }
-    }
+    // const exDbName = exData.find((x) => x.databaseOrPath === data.databaseOrPath)
+    // if (exDbName) {
+    //   return { error: 1, message: 'Source already exists', data: null }
+    // }
 
     // Check if _id not exists
     const exId = exData.find((x) => x._id === data._id)

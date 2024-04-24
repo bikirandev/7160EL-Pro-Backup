@@ -38,9 +38,11 @@ const ExecutePgsql = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        const message = error.message.split('\n')[1] // pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+        // pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+        const message = error.message.split('\n')[1]
         if (message.includes('password authentication failed for user')) {
-          const user = command.split('-U')[1].split(' ')[0]
+          // const user = command.split('-U')[1].split(' ')[0]
+          const user = message.split('for user ')[1].split('"')[1]
           resolve({
             error: 1,
             message: `Password authentication failed for user "${user}"`,
