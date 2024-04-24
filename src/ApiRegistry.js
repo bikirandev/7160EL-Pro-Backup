@@ -41,6 +41,7 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
+const { reloadWindow } = require('./utils/createWindow')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -136,4 +137,6 @@ module.exports = {
   exploreDirectory,
   openDirectoryDialog,
   openFileDialog,
+
+  reloadWindow,
 }

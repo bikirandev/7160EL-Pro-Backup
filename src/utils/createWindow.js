@@ -3,8 +3,10 @@ const path = require('path')
 const startUrl = require('./startUrl')
 const { dialog } = require('electron')
 
-module.exports = ({ BrowserWindow, shell }) => {
-  const win = new BrowserWindow({
+let win
+
+function createWindow({ BrowserWindow, shell }) {
+  win = new BrowserWindow({
     width: 1100,
     height: 700,
     resizable: false,
@@ -53,3 +55,18 @@ module.exports = ({ BrowserWindow, shell }) => {
 
   return win
 }
+
+// Function to reload the window
+function reloadWindow() {
+  // return promise
+  return new Promise((resolve, reject) => {
+    if (win) {
+      win.reload()
+      resolve({ error: 0, message: 'reloaded' })
+    } else {
+      reject({ error: 1, message: 'window not found' })
+    }
+  })
+}
+
+module.exports = { createWindow, reloadWindow }
