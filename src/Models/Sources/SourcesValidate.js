@@ -104,10 +104,6 @@ const validatePgsqlData = (data) => {
     return { error: 1, message: 'Password is required', data: null }
   }
 
-  if (!data.dumpPath) {
-    return { error: 1, message: 'Dump path is required', data: null }
-  }
-
   return { error: 0, message: 'Data is valid', data: null }
 }
 

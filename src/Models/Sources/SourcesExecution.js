@@ -38,7 +38,7 @@ const mssqlWinConnect = async (data) => {
     return { error: 0, message: 'Connected', data: { ...result, backupPath } }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on MSSQL Connection', data: null }
+    return { error: 1, message: 'Error on MsSQL Connection', data: null }
   }
 }
 

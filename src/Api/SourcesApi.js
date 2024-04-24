@@ -55,8 +55,8 @@ const addSource = async (ev, data) => {
 
     // Validation Permissions
     const exe1 = validateType(nData) // Validate Type
-    const exe2 = validateMssqlWinData(nData) // Validate MSSQL-Win Data, if type is mssql-win
-    const exe3 = validateMssqlHostData(nData) // Validate MSSQL-Host Data, if type is mssql-host
+    const exe2 = validateMssqlWinData(nData) // Validate MsSQL-Win Data, if type is mssql-win
+    const exe3 = validateMssqlHostData(nData) // Validate MsSQL-Host Data, if type is mssql-host
     const exe4 = validatePgsqlData(nData) // Validate PGSQL Data, if type is pgsql
     const exe5 = validateDirectory(nData) // Validate Directory Data, if type is directory
 
@@ -104,8 +104,8 @@ const updateSource = async (ev, data) => {
     }
 
     const exe1 = validateType(nData) // Validate Type
-    const exe2 = validateMssqlWinData(nData) // Validate MSSQL-Win Data, if type is mssql-win
-    const exe3 = validateMssqlHostData(nData) // Validate MSSQL-Host Data, if type is mssql-host
+    const exe2 = validateMssqlWinData(nData) // Validate MsSQL-Win Data, if type is mssql-win
+    const exe3 = validateMssqlHostData(nData) // Validate MsSQL-Host Data, if type is mssql-host
     const exe4 = validatePgsqlData(nData) // Validate PGSQL Data, if type is pgsql
     const exe5 = validateDirectory(nData) // Validate Directory Data, if type is directory
 

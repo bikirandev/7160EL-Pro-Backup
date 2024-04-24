@@ -11,7 +11,7 @@ const {
 const { validateAll } = require('../../utils/Validate')
 const { createBackupLog, createErrorLog } = require('../Logs/LogCreate')
 const { getDestination } = require('../Destinations/DestinationModel')
-const { mssqlWinExecBackup } = require('../BackupLocal/BackupLocalMssql')
+const { mssqlWinExecBackup, mssqlHostExecBackup } = require('../BackupLocal/BackupLocalMssql')
 const { dirBackup } = require('../BackupLocal/BackupLocalDir')
 const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
 const { getFileSizeHr } = require('../../utils/FileOperation')
@@ -50,11 +50,12 @@ const forceBackup = async (ev, id) => {
 
     // Execution
     const exe1 = await mssqlWinExecBackup(sourceData)
-    const exe2 = await dirBackup(sourceData)
+    const exe2 = await mssqlHostExecBackup(sourceData)
     const exe3 = await pgsqlHostBackup(sourceData)
+    const exe4 = await dirBackup(sourceData)
 
     // Step-4: Execute backup
-    const backupSt = validateAll([exe1, exe2, exe3])
+    const backupSt = validateAll([exe1, exe2, exe3, exe4])
     if (backupSt.error) {
       evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup failed: ' + backupSt.message)
@@ -67,6 +68,9 @@ const forceBackup = async (ev, id) => {
       })
       return backupSt
     }
+
+    console.log(backupSt)
+
     if (!backupSt?.data?.backupPath) {
       evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup path not found')
