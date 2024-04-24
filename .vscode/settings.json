@@ -18,10 +18,12 @@
     "mongodump",
     "mysqldump",
     "nsis",
+    "ODBC",
     "Pgsql",
     "rabbitmq",
     "sonarqube",
     "sqlcmd",
+    "strderr",
     "zklib"
   ]
 }

@@ -35,6 +35,9 @@ const mssqlWinExecBackup = async (sourceData) => {
 
     // Step-2: Execute Backup
     const result = await ExecuteMssql(command)
+    if (result.error) {
+      return result
+    }
     const stdout = result?.data?.stdout || ''
 
     // Check if error
@@ -90,6 +93,9 @@ const mssqlHostExecBackup = async (sourceData) => {
 
     // Step-2: Execute Backup
     const result = await ExecuteMssql(command)
+    if (result.error) {
+      return result
+    }
     const stdout = result?.data?.stdout || ''
 
     // Check if error
@@ -107,7 +113,6 @@ const mssqlHostExecBackup = async (sourceData) => {
 
     return { error: 0, message: 'Backup', data: { ...result.data, backupPath } }
   } catch (err) {
-    console.log(err)
     return { error: 1, message: 'Error on MsSQL Connection', data: null }
   }
 }

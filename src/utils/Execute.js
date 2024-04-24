@@ -16,7 +16,16 @@ const ExecuteMssql = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.log('error', error)
+        // strderr = Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Login failed for user 'test_db'..
+        if (stderr.includes('Login failed for user')) {
+          const user = stderr.split('Login failed for user ')[1].split('..')[0]
+          resolve({
+            error: 1,
+            message: `Login failed for user "${user}"`,
+            data: { error, stdout, stderr },
+          })
+        }
+
         reject(stderr || stdout)
       } else {
         resolve({ error: 0, message: 'output of [exec]', data: { error, stdout, stderr } })
