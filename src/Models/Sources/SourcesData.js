@@ -26,7 +26,7 @@ const sourceTypes = {
   TYPE_MSSQL_WIN: 'mssql-win',
   TYPE_MSSQL_HOST: 'mssql-host',
   TYPE_PGSQL: 'pgsql',
-  TYPE_MYSQL: 'mysql-host',
+  TYPE_MYSQL: 'mysql',
   TYPE_DIRECTORY: 'directory',
 }
 

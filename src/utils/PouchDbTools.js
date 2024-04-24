@@ -57,6 +57,7 @@ const createDocument = async (dbName, data) => {
 }
 
 const updateDocument = async (dbName, id, data) => {
+  // console.log({ dbName, id, data })
   try {
     const dbPath = path.join('./Data', dbName)
     const localDB = new PouchDb(dbPath)

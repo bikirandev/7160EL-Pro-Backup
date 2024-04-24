@@ -132,7 +132,33 @@ const ExecuteMysql = (command) => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.log('error', error)
+        console.log('error +++++++++++++', error)
+        console.log('stderr +++++++++++++', stderr)
+        console.log('stdout +++++++++++++', stdout)
+
+        const message = stderr
+
+        // message = mysqldump.exe: Got error: 1045: "Access denied for user 'asdsd'@'localhost' (using password: YES)" when trying to connect
+        if (message.includes('Access denied for user')) {
+          const user = message.split("Access denied for user '")[1].split("'@")[0]
+          const host = message.split("'@'")[1].split(' (using password: YES)')[0]
+          resolve({
+            error: 1,
+            message: `Access denied for user '${user}@${host}' with password`,
+            data: { error, stdout, stderr },
+          })
+        }
+
+        // message =  mysqldump.exe: Got error: 1049: "Unknown database 'dsadsadsad'" when selecting the database
+        if (message.includes('Unknown database')) {
+          const database = message.split("Unknown database '")[1].split("'")[0]
+          resolve({
+            error: 1,
+            message: `Unknown database '${database}'`,
+            data: { error, stdout, stderr },
+          })
+        }
+
         reject(stderr || stdout)
       } else {
         resolve({ error: 0, message: 'output of [exec]', data: { error, stdout, stderr } })

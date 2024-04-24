@@ -28,7 +28,7 @@ const mysqlHostBackup = async (sourceData) => {
       return { error: 1, message: 'Error on Default Backup Path', data: null }
     }
 
-    const pgConfig = {
+    const mysqlConfig = {
       user: sourceData.user,
       host: sourceData.host,
       database: database,
@@ -37,12 +37,11 @@ const mysqlHostBackup = async (sourceData) => {
       dumpPath: path.join('"C:\\xampp\\mysql\\bin\\mysqldump.exe"'),
     }
 
-    // Construct the pg_dump command
-    const pgDumpCommand = `set "PGPASSWORD=${pgConfig.password}" && "${pgConfig.dumpPath}" -U ${pgConfig.user} -h ${pgConfig.host} -d ${pgConfig.database} -p ${pgConfig.port} > ${backupPath}`
-    // console.log('pgDumpCommand', pgDumpCommand)
+    // Construct the mysqldump command with password
+    const mysqlDumpCommand = `${mysqlConfig.dumpPath} -u ${mysqlConfig.user} -h ${mysqlConfig.host} -p${mysqlConfig.password} ${mysqlConfig.database} > ${backupPath}`
 
     // Step-2: Execute Backup
-    const result = await ExecuteMysql(pgDumpCommand)
+    const result = await ExecuteMysql(mysqlDumpCommand)
     if (result.error) {
       return result
     }
@@ -50,7 +49,7 @@ const mysqlHostBackup = async (sourceData) => {
     return { error: 0, message: 'Backup successful', data: { ...result.data, backupPath } }
   } catch (err) {
     console.log(err)
-    return { error: 1, message: 'Error on PostgreSQL Connection', data: null }
+    return { error: 1, message: 'Error on MySQL Connection', data: null }
   }
 }
 
