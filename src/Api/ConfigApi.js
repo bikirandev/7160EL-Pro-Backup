@@ -39,6 +39,13 @@ const setDefaultDirectory = async (ev, data) => {
 const setNotificationEmail = async (ev, data) => {
   const { notificationEmail } = data
 
+  //validate using regex
+  const validateEmail = await notificationEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+
+  if (validateEmail === null) {
+    return { error: 1, message: 'Invalid email', data: null }
+  }
+
   // Create of Update new Line
   try {
     await setNotfEmail(notificationEmail)
