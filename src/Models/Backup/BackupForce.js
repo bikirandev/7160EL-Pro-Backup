@@ -69,8 +69,6 @@ const forceBackup = async (ev, id) => {
       return backupSt
     }
 
-    console.log(backupSt)
-
     if (!backupSt?.data?.backupPath) {
       evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup path not found')

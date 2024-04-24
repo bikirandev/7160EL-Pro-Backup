@@ -15,8 +15,6 @@ const getConfigs = async () => {
       confData[conf._id] = conf.value
     }
 
-    console.log('List of Configs', confData)
-
     return { error: 0, message: 'List of Configs', data: confData }
   } catch (err) {
     console.log(err)
