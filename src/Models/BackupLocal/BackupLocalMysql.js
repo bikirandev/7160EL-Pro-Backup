@@ -1,11 +1,12 @@
 const path = require('path')
 const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 const { ExecuteMysql } = require('../../utils/Execute')
+const { sourceTypes } = require('../Sources/SourcesData')
 
 const mysqlHostBackup = async (sourceData) => {
   const database = sourceData.databaseOrPath
 
-  if (sourceData.type !== 'pgsql') {
+  if (sourceData.type !== sourceTypes.TYPE_MYSQL) {
     return { error: 0, message: 'Skipped', data: null, skipped: true }
   }
 
@@ -41,7 +42,7 @@ const mysqlHostBackup = async (sourceData) => {
     // console.log('pgDumpCommand', pgDumpCommand)
 
     // Step-2: Execute Backup
-    const result = await ExecutePgsql(pgDumpCommand)
+    const result = await ExecuteMysql(pgDumpCommand)
     if (result.error) {
       return result
     }

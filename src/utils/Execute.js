@@ -52,7 +52,7 @@ const ExecutePgsql = (command) => {
 
         // message = pg_dump: error: could not translate host name "localhost" to address: Unknown host
         if (message.includes('could not translate host name')) {
-          const host = command.split('-h')[1].split(' ')[0]
+          const host = message.split('could not translate host name ')[1].split(' to address')[0]
           resolve({
             error: 1,
             message: `Could not translate host name "${host}" to address: Unknown host`,
@@ -62,7 +62,7 @@ const ExecutePgsql = (command) => {
 
         // message = pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "db_name" does not exist
         if (message.includes('database does not exist')) {
-          const database = command.split('-d')[1].split(' ')[0]
+          const database = message.split('database ')[1].split(' does not exist')[0]
           resolve({
             error: 1,
             message: `Database "${database}" does not exist`,
@@ -72,7 +72,7 @@ const ExecutePgsql = (command) => {
 
         // message = pg_dump: error: connection to server at "localhost" (::1), port 22 failed: Connection refused (0x0000274D/10061)
         if (message.includes('Connection refused')) {
-          const port = command.split('-p')[1].split(' ')[0]
+          const port = message.split('port ')[1].split(' failed')[0]
           resolve({
             error: 1,
             message: `Connection refused on port ${port}`,
@@ -82,7 +82,7 @@ const ExecutePgsql = (command) => {
 
         // message = pg_dump: error: invalid port number: "543222"
         if (message.includes('invalid port number')) {
-          const port = command.split('-p')[1].split(' ')[0]
+          const port = message.split('port number: "')[1].split('"')[0]
           resolve({
             error: 1,
             message: `Invalid port number "${port}"`,
@@ -106,6 +106,16 @@ const ExecutePgsql = (command) => {
           resolve({
             error: 1,
             message: `Access is denied: ${backupPath}`,
+            data: { error, stdout, stderr },
+          })
+        }
+
+        // message = pg_dump: error: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "sfsdfdsf" does not exist
+        if (message.includes('does not exist')) {
+          const database = message.split('database "')[1].split('" does not exist')[0]
+          resolve({
+            error: 1,
+            message: `Database "${database}" does not exist`,
             data: { error, stdout, stderr },
           })
         }

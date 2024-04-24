@@ -17,6 +17,7 @@ const { backupToBucket2 } = require('../GoogleBackup/GoogleBackup')
 const { getFileSizeHr } = require('../../utils/FileOperation')
 const { evSendTaskStatus } = require('../Tasks/Ev')
 const { pgsqlHostBackup } = require('../BackupLocal/BackupLocalPgsql')
+const { mysqlHostBackup } = require('../BackupLocal/BackupLocalMysql')
 
 // force backup
 const forceBackup = async (ev, id) => {
@@ -52,10 +53,11 @@ const forceBackup = async (ev, id) => {
     const exe1 = await mssqlWinExecBackup(sourceData)
     const exe2 = await mssqlHostExecBackup(sourceData)
     const exe3 = await pgsqlHostBackup(sourceData)
-    const exe4 = await dirBackup(sourceData)
+    const exe4 = await mysqlHostBackup(sourceData)
+    const exe5 = await dirBackup(sourceData)
 
     // Step-4: Execute backup
-    const backupSt = validateAll([exe1, exe2, exe3, exe4])
+    const backupSt = validateAll([exe1, exe2, exe3, exe4, exe5])
     if (backupSt.error) {
       evSendTaskStatus(id, 'error')
       createBackupLog(id, 'Backup failed: ' + backupSt.message)

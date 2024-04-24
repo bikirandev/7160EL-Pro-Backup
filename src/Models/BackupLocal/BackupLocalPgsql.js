@@ -1,6 +1,7 @@
 const path = require('path')
 const { generateFilePath } = require('../Configs/ConfigGenerateFs')
 const { ExecutePgsql } = require('../../utils/Execute')
+const { sourceTypes } = require('../Sources/SourcesData')
 
 // const pgsqlQuery = (client, query) => {
 //   return new Promise((resolve, reject) => {
@@ -16,7 +17,7 @@ const { ExecutePgsql } = require('../../utils/Execute')
 const pgsqlHostBackup = async (sourceData) => {
   const database = sourceData.databaseOrPath
 
-  if (sourceData.type !== 'pgsql') {
+  if (sourceData.type !== sourceTypes.TYPE_PGSQL) {
     return { error: 0, message: 'Skipped', data: null, skipped: true }
   }
 

@@ -32,7 +32,7 @@ const validateMssqlWin = (dbName) => {
 }
 
 const validateMssqlWinData = (data) => {
-  if (data.type !== 'mssql-win') {
+  if (data.type !== sourceTypes.TYPE_MSSQL_WIN) {
     return { error: 0, message: 'Skipped', data: null }
   }
 
@@ -52,7 +52,7 @@ const validateMssqlWinData = (data) => {
 }
 
 const validateMssqlHostData = (data) => {
-  if (data.type !== 'mssql-host') {
+  if (data.type !== sourceTypes.TYPE_MSSQL_HOST) {
     return { error: 0, message: 'Skipped', data: null }
   }
 
@@ -80,7 +80,7 @@ const validateMssqlHostData = (data) => {
 }
 
 const validatePgsqlData = (data) => {
-  if (data.type !== 'pgsql') {
+  if (data.type !== sourceTypes.TYPE_PGSQL) {
     return { error: 0, message: 'Skipped', data: null }
   }
 
@@ -108,7 +108,7 @@ const validatePgsqlData = (data) => {
 }
 
 const validateDirectory = (data) => {
-  if (data.type !== 'directory') {
+  if (data.type !== sourceTypes.TYPE_DIRECTORY) {
     return { error: 0, message: 'Skipped', data: null }
   }
 
