@@ -24,7 +24,6 @@
     "appId": "com.bikiran.pro-backup",
     "win": {
       "target": "nsis",
-      "name": "Pro Backup",
       "requestedExecutionLevel": "highestAvailable",
       "icon": "./src/assets/Backup.png"
     },
