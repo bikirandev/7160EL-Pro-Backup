@@ -20,8 +20,8 @@
     "build": "electron-builder"
   },
   "build": {
-    "productName": "pro-backup",
-    "appId": "com.bikiran.pro-backup",
+    "productName": "Pro Backup",
+    "appId": "com.bikiran.probackup",
     "win": {
       "target": "nsis",
       "requestedExecutionLevel": "highestAvailable",
@@ -49,7 +49,6 @@
     "@google-cloud/storage": "^7.11.0",
     "cron-parser": "^4.9.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^9.0.0",
     "electron-window-state": "^5.0.3",
     "moment": "^2.30.1",
     "mssql": "^10.0.2",

@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 const { Notification } = require('electron')
 
-const showNotification = (body) => {
+const showNotification = (body, iconPath) => {
   const notification = new Notification({
     title: 'Pro Backup',
-    body: body,
-    icon: './src/assets/backup-pro-logo.png',
+    body: iconPath,
+    icon: iconPath,
   })
   notification.show()
 
