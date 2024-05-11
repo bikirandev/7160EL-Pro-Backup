@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain, shell, Tray, Menu } = require('electron')
 const apiRegistry = require('./ApiRegistry')
 const { createWindow } = require('./utils/createWindow')
-const { showNotification } = require('./Models/Notification/Notification')
+// const { showNotification } = require('./Models/Notification/Notification')
 const path = require('path')
 
 const regKeys = Object.keys(apiRegistry)
@@ -45,7 +45,7 @@ app.on('ready', () => {
   })
 
   // Notification
-  showNotification('Pro Backup is running...', iconPath)
+  // showNotification('Pro Backup is running...', iconPath)
 
   // --Creating Window // it returns win
   win = createWindow({ BrowserWindow, shell })
