@@ -1,13 +1,20 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, shell, Tray } = require('electron')
 const process = require('process')
 const apiRegistry = require('./ApiRegistry')
 const { createWindow } = require('./utils/createWindow')
 
 const regKeys = Object.keys(apiRegistry)
 
+let tray = null
+// let backgroundProcess = null;
+
 app
   .whenReady()
   .then(() => {
+    // Create and display a tray icon
+    tray = new Tray('./src/assets/backup-pro-logo.png')
+    tray.setToolTip('Pro Backup')
+
     regKeys.forEach((key) => {
       ipcMain.handle(key, apiRegistry[key])
     })
