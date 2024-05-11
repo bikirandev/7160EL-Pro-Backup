@@ -1,40 +1,49 @@
-const { app, BrowserWindow, ipcMain, shell, Tray } = require('electron')
-const process = require('process')
+/* eslint-disable no-undef */
+const { app, BrowserWindow, ipcMain, shell, Tray, Menu } = require('electron')
 const apiRegistry = require('./ApiRegistry')
 const { createWindow } = require('./utils/createWindow')
+const { showNotification } = require('./Models/Notification/Notification')
 
 const regKeys = Object.keys(apiRegistry)
 app.setAppUserModelId('com.bikiran.probackup') // Replace with your specifics
 
 let tray = null
-// let backgroundProcess = null;\
+let win = null
 
-app
-  .whenReady()
-  .then(() => {
-    // Create and display a tray icon
-    tray = new Tray('./src/assets/backup-pro-logo.png')
-    tray.setToolTip('Pro Backup')
+app.on('ready', () => {
+  // Create and display a tray icon
+  tray = new Tray('./src/assets/backup-pro-logo.png')
+  tray.setToolTip('Pro Backup')
 
-    regKeys.forEach((key) => {
-      ipcMain.handle(key, apiRegistry[key])
-    })
-
-    // --Creating Window // it returns win
-    createWindow({ BrowserWindow, shell })
-
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
-      }
-    })
-  })
-  .catch((err) => {
-    console.log(err)
+  // Open window on tray icon click
+  tray.on('click', () => {
+    win.show()
   })
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  // Add tray context menu
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show App',
+      click: () => {
+        win.show()
+      },
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        app.quit()
+      },
+    },
+  ])
+  tray.setContextMenu(contextMenu)
+
+  regKeys.forEach((key) => {
+    ipcMain.handle(key, apiRegistry[key])
+  })
+
+  // Notification
+  showNotification('Pro Backup is running...')
+
+  // --Creating Window // it returns win
+  win = createWindow({ BrowserWindow, shell })
 })

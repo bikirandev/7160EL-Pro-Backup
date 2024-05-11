@@ -3,10 +3,10 @@ const path = require('path')
 const startUrl = require('./startUrl')
 const { dialog } = require('electron')
 
-let win
+let mainWindow = null
 
 function createWindow({ BrowserWindow, shell }) {
-  win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1100,
     height: 700,
     resizable: false,
@@ -21,39 +21,42 @@ function createWindow({ BrowserWindow, shell }) {
   })
 
   // startUrl() returns http://localhost:3000 or ./build/index.html (React Build File)
-  win.loadURL(startUrl())
+  mainWindow.loadURL(startUrl())
 
-  // if any task is running, show a warning message before closing the window
-  const isRunning = true
-  if (isRunning) {
-    win.on('close', function (event) {
-      event.preventDefault() // Prevent window from closing immediately
+  // On Close Button Click
+  mainWindow.on('close', function (event) {
+    event.preventDefault() // Prevent window from closing immediately
 
-      const options = {
-        type: 'question',
-        buttons: ['Yes', 'No'],
-        title: '   ',
-        message:
-          'When you close the window, All background process will be stopped.\nAre you sure you want to close the window?',
+    const options = {
+      type: 'question',
+      buttons: ['Yes', 'No'],
+      title: '   ',
+      message:
+        'When you close the window, All background process will be stopped.\nAre you sure you want to close the window?',
+    }
+
+    dialog.showMessageBox(mainWindow, options).then((result) => {
+      if (result.response === 1) {
+        // Do nothing, prevent window from closing
+      } else {
+        mainWindow.destroy() // Close the window
       }
-
-      dialog.showMessageBox(win, options).then((result) => {
-        if (result.response === 1) {
-          // Do nothing, prevent window from closing
-        } else {
-          win.destroy() // Close the window
-        }
-      })
     })
-  }
+  })
+
+  // On MiniMize Button Click
+  mainWindow.on('minimize', function (event) {
+    event.preventDefault()
+    mainWindow.hide()
+  })
 
   // url open
-  win.webContents.on('will-navigate', (event, url) => {
+  mainWindow.webContents.on('will-navigate', (event, url) => {
     event.preventDefault()
     shell.openExternal(url)
   })
 
-  return win
+  return mainWindow
 }
 
 // Function to reload the window
@@ -69,4 +72,4 @@ function reloadWindow() {
   })
 }
 
-module.exports = { createWindow, reloadWindow }
+module.exports = { createWindow, reloadWindow, mainWindow }

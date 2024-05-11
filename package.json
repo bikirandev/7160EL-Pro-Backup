@@ -5,7 +5,7 @@
     "email": "info@bikiran.com"
   },
   "description": "This APP is built by Bikiran",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "private": true,
   "homepage": "./",
   "main": "src/main.js",
@@ -49,6 +49,7 @@
     "@google-cloud/storage": "^7.11.0",
     "cron-parser": "^4.9.0",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^9.0.0",
     "electron-window-state": "^5.0.3",
     "moment": "^2.30.1",
     "mssql": "^10.0.2",

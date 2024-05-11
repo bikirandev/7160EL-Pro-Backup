@@ -7,15 +7,16 @@ const { forceBackup } = require('./Models/Backup/BackupForce')
 const { updateAutoStart, updateFrequency } = require('./Api/SourcesUpdateApi')
 const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('./Api/LogsApi')
 const { init } = require('./Api/InitApi')
+const { syncBackup } = require('./Models/Backup/BackupSync')
+const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
+const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
+const { reloadWindow } = require('./utils/createWindow')
 const {
   getConfigs,
   setDefaultDirectory,
   defaultDirCleanup,
   setNotificationEmail,
 } = require('./Api/ConfigApi')
-const { syncBackup } = require('./Models/Backup/BackupSync')
-const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
-const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
 const {
   resetConfig,
   exportConfig,
@@ -41,7 +42,6 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
-const { reloadWindow } = require('./utils/createWindow')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
