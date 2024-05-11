@@ -4,9 +4,10 @@ const apiRegistry = require('./ApiRegistry')
 const { createWindow } = require('./utils/createWindow')
 
 const regKeys = Object.keys(apiRegistry)
+app.setAppUserModelId('com.bikiran.probackup') // Replace with your specifics
 
 let tray = null
-// let backgroundProcess = null;
+// let backgroundProcess = null;\
 
 app
   .whenReady()
@@ -33,5 +34,7 @@ app
   })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
