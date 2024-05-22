@@ -25,15 +25,15 @@
     "win": {
       "target": "nsis",
       "requestedExecutionLevel": "highestAvailable",
-      "icon": "./src/assets/Backup.png"
+      "icon": "./src/assets/backup-pro-logo.png"
     },
     "mac": {
       "target": "dmg",
-      "icon": "./src/assets/Backup.png"
+      "icon": "./src/assets/backup-pro-logo.png"
     },
     "linux": {
       "target": "deb",
-      "icon": "./src/assets/Backup.png"
+      "icon": "./src/assets/backup-pro-logo.png"
     },
     "extraResources": [
       {
