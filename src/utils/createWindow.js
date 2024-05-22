@@ -11,7 +11,7 @@ function createWindow({ BrowserWindow, shell }) {
     height: 700,
     resizable: false,
     // titleBarStyle: 'hidden',
-    autoHideMenuBar: true,
+    // autoHideMenuBar : true,
 
     webPreferences: {
       nodeIntegration: true,
