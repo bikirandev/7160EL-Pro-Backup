@@ -1,4 +1,8 @@
-const { dumpUtilities } = require('../Models/Configs/checkDumpFileExistence')
+const {
+  scanDumpPathExistence,
+  dumpUtilities,
+  dumpCommands,
+} = require('../Models/Configs/ConfigDump')
 const {
   CONF_DUMP_MYSQL,
   CONF_DUMP_MSSQL,
@@ -83,7 +87,35 @@ const testDumpPath = async (ev, data) => {
   }
 }
 
+const scanDumpPath = async (ev, data) => {
+  // DB Types
+  const dumpTypes = [CONF_DUMP_MYSQL, CONF_DUMP_MSSQL, CONF_DUMP_PGSQL]
+
+  // Validate path
+  if (!data.path) {
+    return { error: 1, message: 'Path is empty', data: null }
+  }
+
+  // Validate db type
+  if (!dumpTypes.includes(data.dumpType)) {
+    return { error: 1, message: 'Invalid db type', data: null }
+  }
+
+  try {
+    const dumpPath = await scanDumpPathExistence(dumpCommands?.[data?.dumpType], data.dumpType)
+    if (dumpPath.error) {
+      return { error: 1, message: dumpPath?.message, data: dumpPath?.data }
+    }
+
+    return { error: 0, message: dumpPath?.message, data: dumpPath?.data }
+  } catch (err) {
+    console.log(err)
+    throw new Error(err)
+  }
+}
+
 module.exports = {
   setDumpPath,
   testDumpPath,
+  scanDumpPath,
 }
