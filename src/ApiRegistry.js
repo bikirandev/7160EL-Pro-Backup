@@ -42,6 +42,7 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
+const { addFeatureRequest } = require('./Api/FeatureApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -137,6 +138,9 @@ module.exports = {
   exploreDirectory,
   openDirectoryDialog,
   openFileDialog,
+
+  //feature request
+  addFeatureRequest,
 
   reloadWindow,
 }
