@@ -16,12 +16,7 @@ const addFeatureRequest = async (ev, data) => {
     if (!data.description) {
       return { error: 1, message: 'Description is required', data: null }
     }
-    // if(!data.reason){
-    //     return { error: 1, message: 'Reason is required', data: null }
-    // }
-    // if(!data.priority){
-    //     return { error: 1, message: 'Priority is required', data: null }
-    // }
+
     if (!data.category) {
       return { error: 1, message: 'Category is required', data: null }
     }
@@ -56,9 +51,6 @@ const addFeatureRequest = async (ev, data) => {
     - **Email:** ${data.email || '[Empty]'}
     - **Title:** ${data.title || '[Empty]'}
     - **Description:** ${data.description || '[Empty]'}
-    - **Reason:** ${data.reason || '[Empty]'}
-    - **Priority:** ${data.priority || '[Empty]'}
-    - **Category:** ${data.category || '[Empty]'}
     `
 
     // Recipient Email
