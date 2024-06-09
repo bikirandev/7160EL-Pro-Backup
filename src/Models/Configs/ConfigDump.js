@@ -7,8 +7,8 @@ const dumpUtilities = {
 }
 
 const dumpCommands = {
-  dumpPgsql: 'psql',
-  dumpMysql: 'mysql',
+  dumpPgsql: 'pg_dump',
+  dumpMysql: 'mysqldump',
   dumpMssql: 'sqlcmd',
 }
 

@@ -12,7 +12,6 @@ const { isDirExists } = require('../utils/FileOperation')
 const { updateDocument, DB_CONFIG, getDocument, createDocument } = require('../utils/PouchDbTools')
 
 const setDumpPath = async (ev, data) => {
-  console.log('Set Dump Path', data)
   // data.dumpType = 'mysql'
   // data.path = ''
 
@@ -57,10 +56,9 @@ const setDumpPath = async (ev, data) => {
 }
 
 const testDumpPath = async (ev, data) => {
-  console.log('Set Dump Path', data)
-
   // check if the dump file exists in the directory
   const filePath = `${data.path.replace(/\\[^\\]*$/, '')}\\${dumpUtilities?.[data?.dumpType]}`
+
   // DB Types
   const dumpTypes = [CONF_DUMP_MYSQL, CONF_DUMP_MSSQL, CONF_DUMP_PGSQL]
 

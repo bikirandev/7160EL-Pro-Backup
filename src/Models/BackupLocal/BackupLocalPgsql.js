@@ -39,17 +39,8 @@ const pgsqlHostBackup = async (sourceData) => {
       return { error: 1, message: 'Error on Default Backup Path', data: null }
     }
 
-    const pgConfig = {
-      user: sourceData.user,
-      host: sourceData.host,
-      database: database,
-      password: sourceData.password,
-      port: sourceData.port, // Default port is 5432
-      dumpPath: path.join('C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe'),
-    }
-
     // Construct the pg_dump command
-    const pgDumpCommand = `set "PGPASSWORD=${pgConfig.password}" && "${pgConfig.dumpPath}" -U ${pgConfig.user} -h ${pgConfig.host} -d ${pgConfig.database} -p ${pgConfig.port} > ${backupPath}`
+    const pgDumpCommand = `set "PGPASSWORD=${sourceData.password}" && pg_dump -U ${sourceData.user} -h ${sourceData.host} -d ${database} -p ${sourceData.port} > ${backupPath}`
     // console.log('pgDumpCommand', pgDumpCommand)
 
     // Step-2: Execute Backup

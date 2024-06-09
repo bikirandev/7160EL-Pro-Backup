@@ -28,17 +28,8 @@ const mysqlHostBackup = async (sourceData) => {
       return { error: 1, message: 'Error on Default Backup Path', data: null }
     }
 
-    const mysqlConfig = {
-      user: sourceData.user,
-      host: sourceData.host,
-      database: database,
-      password: sourceData.password,
-      port: sourceData.port, // Default port is 3306
-      dumpPath: path.join('mysqldump'),
-    }
-
     // Construct the mysqldump command with password
-    const mysqlDumpCommand = `${mysqlConfig.dumpPath} -u ${mysqlConfig.user} -h ${mysqlConfig.host} -p${mysqlConfig.password} ${mysqlConfig.database} > ${backupPath}`
+    const mysqlDumpCommand = `mysqldump -u ${sourceData.user} -h ${sourceData.host} -p${sourceData.password} ${database} > ${backupPath}`
 
     // Step-2: Execute Backup
     const result = await ExecuteMysql(mysqlDumpCommand)
