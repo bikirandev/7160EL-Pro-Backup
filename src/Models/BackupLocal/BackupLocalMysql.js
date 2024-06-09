@@ -34,7 +34,7 @@ const mysqlHostBackup = async (sourceData) => {
       database: database,
       password: sourceData.password,
       port: sourceData.port, // Default port is 3306
-      dumpPath: path.join('"C:\\xampp\\mysql\\bin\\mysqldump.exe"'),
+      dumpPath: path.join('mysqldump'),
     }
 
     // Construct the mysqldump command with password
