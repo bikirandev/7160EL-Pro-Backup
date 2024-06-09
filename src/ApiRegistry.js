@@ -9,7 +9,7 @@ const { getLogFiles, downloadLogFile, deleteLogFile, emptyLogFiles } = require('
 const { init } = require('./Api/InitApi')
 const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
-const { setDumpPath, testDumpPath } = require('./Api/ConfigDumpApi')
+const { setDumpPath, testDumpPath, scanDumpPath } = require('./Api/ConfigDumpApi')
 const { reloadWindow } = require('./utils/createWindow')
 const {
   getConfigs,
@@ -126,6 +126,7 @@ module.exports = {
   // Dump Config API
   setDumpPath,
   testDumpPath,
+  scanDumpPath,
 
   // Logs API
   getLogFiles,
