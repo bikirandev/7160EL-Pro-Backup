@@ -2,6 +2,7 @@ const openLink = require('./utils/openLink')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { dialog } = require('electron') // BrowserWindow,
 const { exec } = require('child_process')
+const path = require('path')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { forceBackup } = require('./Models/Backup/BackupForce')
@@ -81,14 +82,16 @@ const openFileDialog = async (ev, fileType = null) => {
 }
 
 function openEnvVariablesDialog() {
-  const command = `rundll32 sysdm.cpl,EditEnvironmentVariables`
+  // eslint-disable-next-line no-undef
+  const scriptPath = path.join(__dirname, 'openEnvVariables.ps1')
+  const command = `powershell -ExecutionPolicy Bypass -File "${scriptPath}"`
+
   exec(command, (error) => {
     if (error) {
       console.error(`Error executing command: ${error}`)
       return
     }
-    // console.log(`stdout: ${stdout}`)
-    // console.error(`stderr: ${stderr}`)
+    console.log('Environment Variables dialog opened successfully.')
   })
 }
 
