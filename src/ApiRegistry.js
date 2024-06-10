@@ -1,6 +1,7 @@
 const openLink = require('./utils/openLink')
 const exploreDirectory = require('./utils/exploreDirectory')
 const { dialog } = require('electron') // BrowserWindow,
+const { exec } = require('child_process')
 const { scheduleStart, scheduleStop } = require('./Api/ScheduleApi')
 const { getTasksStatus } = require('./Models/Tasks/TasksModel')
 const { forceBackup } = require('./Models/Backup/BackupForce')
@@ -11,6 +12,7 @@ const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
 const { setDumpPath, testDumpPath, scanDumpPath } = require('./Api/ConfigDumpApi')
 const { reloadWindow } = require('./utils/createWindow')
+
 const {
   getConfigs,
   setDefaultDirectory,
@@ -76,6 +78,18 @@ const openFileDialog = async (ev, fileType = null) => {
   })
 
   return result.filePaths[0]
+}
+
+function openEnvVariablesDialog() {
+  const command = `rundll32 sysdm.cpl,EditEnvironmentVariables`
+  exec(command, (error) => {
+    if (error) {
+      console.error(`Error executing command: ${error}`)
+      return
+    }
+    // console.log(`stdout: ${stdout}`)
+    // console.error(`stderr: ${stderr}`)
+  })
 }
 
 module.exports = {
@@ -144,4 +158,6 @@ module.exports = {
   addFeatureRequest,
 
   reloadWindow,
+
+  openEnvVariablesDialog,
 }
