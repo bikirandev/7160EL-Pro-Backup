@@ -1,14 +1,13 @@
 const {
   scanDumpPathExistence,
-  dumpUtilities,
   dumpCommands,
+  testDumpPathExistence,
 } = require('../Models/Configs/ConfigDump')
 const {
   CONF_DUMP_MYSQL,
   CONF_DUMP_MSSQL,
   CONF_DUMP_PGSQL,
 } = require('../Models/Configs/ConfigKeys')
-const { isDirExists } = require('../utils/FileOperation')
 const { updateDocument, DB_CONFIG, getDocument, createDocument } = require('../utils/PouchDbTools')
 
 const setDumpPath = async (ev, data) => {
@@ -56,9 +55,6 @@ const setDumpPath = async (ev, data) => {
 }
 
 const testDumpPath = async (ev, data) => {
-  // check if the dump file exists in the directory
-  const filePath = `${data.path.replace(/\\[^\\]*$/, '')}\\${dumpUtilities?.[data?.dumpType]}`
-
   // DB Types
   const dumpTypes = [CONF_DUMP_MYSQL, CONF_DUMP_MSSQL, CONF_DUMP_PGSQL]
 
@@ -73,12 +69,16 @@ const testDumpPath = async (ev, data) => {
   }
 
   try {
-    const isDirExist = await isDirExists(filePath)
-    if (isDirExist.error) {
-      return { error: 1, message: 'Directory not exists', data: null }
+    const isExist = await testDumpPathExistence(dumpCommands[data.dumpType])
+    if (isExist.error) {
+      return {
+        error: 1,
+        message: isExist?.message,
+        data: null,
+      }
     }
 
-    return { error: 0, message: 'Dump file found', data: null }
+    return { error: 0, message: isExist?.message, data: null }
   } catch (err) {
     console.log(err)
     throw new Error(err)

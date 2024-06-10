@@ -59,8 +59,52 @@ function scanDumpPathExistence(commandType, dumpType) {
   })
 }
 
+const testDumpPathExistence = async (commandType) => {
+  let sqlType = {}
+  for (const [key, value] of Object.entries(dumpCommands)) {
+    sqlType[value] = key
+  }
+
+  const sql = sqlType[commandType]?.slice(4) || 'SQL'
+
+  return new Promise((resolve) => {
+    const command = `where ${commandType}"`
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        resolve({
+          error: 1,
+          message: `${sql} dump path not found`,
+          data: null,
+        })
+        return
+      }
+      if (stderr) {
+        resolve({
+          error: 1,
+          message: 'Error finding dump path',
+          data: null,
+        })
+        return
+      }
+      const files = stdout.trim().split('\n')
+      if (files.length > 0) {
+        const pgDumpPath = files[0].trim()
+        resolve({
+          error: 0,
+          message: `${sql} Dump path found`,
+          data: { path: pgDumpPath },
+        })
+      } else {
+        resolve({ error: 0, message: 'dump.exe not found', data: null })
+      }
+    })
+  })
+}
+
 module.exports = {
   scanDumpPathExistence,
+  testDumpPathExistence,
   dumpUtilities,
   dumpCommands,
   replaceFileNameFromPath,
