@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer')
 const { getSmtpData } = require('../Models/Configs/ConfigSmtp')
+// const adminTemplate = require('../templates/adminTemplate')
+const inlineBase64 = require('nodemailer-plugin-inline-base64')
+const customerTemplate = require('../templates/customerTemplate')
+const adminTemplate = require('../templates/adminTemplate')
 
 const addFeatureRequest = async (ev, data) => {
   try {
@@ -15,10 +19,6 @@ const addFeatureRequest = async (ev, data) => {
     }
     if (!data.description) {
       return { error: 1, message: 'Description is required', data: null }
-    }
-
-    if (!data.category) {
-      return { error: 1, message: 'Category is required', data: null }
     }
 
     // Get SMTP Config
@@ -43,30 +43,40 @@ const addFeatureRequest = async (ev, data) => {
       },
     })
 
-    // Email Body
-    const emailBody = `
-    **Feature Request Details**
+    // `
 
-    - **Full Name:** ${data.fullName || '[Empty]'}
-    - **Email:** ${data.email || '[Empty]'}
-    - **Title:** ${data.title || '[Empty]'}
-    - **Description:** ${data.description || '[Empty]'}
-    `
+    const adminHtmlTemplate = adminTemplate(data.fullName, data.email, data.title, data.description)
+    const customerHtmlTemplate = customerTemplate(data.title, data.description)
 
     // Recipient Email
-    const mailTo = 'info@bikiran.com'
+    // const mailTo = 'info@bikiran.com'
+    const mailToAdmin = 'yeasinn2002@gmail.com'
 
     // Mail Options
-    const mailOptions = {
+    const adminMailOptions = {
       from: `Pro Backup <${data.username}>`,
-      to: mailTo,
+      to: mailToAdmin,
       subject: 'Feature Request',
-      text: emailBody,
+      html: adminHtmlTemplate,
     }
 
-    // // Send Email
-    const result = await transporter.sendMail(mailOptions)
-    console.log(result)
+    // Mail Options
+    const customerMailOptions = {
+      from: `Pro Backup <${data.username}>`,
+      to: data.email,
+      subject: 'Feature Request',
+      html: customerHtmlTemplate,
+    }
+
+    // Add Inline Base64 Images plugin to compile base64 images
+    transporter.use('compile', inlineBase64())
+
+    // Send Email to Admin
+    const resultAd = await transporter.sendMail(adminMailOptions)
+    // Send Email to Customer
+    const resultCu = await transporter.sendMail(customerMailOptions)
+    console.log('resultAd', resultAd)
+    console.log('resultCu', resultCu)
 
     // Return Success
     return {
