@@ -21,8 +21,8 @@ Done List:
 -  *Mssql 	            --✅TEST
 -  *Mysql (Win Auth) 	    --✅TEST
 - PgSQL & MySQL feature should be added.
-// 4. Facebook Pixel & Google Analytics Setup
-// 1. Marketing Materials for Facebook and LinkedIn
+- Facebook Pixel & Google Analytics Setup
+- Marketing Materials for Facebook and LinkedIn
 
 
 Pending List (Fahim):
