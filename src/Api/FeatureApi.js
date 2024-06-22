@@ -50,7 +50,7 @@ const addFeatureRequest = async (ev, data) => {
 
     // Recipient Email
     // const mailTo = 'info@bikiran.com'
-    const mailToAdmin = 'yeasinn2002@gmail.com'
+    const mailToAdmin = 'bishojit@gmail.com'
 
     // Mail Options
     const adminMailOptions = {
