@@ -46,6 +46,7 @@ const {
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
 const { addFeatureRequest } = require('./Api/FeatureApi')
+const { loginInitiate } = require('./Api/AuthApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
@@ -150,6 +151,9 @@ module.exports = {
   downloadLogFile,
   deleteLogFile,
   emptyLogFiles,
+
+  // Login API
+  loginInitiate,
 
   //open link in external browser
   openLink,
