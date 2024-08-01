@@ -163,8 +163,6 @@ module.exports = {
 
   //feature request
   addFeatureRequest,
-
   reloadWindow,
-
   openEnvVariablesDialog,
 }
