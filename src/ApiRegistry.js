@@ -13,6 +13,8 @@ const { syncBackup } = require('./Models/Backup/BackupSync')
 const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
 const { setDumpPath, testDumpPath, scanDumpPath } = require('./Api/ConfigDumpApi')
 const { reloadWindow } = require('./utils/createWindow')
+const { addFeatureRequest } = require('./Api/FeatureApi')
+const { loginInitiate } = require('./Api/AuthApi')
 
 const {
   getConfigs,
@@ -45,8 +47,6 @@ const {
   removeBackup,
   cleanupBackups,
 } = require('./Api/SourcesBackupApi')
-const { addFeatureRequest } = require('./Api/FeatureApi')
-const { loginInitiate } = require('./Api/AuthApi')
 
 // /api/registration
 // const closeWindow = (ev, data) => {
