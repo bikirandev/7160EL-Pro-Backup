@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain, shell, Tray, Menu } = require('electron')
 const apiRegistry = require('./ApiRegistry')
 const { createWindow } = require('./utils/createWindow')
+const { migrateDataDirectory } = require('./utils/DataMigration')
 // const { showNotification } = require('./Models/Notification/Notification')
 const path = require('path')
 
@@ -12,6 +13,9 @@ let tray = null
 let win = null
 
 app.on('ready', () => {
+  // Migrate data directory on first startup
+  migrateDataDirectory()
+
   const iconPath = path.join(__dirname, 'assets', 'backup-pro-logo.png')
 
   // Create and display a tray icon
@@ -49,4 +53,35 @@ app.on('ready', () => {
 
   // --Creating Window // it returns win
   win = createWindow({ BrowserWindow, shell })
+
+  // // Set application menu to show menubar
+  // const template = [
+  //   {
+  //     label: 'File',
+  //     submenu: [
+  //       { role: 'reload' },
+  //       { role: 'quit' }
+  //     ]
+  //   },
+  //   {
+  //     label: 'Edit',
+  //     submenu: [
+  //       { role: 'undo' },
+  //       { role: 'redo' },
+  //       { type: 'separator' },
+  //       { role: 'cut' },
+  //       { role: 'copy' },
+  //       { role: 'paste' }
+  //     ]
+  //   },
+  //   {
+  //     label: 'View',
+  //     submenu: [
+  //       { role: 'reload' },
+  //       { role: 'toggleDevTools' }
+  //     ]
+  //   }
+  // ]
+  // const menu = Menu.buildFromTemplate(template)
+  // Menu.setApplicationMenu(menu)
 })

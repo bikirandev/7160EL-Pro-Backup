@@ -1,9 +1,25 @@
 const PouchDb = require('pouchdb')
 const path = require('path')
+const { app } = require('electron')
+
+// Get the appropriate data directory for the app
+const getDataDirectory = () => {
+  if (app && app.getPath && app.isPackaged) {
+    // In packaged Electron environment, use userData directory
+    const dataPath = path.join(app.getPath('userData'), 'Data')
+    console.log('Using packaged app data directory:', dataPath)
+    return dataPath
+  } else {
+    // Fallback for development/non-Electron environments
+    const dataPath = path.resolve('Data')
+    console.log('Using development data directory:', dataPath)
+    return dataPath
+  }
+}
 
 // Define a function to get all documents
 const getAllDocuments = (dbName) => {
-  const dbPath = path.join('./Data', dbName)
+  const dbPath = path.join(getDataDirectory(), dbName)
   const localDB = new PouchDb(dbPath)
 
   return localDB
@@ -19,7 +35,7 @@ const getAllDocuments = (dbName) => {
 }
 
 const getDocument = (dbName, id) => {
-  const dbPath = path.join('./Data', dbName)
+  const dbPath = path.join(getDataDirectory(), dbName)
   const localDB = new PouchDb(dbPath)
 
   return localDB
@@ -40,7 +56,7 @@ const getDocument = (dbName, id) => {
 // Add new Document
 const createDocument = async (dbName, data) => {
   try {
-    const dbPath = path.join('./Data', dbName)
+    const dbPath = path.join(getDataDirectory(), dbName)
     const localDB = new PouchDb(dbPath)
 
     // Creating new document
@@ -59,7 +75,7 @@ const createDocument = async (dbName, data) => {
 const updateDocument = async (dbName, id, data) => {
   // console.log({ dbName, id, data })
   try {
-    const dbPath = path.join('./Data', dbName)
+    const dbPath = path.join(getDataDirectory(), dbName)
     const localDB = new PouchDb(dbPath)
 
     const dataSt = await getDocument(dbName, id)
@@ -82,7 +98,7 @@ const updateDocument = async (dbName, id, data) => {
 
 const deleteDocument = async (dbName, id) => {
   try {
-    const dbPath = path.join('./Data', dbName)
+    const dbPath = path.join(getDataDirectory(), dbName)
     const localDB = new PouchDb(dbPath)
 
     const dataSt = await getDocument(dbName, id)
@@ -105,7 +121,7 @@ const deleteDocument = async (dbName, id) => {
 
 const emptyDocument = async (dbName) => {
   try {
-    const dbPath = path.join('./Data', dbName)
+    const dbPath = path.join(getDataDirectory(), dbName)
     const localDB = new PouchDb(dbPath)
 
     const allDocs = await getAllDocuments(dbName)

@@ -42,6 +42,20 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "Data",
+        "to": "./Data",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "Logs",
+        "to": "./Logs",
+        "filter": [
+          "**/*"
+        ]
       }
     ]
   },

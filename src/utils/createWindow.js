@@ -11,7 +11,7 @@ function createWindow({ BrowserWindow, shell }) {
     height: 700,
     resizable: false,
     // titleBarStyle: 'hidden',
-    // autoHideMenuBar : true,
+    // Menu will be shown by default when Menu.setApplicationMenu() is called
 
     webPreferences: {
       nodeIntegration: true,
