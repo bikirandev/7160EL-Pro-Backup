@@ -12,10 +12,8 @@ const { createErrorLog, createSuccessLog } = require('../Models/Logs/LogCreate')
 const getRecentBackups = async (ev, data) => {
   try {
     const uploads = await getAllDocuments(DB_UPLOADS)
-    console.log(uploads, 'uploads')
     // Collect sources
     const sources = await getAllDocuments(DB_SOURCE)
-    console.log(sources, 'sources')
     // Filter by sourceId
     const files = uploads.filter((x) => {
       if (!data.sourceId) {
@@ -24,10 +22,8 @@ const getRecentBackups = async (ev, data) => {
 
       return x.sourceId === data.sourceId
     })
-    console.log(files, 'ffff')
     return { error: 0, message: 'List of Backups', data: files }
   } catch (err) {
-    console.log(err, 'eeeeeee')
     throw new Error(err)
   }
 }
