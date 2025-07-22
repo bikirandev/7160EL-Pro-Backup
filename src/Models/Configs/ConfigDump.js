@@ -1,9 +1,13 @@
 const { exec } = require('child_process')
+const path = require('path')
+const os = require('os')
+
+const isWindows = os.platform() === 'win32'
 
 const dumpUtilities = {
-  dumpPgsql: 'pg_dump.exe',
-  dumpMysql: 'mysqldump.exe',
-  dumpMssql: 'sqlcmd.exe',
+  dumpPgsql: isWindows ? 'pg_dump.exe' : 'pg_dump',
+  dumpMysql: isWindows ? 'mysqldump.exe' : 'mysqldump',
+  dumpMssql: isWindows ? 'sqlcmd.exe' : 'sqlcmd',
 }
 
 const dumpCommands = {
@@ -12,22 +16,21 @@ const dumpCommands = {
   dumpMssql: 'sqlcmd',
 }
 
-const replaceFileNameFromPath = (path, dumpType) => {
-  // ex:'C:\Program Files\PostgreSQL\16\bin\sqlcmd.exe' => 'C:\Program Files\PostgreSQL\16\bin\sqlcmd.exe'
-  const pathArr = path.split('\\') // Change '/' to '\\' for Windows paths
+const replaceFileNameFromPath = (filePath, dumpType) => {
+  // Cross-platform path handling
+  const pathArr = filePath.split(path.sep)
   pathArr.pop()
   pathArr.push(dumpUtilities[dumpType])
-  return pathArr.join('\\') // Change '/' to '\\' for Windows paths
+  return pathArr.join(path.sep)
 }
 
 function scanDumpPathExistence(commandType, dumpType) {
   return new Promise((resolve) => {
-    // const command = `dir /s /b "C:\\pg_dump.exe"`
-    const command = `where ${commandType}"`
+    // Use cross-platform command to find executable
+    const command = isWindows ? `where "${commandType}"` : `which ${commandType}`
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        // reject({ error: 1, message: error.message, data: null })
         resolve({
           error: 1,
           message: error.message,
@@ -36,7 +39,6 @@ function scanDumpPathExistence(commandType, dumpType) {
         return
       }
       if (stderr) {
-        // reject({ error: 1, message: stderr, data: null })
         resolve({
           error: 1,
           message: 'Error finding dump path',
@@ -46,14 +48,14 @@ function scanDumpPathExistence(commandType, dumpType) {
       }
       const files = stdout.trim().split('\n')
       if (files.length > 0) {
-        const pgDumpPath = files[0].trim()
+        const dumpPath = files[0].trim()
         resolve({
           error: 0,
           message: 'Dump path found',
-          data: { path: replaceFileNameFromPath(pgDumpPath, dumpType) },
+          data: { path: replaceFileNameFromPath(dumpPath, dumpType) },
         })
       } else {
-        resolve({ error: 0, message: 'dump.exe not found', data: null })
+        resolve({ error: 0, message: 'dump utility not found', data: null })
       }
     })
   })
@@ -68,7 +70,8 @@ const testDumpPathExistence = async (commandType) => {
   const sql = sqlType[commandType]?.slice(4) || 'SQL'
 
   return new Promise((resolve) => {
-    const command = `where ${commandType}"`
+    // Use cross-platform command to find executable
+    const command = isWindows ? `where "${commandType}"` : `which ${commandType}`
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
@@ -89,14 +92,14 @@ const testDumpPathExistence = async (commandType) => {
       }
       const files = stdout.trim().split('\n')
       if (files.length > 0) {
-        const pgDumpPath = files[0].trim()
+        const dumpPath = files[0].trim()
         resolve({
           error: 0,
           message: `${sql} Dump path found`,
-          data: { path: pgDumpPath },
+          data: { path: dumpPath },
         })
       } else {
-        resolve({ error: 0, message: 'dump.exe not found', data: null })
+        resolve({ error: 0, message: 'dump utility not found', data: null })
       }
     })
   })
