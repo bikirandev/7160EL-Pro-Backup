@@ -96,6 +96,19 @@ function openEnvVariablesDialog() {
   })
 }
 
+const checkOs = () => {
+  const platform = process.platform
+  if (platform === 'win32') {
+    return 'windows'
+  } else if (platform === 'darwin') {
+    return 'mac'
+  } else if (platform === 'linux') {
+    return 'linux'
+  } else {
+    return 'unknown'
+  }
+}
+
 module.exports = {
   init,
 
@@ -155,14 +168,15 @@ module.exports = {
   // Login API
   loginInitiate,
 
-  //open link in external browser
+  //feature request
+  addFeatureRequest,
+
+  // Utils
   openLink,
   exploreDirectory,
   openDirectoryDialog,
   openFileDialog,
-
-  //feature request
-  addFeatureRequest,
-  reloadWindow,
   openEnvVariablesDialog,
+  checkOs,
+  reloadWindow,
 }
