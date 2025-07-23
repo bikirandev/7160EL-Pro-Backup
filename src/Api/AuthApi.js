@@ -4,6 +4,17 @@ const openLink = require('../utils/openLink')
 
 const authUrl = 'https://account.bikiran.com/applogin'
 
+// Store the auth token (this will be set from main process)
+let authToken = null
+
+const setAuthToken = (token) => {
+  authToken = token
+}
+
+const getAuthToken = async () => {
+  return { error: 0, message: 'Auth token retrieved', data: authToken }
+}
+
 const loginInitiate = async (ev, data) => {
   try {
     console.log(ev, data)
@@ -28,4 +39,6 @@ const loginInitiate = async (ev, data) => {
 
 module.exports = {
   loginInitiate,
+  getAuthToken,
+  setAuthToken,
 }

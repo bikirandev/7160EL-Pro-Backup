@@ -14,7 +14,7 @@ const { setSMTPConfig, testSMTPConfig } = require('./Api/ConfigSmtpApi')
 const { setDumpPath, testDumpPath, scanDumpPath } = require('./Api/ConfigDumpApi')
 const { reloadWindow } = require('./utils/createWindow')
 const { addFeatureRequest } = require('./Api/FeatureApi')
-const { loginInitiate } = require('./Api/AuthApi')
+const { loginInitiate, getAuthToken } = require('./Api/AuthApi')
 
 const {
   getConfigs,
@@ -167,6 +167,7 @@ module.exports = {
 
   // Login API
   loginInitiate,
+  getAuthToken,
 
   //feature request
   addFeatureRequest,
