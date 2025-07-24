@@ -15,6 +15,7 @@ const { setDumpPath, testDumpPath, scanDumpPath } = require('./Api/ConfigDumpApi
 const { reloadWindow } = require('./utils/createWindow')
 const { addFeatureRequest } = require('./Api/FeatureApi')
 const { loginInitiate, getAuthToken } = require('./Api/AuthApi')
+const { checkForUpdates, downloadUpdate } = require('./Api/UpdaterApi')
 
 const {
   getConfigs,
@@ -168,6 +169,10 @@ module.exports = {
   // Login API
   loginInitiate,
   getAuthToken,
+
+  // Updater API
+  checkForUpdates,
+  downloadUpdate,
 
   //feature request
   addFeatureRequest,

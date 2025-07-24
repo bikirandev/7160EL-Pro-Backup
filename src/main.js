@@ -4,6 +4,7 @@ const apiRegistry = require('./ApiRegistry')
 const { setAuthToken } = require('./Api/AuthApi')
 const { createWindow } = require('./utils/createWindow')
 const { migrateDataDirectory } = require('./utils/DataMigration')
+const AutoUpdater = require('./utils/AutoUpdater')
 // const { showNotification } = require('./Models/Notification/Notification')
 const path = require('path')
 
@@ -13,6 +14,7 @@ app.setAsDefaultProtocolClient('probackup'); // <-- custom protocol like myapp:/
 
 let tray = null
 let win = null
+let autoUpdater = null
 
 app.on('ready', () => {
   // Migrate data directory on first startup
@@ -50,11 +52,37 @@ app.on('ready', () => {
     ipcMain.handle(key, apiRegistry[key])
   })
 
+  // Auto-updater IPC handlers
+  ipcMain.handle('check-for-updates', () => {
+    if (autoUpdater) {
+      autoUpdater.checkForUpdates()
+    }
+  })
+
+  ipcMain.handle('download-update', () => {
+    if (autoUpdater) {
+      autoUpdater.downloadAndInstall()
+    }
+  })
+
   // Notification
   // showNotification('Pro Backup is running...', iconPath)
 
   // --Creating Window // it returns win
   win = createWindow({ BrowserWindow, shell })
+
+  // Initialize auto-updater after window is created
+  // Only check for updates in production
+  if (!app.isPackaged) {
+    console.log('Running in development mode, auto-updater disabled')
+  } else {
+    try {
+      autoUpdater = new AutoUpdater(win)
+      console.log('Auto-updater initialized for production')
+    } catch (error) {
+      console.error('Failed to initialize auto-updater:', error)
+    }
+  }
 
   // // Set application menu to show menubar
   // const template = [

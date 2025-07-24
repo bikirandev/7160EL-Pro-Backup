@@ -4,8 +4,8 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'bikiran',
-          name: 'bikiran',
+          owner: 'bikirandev',
+          name: '7160EL-Pro-Backup',
         },
         prerelease: false,
         draft: true,
