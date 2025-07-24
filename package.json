@@ -5,7 +5,7 @@
     "email": "info@bikiran.com"
   },
   "description": "This APP is built by Bikiran",
-  "version": "1.1.14",
+  "version": "1.2.0",
   "private": true,
   "homepage": "./",
   "main": "src/main.js",
@@ -21,22 +21,58 @@
     "build:windows": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder --win --mac --linux"
+    "build:all": "electron-builder --win --mac --linux",
+    "publish": "electron-builder --publish=always",
+    "publish:windows": "electron-builder --win --publish=always",
+    "publish:mac": "electron-builder --mac --publish=always",
+    "publish:linux": "electron-builder --linux --publish=always",
+    "publish:all": "electron-builder --win --mac --linux --publish=always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bikirandev/7160EL-Pro-Backup.git"
   },
   "build": {
     "productName": "Pro Backup",
     "appId": "com.bikiran.probackup",
+    "publish": {
+      "provider": "github",
+      "owner": "bikirandev",
+      "repo": "7160EL-Pro-Backup"
+    },
     "win": {
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "requestedExecutionLevel": "highestAvailable",
       "icon": "./src/assets/backup-pro-logo.png"
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "./src/assets/backup-pro-logo.png"
     },
     "linux": {
-      "target": "deb",
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "./src/assets/backup-pro-logo.png"
     },
     "extraResources": [
@@ -66,7 +102,9 @@
   "dependencies": {
     "@google-cloud/storage": "^7.11.2",
     "cron-parser": "^4.9.0",
+    "electron-log": "^5.4.1",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "electron-window-state": "^5.0.3",
     "firebase": "^12.0.0",
     "moment": "^2.30.1",
@@ -84,6 +122,7 @@
     "@electron-forge/maker-rpm": "^7.4.0",
     "@electron-forge/maker-squirrel": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/publisher-github": "^7.8.1",
     "electron": "^31.1.0",
     "electron-builder": "^24.13.3",
     "electron-builder-squirrel-windows": "25.0.0-alpha.6",
