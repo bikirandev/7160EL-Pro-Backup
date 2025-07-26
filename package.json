@@ -5,7 +5,7 @@
     "email": "info@bikiran.com"
   },
   "description": "This APP is built by Bikiran",
-  "version": "1.3.0",
+  "version": "1.13.4",
   "private": true,
   "homepage": "./",
   "main": "src/main.js",
@@ -22,15 +22,20 @@
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
     "build:all": "electron-builder --win --mac --linux",
+    "build:mac:local": "electron-builder --mac --publish=never",
     "publish": "electron-builder --publish=always",
     "publish:windows": "electron-builder --win --publish=always",
     "publish:mac": "electron-builder --mac --publish=always",
     "publish:linux": "electron-builder --linux --publish=always",
-    "publish:all": "electron-builder --win --mac --linux --publish=always"
+    "publish:all": "electron-builder --win --mac --linux --publish=always",
+    "release:prepare": "./scripts/prepare-release.sh",
+    "release:check": "npm run build:all --dry-run",
+    "release:verify": "./scripts/verify-build.sh",
+    "version:check": "node -p \"require('./package.json').version\""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bikirandev/7160EL-Pro-Backup.git"
+    "url": "https://github.com/bikirandev/7160EL-Pro-Backup"
   },
   "build": {
     "productName": "Pro Backup",
@@ -55,6 +60,13 @@
     "mac": {
       "target": [
         {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
           "target": "dmg",
           "arch": [
             "x64",
@@ -76,6 +88,13 @@
       "icon": "./src/assets/backup-pro-logo.png"
     },
     "extraResources": [
+      {
+        "from": ".env",
+        "to": "./.env",
+        "filter": [
+          "**/*"
+        ]
+      },
       {
         "from": "build",
         "to": "./build",
@@ -102,6 +121,7 @@
   "dependencies": {
     "@google-cloud/storage": "^7.11.2",
     "cron-parser": "^4.9.0",
+    "dotenv": "^17.2.0",
     "electron-log": "^5.4.1",
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.6.2",
