@@ -43,12 +43,13 @@ if (app.isPackaged) {
   console.log('Auto-updater configured for repository: bikirandev/7160EL-Pro-Backup');
   console.log('Current app version:', app.getVersion());
   
-  // Enable auto-download after user confirmation
-  autoUpdater.autoInstallOnAppQuit = false;
+  // Enable auto-install on quit to prevent installation issues
+  autoUpdater.autoInstallOnAppQuit = true;
 }
 
 let tray = null
 let win = null
+global.isUpdating = false  // Global flag to track if we're in update process
 
 app.on('ready', () => {
   // Migrate data directory on first startup
@@ -303,7 +304,25 @@ autoUpdater.on('update-downloaded', (info) => {
       if (result.response === 0) {
         // User clicked "Restart Now"
         console.log('User chose to restart now');
-        autoUpdater.quitAndInstall();
+        
+        // Set updating flag to bypass close confirmations
+        global.isUpdating = true;
+        
+        // Close all windows gracefully before update
+        const allWindows = BrowserWindow.getAllWindows();
+        allWindows.forEach(window => {
+          if (window && !window.isDestroyed()) {
+            window.removeAllListeners('close');
+            window.close();
+          }
+        });
+        
+        // Small delay to ensure windows are closed
+        setTimeout(() => {
+          // Fix for Windows "Failed to uninstall old application files" error
+          // Use false for isSilent and true for isForceRunAfter
+          autoUpdater.quitAndInstall(false, true);
+        }, 500);
       } else {
         console.log('User chose to restart later');
       }
@@ -344,4 +363,3 @@ app.on('open-url', (event, url) => {
     win.webContents.send('auth-token-received', token);
   }
 });
-

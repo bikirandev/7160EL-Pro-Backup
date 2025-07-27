@@ -25,6 +25,11 @@ function createWindow({ BrowserWindow, shell }) {
 
   // On Close Button Click
   mainWindow.on('close', function (event) {
+    // Check if we're in update process - if so, allow immediate close
+    if (global.isUpdating) {
+      return // Allow immediate close during update
+    }
+
     event.preventDefault() // Prevent window from closing immediately
 
     const options = {

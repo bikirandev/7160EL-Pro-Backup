@@ -57,6 +57,24 @@
       "requestedExecutionLevel": "highestAvailable",
       "icon": "./src/assets/backup-pro-logo.png"
     },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Pro Backup",
+      "deleteAppDataOnUninstall": false,
+      "displayLanguageSelector": false,
+      "installerLanguages": ["en_US"],
+      "language": "1033",
+      "multiLanguageInstaller": false,
+      "packElevateHelper": true,
+      "removeDefaultUninstallWelcomePage": false,
+      "runAfterFinish": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
     "mac": {
       "target": [
         {
